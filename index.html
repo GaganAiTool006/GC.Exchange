@@ -3,24 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binance Clone | Buy & Sell Bitcoin, Ethereum, and 350+ Altcoins</title>
-    <meta name="description" content="Trade Bitcoin, Ethereum, and hundreds of cryptocurrencies on the leading cryptocurrency exchange clone. Experience fast, secure, and intuitive spot trading.">
-    <!-- Google Fonts: Inter & Outfit -->
+    <title>GK Exchange | Buy & Sell Bitcoin, Ethereum & 350+ Cryptocurrencies</title>
+    <meta name="description" content="GK Exchange - India's premium cryptocurrency trading platform. Trade Bitcoin, Ethereum, and 350+ altcoins with lowest fees, advanced charts, and 24/7 support.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Lucide Icons CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- TradingView Widget Script -->
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Top Global Announcement Bar -->
+    <!-- Announcement Bar -->
     <div class="announcement-bar" id="announcement-bar">
         <div class="announcement-content">
-            <span class="badge">New</span>
-            <span class="text">Binance Launchpool: Stake BNB and FDUSD to Farm Hooked Protocol (HOOK)!</span>
+            <span class="badge">🔥 New</span>
+            <span class="text">GK Exchange Launchpool: Stake GKX tokens and earn up to 45% APY! Limited time offer.</span>
         </div>
         <button class="close-announcement" onclick="document.getElementById('announcement-bar').style.display='none'">
             <i data-lucide="x"></i>
@@ -31,53 +27,75 @@
     <header class="main-header">
         <div class="header-left">
             <a href="#home" class="logo-area" id="nav-logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 0L17.5 5.5L12 11L6.5 5.5L12 0Z" fill="#F0B90B"/>
-                    <path d="M5.5 6.5L11 12L5.5 17.5L0 12L5.5 6.5Z" fill="#F0B90B"/>
-                    <path d="M18.5 6.5L24 12L18.5 17.5L13 12L18.5 6.5Z" fill="#F0B90B"/>
-                    <path d="M12 13L17.5 18.5L12 24L6.5 18.5L12 13Z" fill="#F0B90B"/>
-                    <path d="M12 7.5L16.5 12L12 16.5L7.5 12L12 7.5Z" fill="#FFFFFF"/>
-                </svg>
-                <span class="logo-text">BINANCE</span>
+                <div class="logo-icon">
+                    <span class="logo-g">G</span><span class="logo-k">K</span>
+                </div>
+                <div class="logo-text-block">
+                    <span class="logo-text">GK Exchange</span>
+                    <span class="logo-sub">Pro Trading</span>
+                </div>
             </a>
             <nav class="nav-links">
                 <a href="#markets" class="nav-item" id="nav-markets"><i data-lucide="trending-up"></i> Markets</a>
-                <a href="#trade" class="nav-item" id="nav-trade"><i data-lucide="line-chart"></i> Trade</a>
-                <a href="#p2p" class="nav-item" id="nav-p2p"><i data-lucide="users"></i> P2P</a>
+                <div class="nav-dropdown-wrapper">
+                    <a href="#trade" class="nav-item" id="nav-trade"><i data-lucide="bar-chart-2"></i> Trade <i data-lucide="chevron-down" style="width:12px;height:12px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#trade" class="nav-dropdown-item"><i data-lucide="zap"></i> Spot Trading</a>
+                        <a href="#trade?type=futures" class="nav-dropdown-item"><i data-lucide="activity"></i> Futures</a>
+                        <a href="#trade?type=margin" class="nav-dropdown-item"><i data-lucide="layers"></i> Margin</a>
+                    </div>
+                </div>
+                <div class="nav-dropdown-wrapper">
+                    <a href="#p2p" class="nav-item" id="nav-p2p"><i data-lucide="users"></i> P2P <i data-lucide="chevron-down" style="width:12px;height:12px;"></i></a>
+                    <div class="nav-dropdown">
+                        <a href="#p2p" class="nav-dropdown-item"><i data-lucide="shopping-cart"></i> Buy / Sell</a>
+                        <a href="#p2p?sub=orders" class="nav-dropdown-item"><i data-lucide="file-text"></i> My Orders</a>
+                        <a href="#p2p?sub=myads" class="nav-dropdown-item"><i data-lucide="megaphone"></i> My Ads</a>
+                        <a href="#p2p?sub=postAd" class="nav-dropdown-item"><i data-lucide="plus-circle"></i> Post Ad</a>
+                        <a href="#p2p?sub=payment" class="nav-dropdown-item"><i data-lucide="credit-card"></i> Payment Methods</a>
+                    </div>
+                </div>
                 <a href="#wallet" class="nav-item" id="nav-wallet"><i data-lucide="wallet"></i> Wallet</a>
             </nav>
         </div>
 
         <div class="header-right">
-            <!-- Search Bar Mockup -->
             <div class="search-box">
                 <i data-lucide="search"></i>
-                <input type="text" placeholder="Search coin/feature..." id="global-search-input">
+                <input type="text" placeholder="Search markets..." id="global-search-input">
             </div>
 
-            <!-- User Balance Status / Auth CTA -->
             <div class="user-auth-section" id="header-auth-section">
-                <!-- Logged Out View -->
                 <div class="logged-out-controls" id="logged-out-view">
                     <a href="#auth" class="btn-login" id="btn-header-login">Log In</a>
                     <a href="#auth?tab=register" class="btn-signup" id="btn-header-signup">Register</a>
                 </div>
-                <!-- Logged In View -->
                 <div class="logged-in-controls hidden" id="logged-in-view">
                     <div class="header-wallet-preview">
-                        <span class="label">Balance:</span>
-                        <span class="value" id="header-balance-val">$12,500.00</span>
+                        <span class="label">Portfolio</span>
+                        <span class="value" id="header-balance-val">$0.00</span>
                     </div>
                     <div class="user-profile-menu">
-                        <div class="avatar" id="user-avatar-btn">U</div>
+                        <div class="avatar" id="user-avatar-btn">
+                            <span id="avatar-letter">G</span>
+                            <div class="avatar-verified-dot"></div>
+                        </div>
                         <div class="dropdown-menu" id="profile-dropdown">
                             <div class="dropdown-header">
-                                <p class="user-email" id="dropdown-user-email">user@binance.com</p>
-                                <p class="user-id">ID: 593740284</p>
+                                <div class="dropdown-avatar-row">
+                                    <div class="dropdown-big-avatar" id="dropdown-big-avatar">G</div>
+                                    <div>
+                                        <p class="user-email" id="dropdown-user-email">user@gkexchange.com</p>
+                                        <p class="user-id">UID: 593740284</p>
+                                        <span class="vip-badge">VIP 1</span>
+                                    </div>
+                                </div>
                             </div>
                             <hr>
-                            <a href="#wallet" class="dropdown-item"><i data-lucide="user"></i> Dashboard</a>
-                            <a href="#wallet" class="dropdown-item"><i data-lucide="credit-card"></i> Deposit</a>
+                            <a href="#profile" class="dropdown-item"><i data-lucide="user"></i> My Profile</a>
+                            <a href="#wallet" class="dropdown-item"><i data-lucide="wallet"></i> Wallet</a>
+                            <a href="#p2p?sub=orders" class="dropdown-item"><i data-lucide="repeat"></i> P2P Orders</a>
+                            <a href="#profile?tab=security" class="dropdown-item"><i data-lucide="shield"></i> Security</a>
                             <hr>
                             <button class="dropdown-item logout-btn" id="btn-logout"><i data-lucide="log-out"></i> Log Out</button>
                         </div>
@@ -93,29 +111,26 @@
     </header>
 
     <!-- Main Content Route Container -->
-    <main id="app-content" class="fade-in">
-        <!-- Components will render HTML dynamically here -->
-    </main>
+    <main id="app-content" class="fade-in"></main>
 
     <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-top">
             <div class="footer-brand">
-                <div class="logo-area">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 0L17.5 5.5L12 11L6.5 5.5L12 0Z" fill="#F0B90B"/>
-                        <path d="M5.5 6.5L11 12L5.5 17.5L0 12L5.5 6.5Z" fill="#F0B90B"/>
-                        <path d="M18.5 6.5L24 12L18.5 17.5L13 12L18.5 6.5Z" fill="#F0B90B"/>
-                        <path d="M12 13L17.5 18.5L12 24L6.5 18.5L12 13Z" fill="#F0B90B"/>
-                        <path d="M12 7.5L16.5 12L12 16.5L7.5 12L12 7.5Z" fill="#FFFFFF"/>
-                    </svg>
-                    <span class="logo-text">BINANCE</span>
+                <div class="logo-area" style="margin-bottom:16px;">
+                    <div class="logo-icon" style="width:36px;height:36px;font-size:13px;">
+                        <span class="logo-g">G</span><span class="logo-k">K</span>
+                    </div>
+                    <div class="logo-text-block">
+                        <span class="logo-text">GK Exchange</span>
+                        <span class="logo-sub">Pro Trading</span>
+                    </div>
                 </div>
-                <p class="brand-desc">Binance is the world's leading cryptocurrency exchange, serving over 150 million users worldwide.</p>
+                <p class="brand-desc">GK Exchange is a next-generation cryptocurrency trading platform serving millions of traders worldwide with advanced tools and lowest fees.</p>
                 <div class="social-links">
                     <a href="#" aria-label="Telegram"><i data-lucide="send"></i></a>
                     <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
-                    <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" aria-label="Discord"><i data-lucide="message-circle"></i></a>
                     <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
                     <a href="#" aria-label="Youtube"><i data-lucide="youtube"></i></a>
                 </div>
@@ -123,61 +138,62 @@
             <div class="footer-links-grid">
                 <div class="footer-col">
                     <h4>About Us</h4>
-                    <a href="#">About</a>
+                    <a href="#">About GK Exchange</a>
                     <a href="#">Careers</a>
-                    <a href="#">Business Contacts</a>
+                    <a href="#">Press & Media</a>
                     <a href="#">Community</a>
-                    <a href="#">Binance Blog</a>
+                    <a href="#">GK Blog</a>
                 </div>
                 <div class="footer-col">
                     <h4>Products</h4>
-                    <a href="#">Exchange</a>
-                    <a href="#">Academy</a>
-                    <a href="#">Binance Live</a>
-                    <a href="#">Charity</a>
-                    <a href="#">Card</a>
+                    <a href="#">Spot Exchange</a>
+                    <a href="#">Futures Trading</a>
+                    <a href="#">P2P Trading</a>
+                    <a href="#">GK Academy</a>
+                    <a href="#">GK Card</a>
                 </div>
                 <div class="footer-col">
                     <h4>Service</h4>
-                    <a href="#">Downloads</a>
-                    <a href="#">Desktop Application</a>
+                    <a href="#">Mobile App</a>
+                    <a href="#">Desktop App</a>
                     <a href="#">Buy Crypto</a>
-                    <a href="#">P2P Trading</a>
-                    <a href="#">Referral</a>
+                    <a href="#">Staking</a>
+                    <a href="#">Referral Program</a>
                 </div>
                 <div class="footer-col">
                     <h4>Support</h4>
-                    <a href="#">Give Feedback</a>
-                    <a href="#">Support Center</a>
+                    <a href="#">Help Center</a>
                     <a href="#">Submit a Request</a>
-                    <a href="#">Fees</a>
-                    <a href="#">APIs</a>
+                    <a href="#">Trading Fees</a>
+                    <a href="#">API Documentation</a>
+                    <a href="#">Status Page</a>
                 </div>
             </div>
         </div>
         <hr>
         <div class="footer-bottom">
-            <p>&copy; 2026 Binance.com Clone. All rights reserved. Built for showcase purposes.</p>
+            <p>&copy; 2026 GK Exchange. All rights reserved.</p>
             <div class="bottom-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
                 <a href="#">Cookie Preferences</a>
+                <a href="#">Risk Disclosure</a>
             </div>
         </div>
     </footer>
 
-    <!-- Core App Logic -->
+    <!-- Scripts -->
     <script src="components/home.js"></script>
     <script src="components/markets.js"></script>
     <script src="components/trade.js"></script>
     <script src="components/wallet.js"></script>
     <script src="components/p2p.js"></script>
     <script src="components/auth.js"></script>
+    <script src="components/profile.js"></script>
     <script src="app.js"></script>
     <script>
-        // Set fallback for Lucide icons rendering after JS component mount
         window.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
+            if (window.lucide) lucide.createIcons();
         });
     </script>
 </body>
