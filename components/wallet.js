@@ -1,70 +1,153 @@
-let balancesHidden = false;
+/* ============================================
+   GK EXCHANGE - Wallet Component
+   components/wallet.js
+   ============================================ */
 
-window.renderWallet = function(params) {
-    // Computes balances values in USDT/USD
-    let totals = calculateAssetValues();
-    const isDark = state.theme === 'dark';
+var _walletBalancesHidden = false;
 
-    // Renders asset table rows
-    let tableRowsHTML = '';
-    for (const [symbol, amount] of Object.entries(state.user.balances)) {
-        const valUSD = totals.values[symbol] || 0;
-        const percent = totals.totalUSD > 0 ? (valUSD / totals.totalUSD) * 100 : 0;
-        
-        const displayAmt = balancesHidden ? '******' : amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
-        const displayUSD = balancesHidden ? '******' : `$${valUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+window.renderWallet = function(container) {
+    var coinMeta = {
+        'USDT': { name: 'Tether USD', color: '#0ecb81' },
+        'BTC': { name: 'Bitcoin', color: '#f7931a' },
+        'ETH': { name: 'Ethereum', color: '#627eea' },
+        'BNB': { name: 'BNB', color: '#f0b90b' },
+        'SOL': { name: 'Solana', color: '#9945ff' },
+        'XRP': { name: 'XRP', color: '#00aae4' },
+        'ADA': { name: 'Cardano', color: '#3cc8c8' },
+        'DOGE': { name: 'Dogecoin', color: '#c2a633' },
+        'AVAX': { name: 'Avalanche', color: '#e84142' },
+        'LTC': { name: 'Litecoin', color: '#bfbbbb' },
+        'GKX': { name: 'GKX Exchange Token', color: '#f0b90b' }
+    };
 
-        tableRowsHTML += `
-            <tr>
-                <td>
-                    <div class="coin-cell">
-                        <div class="coin-icon" style="background-color: ${state.tickers[symbol+'/USDT'] ? state.tickers[symbol+'/USDT'].color : '#f0b90b'}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; color: #000;">
-                            ${symbol[0]}
+    // Calculate asset values in USD
+    function getAssetUSDValue(coin, amount) {
+        if (coin === 'USDT') return amount;
+        if (coin === 'GKX') return amount * 0.45;
+        var pair = coin + 'USDT';
+        return state.tickers[pair] ? (amount * state.tickers[pair].price) : amount;
+    }
+
+    var totalUSD = 0;
+    var assetBreakdown = [];
+
+    Object.keys(state.wallet).forEach(function(coin) {
+        var amt = state.wallet[coin] || 0;
+        var valUSD = getAssetUSDValue(coin, amt);
+        totalUSD += valUSD;
+        if (amt > 0) {
+            assetBreakdown.push({
+                symbol: coin,
+                amount: amt,
+                valUSD: valUSD,
+                name: (coinMeta[coin] ? coinMeta[coin].name : coin),
+                color: (coinMeta[coin] ? coinMeta[coin].color : '#f0b90b')
+            });
+        }
+    });
+
+    // Sort by USD value descending
+    assetBreakdown.sort(function(a, b) { return b.valUSD - a.valUSD; });
+
+    var btcPrice = (state.tickers['BTCUSDT'] ? state.tickers['BTCUSDT'].price : 67000);
+    var estBTC = totalUSD / btcPrice;
+
+    var displayUSD = _walletBalancesHidden ? '******' : ('$' + formatNum(totalUSD, 2));
+    var displayBTC = _walletBalancesHidden ? '******' : (formatBTC(estBTC) + ' BTC');
+
+    // Build Donut SVG
+    var radius = 15.91549430918954;
+    var cumulativePercent = 0;
+    var donutPaths = '';
+    var legendHTML = '';
+
+    if (totalUSD > 0) {
+        assetBreakdown.forEach(function(item) {
+            var pct = (item.valUSD / totalUSD) * 100;
+            if (pct < 0.5) return;
+            var strokeDash = pct.toFixed(2) + ' ' + (100 - pct).toFixed(2);
+            var strokeOffset = (100 - cumulativePercent + 25).toFixed(2);
+            donutPaths += `
+                <circle cx="21" cy="21" r="${radius}" 
+                        fill="transparent" 
+                        stroke="${item.color}" 
+                        stroke-width="5" 
+                        stroke-dasharray="${strokeDash}" 
+                        stroke-dashoffset="${strokeOffset}">
+                </circle>
+            `;
+            cumulativePercent += pct;
+            legendHTML += `
+                <div class="legend-item" style="display:flex;align-items:center;gap:6px;">
+                    <div style="width:10px;height:10px;border-radius:3px;background:${item.color};"></div>
+                    <span style="font-size:11px;font-weight:600;">${item.symbol}: ${pct.toFixed(1)}%</span>
+                </div>
+            `;
+        });
+    }
+
+    var chartSVG = `
+        <svg class="donut-chart" viewBox="0 0 42 42" width="100%" height="100%">
+            <circle cx="21" cy="21" r="${radius}" fill="transparent" stroke="var(--border-color)" stroke-width="5"></circle>
+            ${donutPaths}
+        </svg>
+        <div class="chart-center-text">
+            <span class="title">Total</span>
+            <span class="value" style="font-size:12px;">${_walletBalancesHidden ? '***' : ('$' + formatNum(totalUSD, 0))}</span>
+        </div>
+    `;
+
+    // Table rows
+    var tableRowsHTML = Object.keys(state.wallet).map(function(coin) {
+        var amt = state.wallet[coin] || 0;
+        var valUSD = getAssetUSDValue(coin, amt);
+        var meta = coinMeta[coin] || { name: coin, color: '#f0b90b' };
+        var displayAmt = _walletBalancesHidden ? '******' : formatNum(amt, coin === 'USDT' || coin === 'DOGE' || coin === 'XRP' || coin === 'ADA' || coin === 'GKX' ? 2 : 6);
+        var displayVal = _walletBalancesHidden ? '******' : ('$' + formatNum(valUSD, 2));
+
+        return `
+            <tr style="border-bottom:1px solid var(--border-light);">
+                <td style="padding:14px;">
+                    <div class="coin-cell" style="display:flex;align-items:center;gap:10px;">
+                        <div class="coin-icon" style="background:${meta.color}22;color:${meta.color};width:32px;height:32px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;">
+                            ${coin.substring(0,2)}
                         </div>
                         <div>
-                            <span class="coin-symbol">${symbol}</span>
-                            <span class="coin-name">${getCoinName(symbol)}</span>
+                            <div style="font-weight:700;font-size:14px;color:var(--text-primary);">${coin}</div>
+                            <div style="font-size:11px;color:var(--text-secondary);">${meta.name}</div>
                         </div>
                     </div>
                 </td>
-                <td>${displayAmt}</td>
-                <td>${displayAmt}</td>
-                <td>${balancesHidden ? '******' : '0.00'}</td>
-                <td>${displayUSD}</td>
-                <td>
-                    <button class="action-btn-sm" onclick="triggerDepositModal('${symbol}')">Deposit</button>
-                    <button class="action-btn-sm" style="margin-left: 6px;" onclick="triggerWithdrawModal('${symbol}')">Withdraw</button>
+                <td style="padding:14px;font-weight:700;font-family:var(--font-heading);">${displayAmt}</td>
+                <td style="padding:14px;color:var(--text-primary);">${displayAmt}</td>
+                <td style="padding:14px;color:var(--text-muted);">${_walletBalancesHidden ? '******' : '0.00'}</td>
+                <td style="padding:14px;font-weight:700;color:var(--primary);">${displayVal}</td>
+                <td style="padding:14px;text-align:right;">
+                    <button class="action-btn-sm btn-open-deposit" data-coin="${coin}" style="background:var(--primary);color:var(--text-on-gold);font-weight:700;padding:5px 12px;border-radius:var(--radius-sm);font-size:11px;margin-right:6px;">Deposit</button>
+                    <button class="action-btn-sm btn-open-withdraw" data-coin="${coin}" style="background:var(--bg-hover);border:1px solid var(--border-color);color:var(--text-primary);font-weight:600;padding:5px 12px;border-radius:var(--radius-sm);font-size:11px;">Withdraw</button>
                 </td>
             </tr>
         `;
-    }
+    }).join('');
 
-    // Build the SVG Allocation Donut chart dynamically
-    const chartSVG = generateDonutChartSVG(totals.percentages);
-
-    const btcPrice = state.tickers['BTC/USDT'].price;
-    const estBTC = totals.totalUSD / btcPrice;
-
-    const displayBtcTotal = balancesHidden ? '******' : `${estBTC.toFixed(6)} BTC`;
-    const displayUSDTotal = balancesHidden ? '******' : `$${totals.totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-    return `
+    container.innerHTML = `
         <div class="wallet-container">
             <!-- Summary Portfolio Card -->
             <div class="wallet-summary-card">
                 <div class="wallet-details">
-                    <h2>Estimated Balance 
-                        <button id="btn-toggle-balances" style="background:none; border:none; padding: 2px;" aria-label="Hide/Show Balances">
-                            <i data-lucide="${balancesHidden ? 'eye-off' : 'eye'}" style="width: 18px; height: 18px; color: var(--text-secondary); vertical-align: middle;"></i>
+                    <h2>Estimated Portfolio Value 
+                        <button id="btn-toggle-balances" style="background:none; border:none; padding: 2px; cursor:pointer;" aria-label="Hide/Show Balances">
+                            <i data-lucide="${_walletBalancesHidden ? 'eye-off' : 'eye'}" style="width: 18px; height: 18px; color: var(--text-secondary); vertical-align: middle;"></i>
                         </button>
                     </h2>
                     <div class="wallet-balance-row">
-                        <div class="wallet-btc-balance">${displayBtcTotal}</div>
-                        <div class="wallet-fiat-balance">&asymp; ${displayUSDTotal}</div>
+                        <div class="wallet-btc-balance" style="font-size:38px;">${displayUSD}</div>
+                        <div class="wallet-fiat-balance">&asymp; ${displayBTC}</div>
                     </div>
                     <div class="wallet-actions">
-                        <button class="btn-deposit" id="btn-wallet-deposit">Deposit</button>
-                        <button class="btn-withdraw" id="btn-wallet-withdraw">Withdraw</button>
+                        <button class="btn-deposit" id="btn-wallet-deposit-main">⚡ Deposit Crypto</button>
+                        <button class="btn-withdraw" id="btn-wallet-withdraw-main">Withdraw</button>
+                        <button onclick="navigate('trade')" class="btn-withdraw" style="border-color:var(--border-gold);color:var(--primary);">Go to Trade</button>
                     </div>
                 </div>
 
@@ -74,24 +157,29 @@ window.renderWallet = function(params) {
                         ${chartSVG}
                     </div>
                     <div class="allocation-legend">
-                        ${generateLegendHTML(totals.percentages)}
+                        ${legendHTML}
                     </div>
                 </div>
             </div>
 
             <!-- Assets Table Card -->
             <div class="wallet-assets-card">
-                <h3>Asset Balances</h3>
-                <div class="market-table-container">
-                    <table class="market-table">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+                    <h3>Spot Asset Balances</h3>
+                    <div style="font-size:12px;color:var(--text-muted);">
+                        ${Object.keys(state.wallet).length} Assets Listed
+                    </div>
+                </div>
+                <div class="market-table-container" style="overflow-x:auto;">
+                    <table class="market-table" style="width:100%;border-collapse:collapse;font-size:13px;">
                         <thead>
-                            <tr>
-                                <th>Coin</th>
-                                <th>Total Balance</th>
-                                <th>Available Balance</th>
-                                <th>In Order</th>
-                                <th>Est. Value (USDT)</th>
-                                <th>Actions</th>
+                            <tr style="border-bottom:1px solid var(--border-light);text-align:left;color:var(--text-muted);font-size:11px;text-transform:uppercase;">
+                                <th style="padding:12px 14px;">Coin</th>
+                                <th style="padding:12px 14px;">Total Balance</th>
+                                <th style="padding:12px 14px;">Available Balance</th>
+                                <th style="padding:12px 14px;">In Orders</th>
+                                <th style="padding:12px 14px;">Est. Value (USDT)</th>
+                                <th style="padding:12px 14px;text-align:right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="wallet-assets-tbody">
@@ -107,36 +195,37 @@ window.renderWallet = function(params) {
             <div class="modal-card">
                 <button class="modal-close" id="btn-close-deposit"><i data-lucide="x"></i></button>
                 <div class="modal-header">
-                    <h3>Deposit Crypto</h3>
+                    <h3>Deposit Cryptocurrency</h3>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="deposit-coin-select">Select Coin</label>
+                        <label for="deposit-coin-select">Select Asset</label>
                         <select class="form-control-select" id="deposit-coin-select">
-                            <!-- Populate dynamically -->
+                            ${Object.keys(state.wallet).map(function(c) { return '<option value="' + c + '">' + c + ' - ' + (coinMeta[c] ? coinMeta[c].name : c) + '</option>'; }).join('')}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="deposit-network-select">Select Network</label>
+                        <label for="deposit-network-select">Select Deposit Network</label>
                         <select class="form-control-select" id="deposit-network-select">
-                            <option value="bsc">BNB Smart Chain (BEP20)</option>
+                            <option value="bsc">BNB Smart Chain (BEP20) - Fast & Low Fee</option>
+                            <option value="trx" selected>Tron (TRC20) - 0.5 USDT Fee</option>
                             <option value="eth">Ethereum (ERC20)</option>
-                            <option value="trx" selected>Tron (TRC20)</option>
+                            <option value="sol">Solana Network (SPL)</option>
                         </select>
                     </div>
                     <div class="address-deposit-box">
                         <div class="qr-code-placeholder">
-                            <!-- SVG QR code simulation -->
                             <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="100" height="100" fill="white"/>
-                                <!-- Simulated QR squares -->
-                                <rect x="5" y="5" width="20" height="20" fill="black"/>
-                                <rect x="10" y="10" width="10" height="10" fill="white"/>
-                                <rect x="75" y="5" width="20" height="20" fill="black"/>
-                                <rect x="80" y="10" width="10" height="10" fill="white"/>
-                                <rect x="5" y="75" width="20" height="20" fill="black"/>
-                                <rect x="10" y="80" width="10" height="10" fill="white"/>
-                                <!-- Random matrix blocks -->
+                                <rect x="5" y="5" width="22" height="22" fill="black"/>
+                                <rect x="9" y="9" width="14" height="14" fill="white"/>
+                                <rect x="13" y="13" width="6" height="6" fill="black"/>
+                                <rect x="73" y="5" width="22" height="22" fill="black"/>
+                                <rect x="77" y="9" width="14" height="14" fill="white"/>
+                                <rect x="81" y="13" width="6" height="6" fill="black"/>
+                                <rect x="5" y="73" width="22" height="22" fill="black"/>
+                                <rect x="9" y="77" width="14" height="14" fill="white"/>
+                                <rect x="13" y="81" width="6" height="6" fill="black"/>
                                 <rect x="35" y="15" width="15" height="5" fill="black"/>
                                 <rect x="40" y="30" width="10" height="10" fill="black"/>
                                 <rect x="15" y="45" width="25" height="10" fill="black"/>
@@ -145,13 +234,15 @@ window.renderWallet = function(params) {
                                 <rect x="75" y="75" width="10" height="15" fill="black"/>
                             </svg>
                         </div>
-                        <div class="wallet-address-display">
-                            <span id="deposit-address-val">TYD97Fe9Pmn8837aLqWnmc9381k76Pqa97A</span>
-                            <button class="btn-copy-address" id="btn-copy-address" aria-label="Copy Address">
-                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                        <div class="wallet-address-display" style="display:flex;align-items:center;justify-content:space-between;width:100%;background:var(--bg-card);padding:10px 14px;border-radius:var(--radius-md);border:1px solid var(--border-color);">
+                            <span id="deposit-address-val" style="font-family:monospace;font-size:12px;color:var(--primary);font-weight:700;">GKX98F72TYD97Fe9Pmn8837aLqWnmc9381k76P</span>
+                            <button class="btn-copy-address" id="btn-copy-address" style="color:var(--text-primary);padding:4px;" title="Copy Address">
+                                <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
                             </button>
                         </div>
-                        <span style="font-size: 11px; color: var(--text-secondary);">Send only the selected network token to this deposit address. Sending other tokens may result in permanent loss.</span>
+                        <span style="font-size: 11px; color: var(--text-secondary); text-align:left;">
+                            ⚠️ Send only selected network cryptocurrency to this address. Credits are automatically verified in 12 blockchain confirmations.
+                        </span>
                     </div>
                 </div>
             </div>
@@ -162,25 +253,26 @@ window.renderWallet = function(params) {
             <div class="modal-card">
                 <button class="modal-close" id="btn-close-withdraw"><i data-lucide="x"></i></button>
                 <div class="modal-header">
-                    <h3>Withdraw Crypto</h3>
+                    <h3>Withdraw Cryptocurrency</h3>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="withdraw-coin-select">Select Coin</label>
+                        <label for="withdraw-coin-select">Select Asset</label>
                         <select class="form-control-select" id="withdraw-coin-select">
-                            <!-- Populate dynamically -->
+                            ${Object.keys(state.wallet).map(function(c) { return '<option value="' + c + '">' + c + ' - ' + (coinMeta[c] ? coinMeta[c].name : c) + '</option>'; }).join('')}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="withdraw-address">Recipient Address</label>
-                        <input type="text" class="form-control-input" id="withdraw-address" placeholder="Enter recipient wallet address">
+                        <input type="text" class="form-control-input" id="withdraw-address" placeholder="Enter recipient wallet address (e.g. 0x... or T...)">
                     </div>
                     <div class="form-group">
-                        <label for="withdraw-network-select">Select Network</label>
+                        <label for="withdraw-network-select">Transfer Network</label>
                         <select class="form-control-select" id="withdraw-network-select">
                             <option value="bsc">BNB Smart Chain (BEP20) [Fee: 0.10 USDT]</option>
-                            <option value="eth">Ethereum (ERC20) [Fee: 3.50 USDT]</option>
                             <option value="trx" selected>Tron (TRC20) [Fee: 1.00 USDT]</option>
+                            <option value="eth">Ethereum (ERC20) [Fee: 3.50 USDT]</option>
+                            <option value="sol">Solana Network [Fee: 0.05 USDT]</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -190,303 +282,123 @@ window.renderWallet = function(params) {
                         </div>
                         <div style="position:relative;">
                             <input type="number" class="form-control-input" id="withdraw-amount" placeholder="0.00" step="any" min="0">
-                            <button id="btn-withdraw-max" style="position:absolute; right:12px; top:10px; font-weight:600; color:var(--primary); font-size:12px;">MAX</button>
+                            <button id="btn-withdraw-max" style="position:absolute; right:12px; top:12px; font-weight:700; color:var(--primary); font-size:12px;">MAX</button>
                         </div>
                     </div>
-                    <button class="btn-modal-action" id="btn-execute-withdraw">Submit Withdrawal</button>
+                    <button class="btn-auth-submit" id="btn-execute-withdraw" style="margin-top:10px;">Confirm Withdrawal</button>
                 </div>
             </div>
         </div>
     `;
-}
 
-window.initWallet = function(params) {
     // Balances Hide Toggle
-    const toggleBtn = document.getElementById('btn-toggle-balances');
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-            balancesHidden = !balancesHidden;
-            // Reload wallet view to redraw fields with hidden/shown states
-            window.location.reload();
-        });
-    }
-
-    // Modal wires
-    const depModal = document.getElementById('deposit-modal');
-    const withModal = document.getElementById('withdraw-modal');
-    
-    const depBtn = document.getElementById('btn-wallet-deposit');
-    const withBtn = document.getElementById('btn-wallet-withdraw');
-    
-    const depClose = document.getElementById('btn-close-deposit');
-    const withClose = document.getElementById('btn-close-withdraw');
-
-    if (depBtn && depModal) {
-        depBtn.addEventListener('click', () => triggerDepositModal('USDT'));
-        depClose.addEventListener('click', () => depModal.classList.add('hidden'));
-    }
-
-    if (withBtn && withModal) {
-        withBtn.addEventListener('click', () => triggerWithdrawModal('USDT'));
-        withClose.addEventListener('click', () => withModal.classList.add('hidden'));
-    }
-
-    // Copy address box
-    const copyBtn = document.getElementById('btn-copy-address');
-    if (copyBtn) {
-        copyBtn.addEventListener('click', () => {
-            const addrText = document.getElementById('deposit-address-val').textContent;
-            navigator.clipboard.writeText(addrText).then(() => {
-                alert('Deposit address copied to clipboard!');
-            }).catch(e => {
-                console.error(e);
-            });
-        });
-    }
-
-    // Modal forms coin selectors populating
-    const depCoinSelect = document.getElementById('deposit-coin-select');
-    const withCoinSelect = document.getElementById('withdraw-coin-select');
-    let coinOptions = '';
-    
-    Object.keys(state.user.balances).forEach(sym => {
-        coinOptions += `<option value="${sym}">${sym}</option>`;
+    document.getElementById('btn-toggle-balances')?.addEventListener('click', function() {
+        _walletBalancesHidden = !_walletBalancesHidden;
+        window.renderWallet(container);
     });
 
-    if (depCoinSelect) depCoinSelect.innerHTML = coinOptions;
-    if (withCoinSelect) {
-        withCoinSelect.innerHTML = coinOptions;
-        withCoinSelect.addEventListener('change', (e) => {
-            updateWithdrawMaxLabel(e.target.value);
-        });
-    }
-
-    // Withdraw max btn
-    const maxBtn = document.getElementById('btn-withdraw-max');
-    if (maxBtn) {
-        maxBtn.addEventListener('click', () => {
-            const sym = withCoinSelect.value;
-            const bal = state.user.balances[sym] || 0;
-            document.getElementById('withdraw-amount').value = bal;
-        });
-    }
-
-    // Execute withdrawal trigger
-    const submitWithBtn = document.getElementById('btn-execute-withdraw');
-    if (submitWithBtn) {
-        submitWithBtn.addEventListener('click', processWithdrawal);
-    }
-}
-
-// Open Deposit Modal with pre-selected coin
-window.triggerDepositModal = function(coin) {
+    // Modals references
     const depModal = document.getElementById('deposit-modal');
-    const depCoinSelect = document.getElementById('deposit-coin-select');
-    
-    if (depModal && depCoinSelect) {
-        depCoinSelect.value = coin;
-        depModal.classList.remove('hidden');
-    }
-};
-
-// Open Withdraw Modal with pre-selected coin
-window.triggerWithdrawModal = function(coin) {
     const withModal = document.getElementById('withdraw-modal');
+    const depCoinSelect = document.getElementById('deposit-coin-select');
     const withCoinSelect = document.getElementById('withdraw-coin-select');
-    
-    if (withModal && withCoinSelect) {
-        withCoinSelect.value = coin;
-        updateWithdrawMaxLabel(coin);
-        withModal.classList.remove('hidden');
-    }
-};
+    const withMaxLabel = document.getElementById('withdraw-max-label');
 
-function updateWithdrawMaxLabel(coin) {
-    const maxLabel = document.getElementById('withdraw-max-label');
-    if (maxLabel) {
-        const bal = state.user.balances[coin] || 0;
-        maxLabel.textContent = `Avbl: ${bal.toFixed(4)} ${coin}`;
-    }
-}
-
-function processWithdrawal() {
-    const coinSelect = document.getElementById('withdraw-coin-select');
-    const addressInput = document.getElementById('withdraw-address');
-    const amountInput = document.getElementById('withdraw-amount');
-    
-    const coin = coinSelect.value;
-    const address = addressInput.value.trim();
-    const amount = parseFloat(amountInput.value) || 0;
-    const userBalance = state.user.balances[coin] || 0;
-
-    if (address === '') {
-        alert('Please enter a recipient wallet address.');
-        return;
+    function openDeposit(coin) {
+        if (depCoinSelect) depCoinSelect.value = coin || 'USDT';
+        depModal?.classList.remove('hidden');
     }
 
-    if (amount <= 0) {
-        alert('Please enter a valid withdrawal amount.');
-        return;
+    function openWithdraw(coin) {
+        coin = coin || 'USDT';
+        if (withCoinSelect) withCoinSelect.value = coin;
+        var bal = state.wallet[coin] || 0;
+        if (withMaxLabel) withMaxLabel.textContent = 'Avbl: ' + formatNum(bal, 4) + ' ' + coin;
+        withModal?.classList.remove('hidden');
     }
 
-    if (userBalance < amount) {
-        alert(`Insufficient ${coin} balance. Current balance is ${userBalance} ${coin}.`);
-        return;
-    }
+    // Modal buttons
+    document.getElementById('btn-wallet-deposit-main')?.addEventListener('click', function() { openDeposit('USDT'); });
+    document.getElementById('btn-wallet-withdraw-main')?.addEventListener('click', function() { openWithdraw('USDT'); });
+    document.getElementById('btn-close-deposit')?.addEventListener('click', function() { depModal?.classList.add('hidden'); });
+    document.getElementById('btn-close-withdraw')?.addEventListener('click', function() { withModal?.classList.add('hidden'); });
 
-    // Deduct balance
-    state.user.balances[coin] -= amount;
-
-    // Log transaction
-    state.orderHistory.unshift({
-        id: 'w' + Date.now().toString().slice(-6),
-        time: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        pair: `${coin}/WITHDRAW`,
-        type: 'Withdrawal',
-        side: 'Sell',
-        price: 0,
-        amount: amount,
-        total: amount,
-        status: 'Processing'
+    // Table item buttons
+    document.querySelectorAll('.btn-open-deposit').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            openDeposit(btn.getAttribute('data-coin'));
+        });
     });
 
-    // Save and reload state
-    localStorage.setItem('binance_clone_state', JSON.stringify({
-        user: state.user,
-        favorites: state.favorites,
-        openOrders: state.openOrders,
-        orderHistory: state.orderHistory,
-        p2pOrders: state.p2pOrders,
-        theme: state.theme
-    }));
+    document.querySelectorAll('.btn-open-withdraw').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            openWithdraw(btn.getAttribute('data-coin'));
+        });
+    });
 
-    alert(`Withdrawal request submitted! Sent ${amount} ${coin} to ${address}.`);
-    
-    // Close modal & reload page to update view
-    document.getElementById('withdraw-modal').classList.add('hidden');
-    
-    // Update header balance
-    updateHeaderBalance();
-    
-    // Reroute back to wallet to draw updated values
-    routerReload();
-}
+    withCoinSelect?.addEventListener('change', function(e) {
+        var coin = e.target.value;
+        var bal = state.wallet[coin] || 0;
+        if (withMaxLabel) withMaxLabel.textContent = 'Avbl: ' + formatNum(bal, 4) + ' ' + coin;
+    });
 
-function routerReload() {
-    // Simply trigger router hash refresh
-    const hash = window.location.hash;
-    window.location.hash = '';
-    window.location.hash = hash;
-}
+    // MAX button
+    document.getElementById('btn-withdraw-max')?.addEventListener('click', function() {
+        var coin = withCoinSelect ? withCoinSelect.value : 'USDT';
+        var bal = state.wallet[coin] || 0;
+        var amountInput = document.getElementById('withdraw-amount');
+        if (amountInput) amountInput.value = bal;
+    });
 
-// Asset Calculations Helper
-function calculateAssetValues() {
-    let totalUSD = state.user.balances.USDT;
-    let values = { USDT: state.user.balances.USDT };
+    // Copy address button
+    document.getElementById('btn-copy-address')?.addEventListener('click', function() {
+        var addr = document.getElementById('deposit-address-val')?.textContent || '';
+        navigator.clipboard.writeText(addr).then(function() {
+            showToast('📋 Deposit address copied to clipboard!', 'success');
+        }).catch(function() {
+            showToast('Address: ' + addr, 'info');
+        });
+    });
 
-    for (const [symbol, amount] of Object.entries(state.user.balances)) {
-        if (symbol === 'USDT') continue;
-        const pair = `${symbol}/USDT`;
-        if (state.tickers[pair]) {
-            const val = amount * state.tickers[pair].price;
-            values[symbol] = val;
-            totalUSD += val;
-        } else {
-            values[symbol] = 0;
+    // Submit withdrawal
+    document.getElementById('btn-execute-withdraw')?.addEventListener('click', function() {
+        var coin = withCoinSelect ? withCoinSelect.value : 'USDT';
+        var addr = document.getElementById('withdraw-address')?.value.trim() || '';
+        var amt = parseFloat(document.getElementById('withdraw-amount')?.value) || 0;
+        var userBal = state.wallet[coin] || 0;
+
+        if (!addr) {
+            alert('Please enter a recipient wallet address.');
+            return;
         }
-    }
+        if (amt <= 0) {
+            alert('Please enter a valid withdrawal amount.');
+            return;
+        }
+        if (amt > userBal) {
+            alert('Insufficient ' + coin + ' balance. You have ' + formatNum(userBal, 4) + ' ' + coin + ' available.');
+            return;
+        }
 
-    // Percentages
-    let percentages = {};
-    for (const [symbol, valUSD] of Object.entries(values)) {
-        percentages[symbol] = totalUSD > 0 ? (valUSD / totalUSD) * 100 : 0;
-    }
+        // Deduct
+        state.wallet[coin] = parseFloat((userBal - amt).toFixed(6));
+        state.orders.push({
+            id: 'w' + Date.now(),
+            pair: coin + '/WITHDRAW',
+            side: 'sell',
+            price: 0,
+            qty: amt,
+            status: 'completed',
+            type: 'withdrawal',
+            time: Date.now()
+        });
 
-    return {
-        totalUSD,
-        values,
-        percentages
-    };
-}
-
-function getCoinName(symbol) {
-    if (symbol === 'USDT') return 'Tether USD';
-    const pair = `${symbol}/USDT`;
-    return state.tickers[pair] ? state.tickers[pair].name : symbol;
-}
-
-// Generate Legend HTML
-function generateLegendHTML(percentages) {
-    let html = '';
-    for (const [symbol, pct] of Object.entries(percentages)) {
-        if (pct === 0) continue;
-        const color = symbol === 'USDT' ? '#0ecb81' : (state.tickers[symbol+'/USDT'] ? state.tickers[symbol+'/USDT'].color : '#fcd535');
-        html += `
-            <div class="legend-item">
-                <div class="legend-color-box" style="background-color: ${color};"></div>
-                <span>${symbol}: ${pct.toFixed(1)}%</span>
-            </div>
-        `;
-    }
-    return html;
-}
-
-// Generate SVG Donut Chart
-function generateDonutChartSVG(percentages) {
-    let cumulativePercent = 0;
-    let paths = '';
-    
-    // Filters out zero balance values
-    const entries = Object.entries(percentages).filter(([_, pct]) => pct > 0);
-    
-    if (entries.length === 0) {
-        return `
-            <svg class="donut-chart" viewBox="0 0 42 42" width="100%" height="100%">
-                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--border-color)" stroke-width="4.5"></circle>
-            </svg>
-            <div class="chart-center-text">
-                <span class="title">Assets</span>
-                <span class="value">$0.00</span>
-            </div>
-        `;
-    }
-
-    // SVG parameters
-    // Radius 15.91549430918954 makes the circumference exactly 100!
-    // This allows stroke-dasharray and stroke-dashoffset to easily represent percentages!
-    const radius = 15.91549430918954;
-    const rval = 21;
-
-    entries.forEach(([symbol, pct]) => {
-        const color = symbol === 'USDT' ? '#0ecb81' : (state.tickers[symbol+'/USDT'] ? state.tickers[symbol+'/USDT'].color : '#fcd535');
-        
-        const strokeDasharray = `${pct} ${100 - pct}`;
-        const strokeDashoffset = 100 - cumulativePercent + 25; // +25 to offset starting angle from bottom to top
-        
-        paths += `
-            <circle cx="${rval}" cy="${rval}" r="${radius}" 
-                    fill="transparent" 
-                    stroke="${color}" 
-                    stroke-width="5" 
-                    stroke-dasharray="${strokeDasharray}" 
-                    stroke-dashoffset="${strokeDashoffset}">
-            </circle>
-        `;
-        cumulativePercent += pct;
+        saveState();
+        updateHeaderBalance();
+        withModal?.classList.add('hidden');
+        showToast('✅ Withdrawal of ' + amt + ' ' + coin + ' submitted successfully!', 'success');
+        window.renderWallet(container);
     });
 
-    let totals = calculateAssetValues();
-    const displayCenterVal = balancesHidden ? '******' : `$${totals.totalUSD.toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-
-    return `
-        <svg class="donut-chart" viewBox="0 0 42 42" width="100%" height="100%">
-            <!-- Grey track underlay -->
-            <circle cx="21" cy="21" r="${radius}" fill="transparent" stroke="var(--border-light)" stroke-width="5"></circle>
-            ${paths}
-        </svg>
-        <div class="chart-center-text">
-            <span class="title">Total</span>
-            <span class="value" style="font-size: 11px;">${displayCenterVal}</span>
-        </div>
-    `;
-}
+    if (window.lucide) lucide.createIcons();
+};

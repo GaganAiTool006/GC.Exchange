@@ -21,16 +21,16 @@ var defaultState = {
         loginHistory: []
     },
     tickers: {
-        'BTCUSDT': { price: 67432.80, change: 2.34, high: 68200, low: 66100, vol: 28.4, volUSD: 1.9e9 },
-        'ETHUSDT': { price: 3812.50, change: 1.87, high: 3890, low: 3720, vol: 184.6, volUSD: 7.1e8 },
-        'BNBUSDT': { price: 628.40, change: -0.92, high: 642, low: 618, vol: 512.3, volUSD: 3.2e8 },
-        'SOLUSDT': { price: 187.30, change: 4.21, high: 192, low: 179, vol: 2834.1, volUSD: 5.3e8 },
-        'XRPUSDT': { price: 0.6284, change: -1.12, high: 0.648, low: 0.612, vol: 84200000, volUSD: 5.3e7 },
-        'ADAUSDT': { price: 0.5819, change: 0.78, high: 0.592, low: 0.571, vol: 62100000, volUSD: 3.6e7 },
-        'DOTUSDT': { price: 8.42, change: 2.15, high: 8.61, low: 8.21, vol: 1290000, volUSD: 1.1e7 },
-        'DOGEUSDT': { price: 0.1843, change: 5.62, high: 0.189, low: 0.172, vol: 320000000, volUSD: 5.9e7 },
-        'AVAXUSDT': { price: 38.90, change: 3.14, high: 39.8, low: 37.2, vol: 3200000, volUSD: 1.2e8 },
-        'LTCUSDT': { price: 84.30, change: -0.65, high: 86.1, low: 83.2, vol: 890000, volUSD: 7.5e7 }
+        'BTCUSDT': { price: 67432.80, change: 2.34, high: 68200, low: 66100, vol: 28.4, volUSD: 1.9e9, name: 'Bitcoin' },
+        'ETHUSDT': { price: 3812.50, change: 1.87, high: 3890, low: 3720, vol: 184.6, volUSD: 7.1e8, name: 'Ethereum' },
+        'BNBUSDT': { price: 628.40, change: -0.92, high: 642, low: 618, vol: 512.3, volUSD: 3.2e8, name: 'BNB' },
+        'SOLUSDT': { price: 187.30, change: 4.21, high: 192, low: 179, vol: 2834.1, volUSD: 5.3e8, name: 'Solana' },
+        'XRPUSDT': { price: 0.6284, change: -1.12, high: 0.648, low: 0.612, vol: 84200000, volUSD: 5.3e7, name: 'XRP' },
+        'ADAUSDT': { price: 0.5819, change: 0.78, high: 0.592, low: 0.571, vol: 62100000, volUSD: 3.6e7, name: 'Cardano' },
+        'DOTUSDT': { price: 8.42, change: 2.15, high: 8.61, low: 8.21, vol: 1290000, volUSD: 1.1e7, name: 'Polkadot' },
+        'DOGEUSDT': { price: 0.1843, change: 5.62, high: 0.189, low: 0.172, vol: 320000000, volUSD: 5.9e7, name: 'Dogecoin' },
+        'AVAXUSDT': { price: 38.90, change: 3.14, high: 39.8, low: 37.2, vol: 3200000, volUSD: 1.2e8, name: 'Avalanche' },
+        'LTCUSDT': { price: 84.30, change: -0.65, high: 86.1, low: 83.2, vol: 890000, volUSD: 7.5e7, name: 'Litecoin' }
     },
     currentPair: 'BTCUSDT',
     wallet: {
@@ -44,6 +44,7 @@ var defaultState = {
         DOGE: 50000,
         GKX: 10000
     },
+    favorites: ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'],
     orders: [],
     p2pAds: [],
     p2pOrders: [],
@@ -67,6 +68,7 @@ try {
         state.user = Object.assign({}, defaultState.user, parsed.user || {});
         state.wallet = Object.assign({}, defaultState.wallet, parsed.wallet || {});
         state.tickers = Object.assign({}, defaultState.tickers, parsed.tickers || {});
+        state.favorites = parsed.favorites || defaultState.favorites;
         state.paymentMethods = parsed.paymentMethods || defaultState.paymentMethods;
         state.orders = parsed.orders || [];
         state.p2pOrders = parsed.p2pOrders || [];
@@ -120,7 +122,7 @@ startPriceSim();
 // ============ WALLET HELPERS ============
 function calcTotalUSDValue() {
     var total = state.wallet.USDT || 0;
-    var pairs = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE'];
+    var pairs = ['BTC', 'ETH', 'BNB', 'SOL', 'XRP', 'ADA', 'DOGE', 'AVAX', 'LTC'];
     pairs.forEach(function(coin) {
         if (state.wallet[coin] && state.tickers[coin + 'USDT']) {
             total += state.wallet[coin] * state.tickers[coin + 'USDT'].price;
@@ -130,13 +132,13 @@ function calcTotalUSDValue() {
 }
 window.calcTotalUSDValue = calcTotalUSDValue;
 
-function formatNum(n, d) { d = d === undefined ? 2 : d; return Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+function formatNum(n, d) { d = d === undefined ? 2 : d; return Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }); }
 window.formatNum = formatNum;
 
 function formatCurrency(n) { return '$' + formatNum(n, 2); }
 window.formatCurrency = formatCurrency;
 
-function formatBTC(n) { return parseFloat(n).toFixed(6); }
+function formatBTC(n) { return parseFloat(n || 0).toFixed(6); }
 window.formatBTC = formatBTC;
 
 function timeAgo(ms) { var s = Math.floor((Date.now() - ms) / 1000); if (s < 60) return s + 's ago'; if (s < 3600) return Math.floor(s/60) + 'm ago'; return Math.floor(s/3600) + 'h ago'; }
@@ -155,7 +157,8 @@ function updateAuthUI() {
     if (state.isLoggedIn) {
         loggedOut.classList.add('hidden');
         loggedIn.classList.remove('hidden');
-        var avatarLetter = (state.user.displayName || state.user.email || 'G').charAt(0).toUpperCase();
+        var nameOrEmail = state.user.displayName || state.user.email || 'Trader';
+        var avatarLetter = nameOrEmail.charAt(0).toUpperCase();
         var avatarEl = document.getElementById('avatar-letter');
         if (avatarEl) avatarEl.textContent = avatarLetter;
         var bigAvatar = document.getElementById('dropdown-big-avatar');
@@ -170,32 +173,57 @@ function updateAuthUI() {
 }
 window.updateAuthUI = updateAuthUI;
 
-window.loginUser = function(email, password) {
+function loginUser(email, password, isRegister) {
+    if (!email) email = 'trader@gkexchange.com';
+    var cleanEmail = email.trim();
+    var displayName = cleanEmail.split('@')[0];
+    displayName = displayName.charAt(0).toUpperCase() + displayName.slice(1);
+
     state.isLoggedIn = true;
-    state.user.email = email;
+    state.user.email = cleanEmail;
+    state.user.displayName = displayName;
+    if (!state.user.uid) {
+        state.user.uid = 'GKX' + Math.floor(Math.random() * 9000000 + 1000000);
+    }
+    
+    // Add to login history
+    if (!Array.isArray(state.user.loginHistory)) {
+        state.user.loginHistory = [];
+    }
+    state.user.loginHistory.unshift({
+        time: new Date().toISOString(),
+        ip: '103.212.' + Math.floor(Math.random() * 200 + 10) + '.' + Math.floor(Math.random() * 200 + 10),
+        device: navigator.platform || 'Windows / Web Browser',
+        location: 'Mumbai, India',
+        status: 'Successful'
+    });
+    if (state.user.loginHistory.length > 20) {
+        state.user.loginHistory.pop();
+    }
+
     saveState();
     updateAuthUI();
-    navigate('home');
-};
+    showToast(isRegister ? '🎉 Registration successful! Welcome to GK Exchange.' : '✅ Welcome back, ' + displayName + '!', 'success');
+    navigate('wallet');
+}
+window.loginUser = loginUser;
 
-document.getElementById('btn-logout').addEventListener('click', function() {
+function registerUser(email, password) {
+    loginUser(email, password, true);
+}
+window.registerUser = registerUser;
+
+function logoutUser() {
     state.isLoggedIn = false;
     state.user.email = '';
     saveState();
     updateAuthUI();
     navigate('home');
     showToast('Logged out successfully', 'info');
-});
-
-function loginUser(email, password) {
-    state.isLoggedIn = true;
-    state.user.email = email;
-    state.user.displayName = email.split('@')[0];
-    saveState();
-    updateAuthUI();
-    showToast('Login successful', 'success');
 }
-window.loginUser = loginUser;
+window.logoutUser = logoutUser;
+
+document.getElementById('btn-logout').addEventListener('click', logoutUser);
 
 // ============ TOAST NOTIFICATIONS ============
 function showToast(message, type) {
@@ -207,7 +235,7 @@ function showToast(message, type) {
         'color:' + (type === 'warning' ? 'var(--text-on-gold)' : '#fff'),
         'padding:13px 22px', 'border-radius:10px', 'font-size:14px',
         'font-weight:600', 'box-shadow:0 8px 24px rgba(0,0,0,0.4)',
-        'animation:fadeIn 0.3s ease', 'max-width:320px'
+        'animation:fadeIn 0.3s ease', 'max-width:340px'
     ].join(';');
     toast.textContent = message;
     document.body.appendChild(toast);
@@ -216,14 +244,14 @@ function showToast(message, type) {
 window.showToast = showToast;
 
 // ============ ROUTER ============
-var currentView = null;
-var currentSub = null;
-
 function navigate(view, params) {
     params = params || {};
     var hash = '#' + view;
-    if (params.tab) hash += '?tab=' + params.tab;
-    if (params.sub) hash += '?sub=' + params.sub;
+    var queryParts = [];
+    if (params.tab) queryParts.push('tab=' + params.tab);
+    if (params.sub) queryParts.push('sub=' + params.sub);
+    if (params.pair) queryParts.push('pair=' + params.pair);
+    if (queryParts.length > 0) hash += '?' + queryParts.join('&');
     window.location.hash = hash;
 }
 window.navigate = navigate;
@@ -261,20 +289,31 @@ function renderView() {
             if (window.renderHome) window.renderHome(content);
             break;
         case 'markets':
-            if (window.renderMarkets) window.renderMarkets(content);
+            if (window.renderMarkets) window.renderMarkets(content, params);
             break;
         case 'trade':
+            if (params.pair && state.tickers[params.pair]) {
+                state.currentPair = params.pair;
+            }
             if (window.renderTrade) window.renderTrade(content);
             break;
         case 'wallet':
-            if (!state.isLoggedIn) { navigate('auth'); return; }
+            if (!state.isLoggedIn) { 
+                showToast('Please log in to access your Wallet', 'warning');
+                navigate('auth', { tab: 'login' }); 
+                return; 
+            }
             if (window.renderWallet) window.renderWallet(content);
             break;
         case 'p2p':
             if (window.renderP2P) window.renderP2P(content, params.sub || 'listing', params);
             break;
         case 'profile':
-            if (!state.isLoggedIn) { navigate('auth'); return; }
+            if (!state.isLoggedIn) { 
+                showToast('Please log in to access your Profile', 'warning');
+                navigate('auth', { tab: 'login' }); 
+                return; 
+            }
             if (window.renderProfile) window.renderProfile(content, params.tab || 'overview');
             break;
         case 'auth':
@@ -300,7 +339,10 @@ window.addEventListener('DOMContentLoaded', function() {
 document.getElementById('global-search-input').addEventListener('input', function() {
     var query = this.value.toLowerCase().trim();
     if (query.length > 1) {
-        var matches = Object.keys(state.tickers).filter(function(p) { return p.toLowerCase().includes(query); });
+        var matches = Object.keys(state.tickers).filter(function(p) { 
+            var name = (state.tickers[p].name || '').toLowerCase();
+            return p.toLowerCase().includes(query) || name.includes(query); 
+        });
         if (matches.length > 0) {
             state.currentPair = matches[0];
             navigate('trade');
