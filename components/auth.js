@@ -127,13 +127,13 @@ window.initAuth = function(params) {
             }
 
             if (activeTab === 'login') {
-                // Log in
                 loginUser(email, password);
                 alert(`Welcome back! Logged in as ${email}.`);
+                navigate('home');
             } else {
-                // Register
                 alert(`Registration Successful! Account created for ${email}. You are now being logged in.`);
                 loginUser(email, password);
+                navigate('home');
             }
         });
     }
@@ -142,10 +142,12 @@ window.initAuth = function(params) {
     document.getElementById('btn-social-google')?.addEventListener('click', () => {
         loginUser('google.user@binance.com', 'googleoauth');
         alert('Logged in via Google Authentication.');
+        navigate('home');
     });
 
     document.getElementById('btn-social-apple')?.addEventListener('click', () => {
         loginUser('apple.user@binance.com', 'appleoauth');
         alert('Logged in via Apple ID Authentication.');
+        navigate('home');
     });
 }
