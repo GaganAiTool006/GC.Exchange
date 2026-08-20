@@ -179,6 +179,16 @@ document.getElementById('btn-logout').addEventListener('click', function() {
     showToast('Logged out successfully', 'info');
 });
 
+function loginUser(email, password) {
+    state.isLoggedIn = true;
+    state.user.email = email;
+    state.user.displayName = email.split('@')[0];
+    saveState();
+    updateAuthUI();
+    showToast('Login successful', 'success');
+}
+window.loginUser = loginUser;
+
 // ============ TOAST NOTIFICATIONS ============
 function showToast(message, type) {
     type = type || 'success';
