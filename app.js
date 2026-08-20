@@ -170,6 +170,14 @@ function updateAuthUI() {
 }
 window.updateAuthUI = updateAuthUI;
 
+window.loginUser = function(email, password) {
+    state.isLoggedIn = true;
+    state.user.email = email;
+    saveState();
+    updateAuthUI();
+    navigate('home');
+};
+
 document.getElementById('btn-logout').addEventListener('click', function() {
     state.isLoggedIn = false;
     state.user.email = '';
