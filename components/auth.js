@@ -41,11 +41,11 @@ window.renderAuth = function(container, activeTab) {
                         <div class="auth-inputs">
                             <div class="form-group">
                                 <label for="auth-email" id="auth-label-email">${activeTab === 'login' ? 'Email or Phone Number' : 'Email Address'}</label>
-                                <input type="email" class="form-control-input" id="auth-email" placeholder="e.g. gagan@gkexchange.com" value="${activeTab === 'login' ? 'trader@gkexchange.com' : ''}" required autocomplete="email">
+                                <input type="email" class="form-control-input" id="auth-email" placeholder="e.g. gagan@gkexchange.com" value="" required autocomplete="email">
                             </div>
                             <div class="form-group">
                                 <label for="auth-password">Password</label>
-                                <input type="password" class="form-control-input" id="auth-password" placeholder="Enter password (min 6 characters)" value="${activeTab === 'login' ? 'Pass@12345' : ''}" required autocomplete="current-password">
+                                <input type="password" class="form-control-input" id="auth-password" placeholder="Enter password (min 6 characters)" value="" required autocomplete="current-password">
                             </div>
                         </div>
 
@@ -157,9 +157,9 @@ window.renderAuth = function(container, activeTab) {
     if (tabLogin) tabLogin.addEventListener('click', function() { setTab('login'); });
     if (tabRegister) tabRegister.addEventListener('click', function() { setTab('register'); });
 
-    // Quick Demo Login Button
+    // Demo shortcut disabled: never simulate successful authentication.
     document.getElementById('btn-quick-demo-login')?.addEventListener('click', function() {
-        window.loginUser('trader.pro@gkexchange.com', 'demoPass123');
+        showAuthMessage('Demo login is disabled. Please create an account or sign in.', 'info');
     });
 
     // Form submit
@@ -173,38 +173,55 @@ window.renderAuth = function(container, activeTab) {
             emailInput.focus();
             return;
         }
-        if (!password || password.length < 4) {
-            alert('Please enter a valid password (at least 4 characters).');
+        if (!password || (currentTab === 'register' && password.length < 12)) {
+            showAuthMessage(currentTab === 'register' ? 'Use a password with at least 12 characters.' : 'Please enter your password.', 'error');
             passwordInput.focus();
             return;
         }
-
-        if (currentTab === 'login') {
-            window.loginUser(email, password);
-        } else {
-            window.registerUser(email, password);
-        }
+        submitAuth(email, password, currentTab);
     });
 
-    // Social buttons
-    document.getElementById('btn-social-google')?.addEventListener('click', function() {
-        window.loginUser('google.trader@gmail.com', 'google_oauth_token');
+    // OAuth, QR and password reset require provider/email setup; do not fake success.
+    ['btn-social-google','btn-social-apple','btn-qr-mock-scan'].forEach(function(id) {
+        document.getElementById(id)?.addEventListener('click', function() {
+            showAuthMessage('This sign-in method is not configured yet. Use email and password.', 'info');
+        });
     });
-
-    document.getElementById('btn-social-apple')?.addEventListener('click', function() {
-        window.loginUser('apple.investor@icloud.com', 'apple_oauth_token');
-    });
-
-    // QR simulate
-    document.getElementById('btn-qr-mock-scan')?.addEventListener('click', function() {
-        window.loginUser('mobile.qr.user@gkexchange.com', 'qr_token_pass');
-    });
-
-    // Forgot password
     forgotLink?.addEventListener('click', function() {
-        var email = prompt('Enter your registered email address for password reset instructions:', emailInput.value || '');
-        if (email) {
-            alert('Password reset link has been sent to ' + email + '. Check your inbox.');
-        }
+        showAuthMessage('Password reset is not configured yet. Contact the site administrator.', 'info');
     });
+
+    async function submitAuth(email, password, tab) {
+        authBtn.disabled = true;
+        authBtn.textContent = tab === 'login' ? 'Signing in…' : 'Creating account…';
+        try {
+            var cr = await fetch('/api/auth.php?action=csrf', {credentials:'same-origin'});
+            var cd = await cr.json();
+            if (!cr.ok || !cd.csrf) throw new Error('Authentication service unavailable. Check PHP hosting setup.');
+            var response = await fetch('/api/auth.php?action=' + (tab === 'login' ? 'login' : 'register'), {
+                method:'POST', credentials:'same-origin',
+                headers:{'Content-Type':'application/json','X-CSRF-Token':cd.csrf},
+                body:JSON.stringify({email:email,password:password,displayName:email.split('@')[0]})
+            });
+            var result = await response.json();
+            if (!response.ok || !result.ok || !result.user) throw new Error(result.error || 'Unable to sign in.');
+            window.gcxServerUser = result.user;
+            window.loginUser(result.user.email, '', false, true);
+        } catch (error) {
+            showAuthMessage(error.message || 'Could not connect to authentication service.', 'error');
+        } finally {
+            authBtn.disabled = false;
+            authBtn.textContent = currentTab === 'login' ? 'Log In to Account' : 'Create Free Account';
+        }
+    }
+    function showAuthMessage(message, type) {
+        var old = document.getElementById('auth-api-message');
+        if (old) old.remove();
+        var el = document.createElement('div');
+        el.id = 'auth-api-message';
+        el.setAttribute('role','status');
+        el.textContent = message;
+        el.style.cssText = 'margin:0 0 14px;padding:11px 13px;border-radius:9px;font-size:12px;background:' + (type === 'error' ? 'rgba(246,70,93,.12)' : 'rgba(79,140,255,.12)') + ';color:' + (type === 'error' ? '#ff9aa8' : '#a9c7ff') + ';border:1px solid currentColor';
+        form.parentNode.insertBefore(el, form);
+    }
 };
