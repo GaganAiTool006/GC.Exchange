@@ -639,3 +639,62 @@ body.reference-dashboard-home .overview-bottom-note>span:first-of-type{overflow:
 .reference-trade-page{margin:0;overflow-x:hidden}
 .reference-trade-page .trade-shell{width:100%;min-height:100vh;margin:0;border:0;border-radius:0;box-shadow:none}
 @media(min-width:1500px){.reference-trade-page .trade-shell{width:100%}}
+
+/* Ensure the expanded homepage icon rail remains usable on short displays */
+body.reference-dashboard-home .home-rail{overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+body.reference-dashboard-home .home-rail::-webkit-scrollbar{display:none}
+body.reference-dashboard-home .home-rail .rail-nav{flex:0 0 auto}
+body.reference-dashboard-home .home-rail .rail-link{flex-shrink:0}
+body.reference-dashboard-home .home-rail .rail-spacer{flex:1 0 12px}
+/* On short desktop viewports, compact both dashboard rows instead of leaving a blank band */
+@media(max-height:700px) and (min-width:981px){
+ body.reference-dashboard-home .overview-topbar{height:52px;min-height:52px;flex-basis:52px}
+ body.reference-dashboard-home .overview-content{height:calc(100% - 52px);max-height:calc(100% - 52px);overflow:hidden;grid-template-rows:28px 20px minmax(0,1.12fr) minmax(0,.82fr) 12px;gap:6px;padding:0 15px 5px}
+ body.reference-dashboard-home .overview-title-row{min-height:28px;padding-top:0}
+ body.reference-dashboard-home .overview-title-row h1{font-size:20px}
+ body.reference-dashboard-home .overview-ticker{min-height:20px;padding:0;gap:10px}
+ body.reference-dashboard-home .usage-card{padding:7px 9px 5px}
+ body.reference-dashboard-home .usage-card-head{min-height:29px}
+ body.reference-dashboard-home .usage-big-number{font-size:19px;margin-top:3px}
+ body.reference-dashboard-home .usage-change-pill{font-size:7px;padding:2px 3px}
+ body.reference-dashboard-home .card-eyebrow{font-size:7px}
+ body.reference-dashboard-home .chart-range-tabs button{font-size:7px;padding:4px}
+ body.reference-dashboard-home .usage-chart{min-height:0;margin-top:2px}
+ body.reference-dashboard-home .usage-chart-foot{font-size:6px}
+ body.reference-dashboard-home .mint-exchange{padding:8px 9px 6px}
+ body.reference-dashboard-home .mint-exchange-head{margin-bottom:5px}
+ body.reference-dashboard-home .mint-exchange-head h2{font-size:17px}
+ body.reference-dashboard-home .mint-asset-box{padding:6px 7px 5px;border-radius:9px}
+ body.reference-dashboard-home .mint-field-meta label,body.reference-dashboard-home .mint-field-meta small,body.reference-dashboard-home .mint-asset-name{font-size:6px}
+ body.reference-dashboard-home .mint-asset-row{margin-top:2px}
+ body.reference-dashboard-home .mint-asset-row input{font-size:18px}
+ body.reference-dashboard-home .mint-asset-select{min-width:70px;padding:3px 5px}
+ body.reference-dashboard-home .mint-asset-icon{width:14px;height:14px;font-size:8px}
+ body.reference-dashboard-home .mint-asset-select select{font-size:8px;width:32px}
+ body.reference-dashboard-home .mint-swap-button{width:22px;height:22px;margin:-6px 0}
+ body.reference-dashboard-home .mint-swap-button svg{width:11px;height:11px}
+ body.reference-dashboard-home .mint-fee{font-size:6px;margin:5px 1px 6px}
+ body.reference-dashboard-home .mint-submit{min-height:27px;font-size:8px}
+ body.reference-dashboard-home .mint-disclaimer{display:none}
+ body.reference-dashboard-home .overview-lower-grid{gap:9px}
+ body.reference-dashboard-home .overview-panel-head{padding:7px 9px 0}
+ body.reference-dashboard-home .overview-panel-head h2{font-size:11px}
+ body.reference-dashboard-home .overview-panel-head p{font-size:6px;margin-top:2px}
+ body.reference-dashboard-home .lime-bar-chart{padding:4px 9px 0}
+ body.reference-dashboard-home .sector-key{padding:7px 9px 0;font-size:6px;gap:6px}
+ body.reference-dashboard-home .sector-key i{width:5px;height:5px}
+ body.reference-dashboard-home .sector-stat-row{padding:6px 9px 0;gap:3px}
+ body.reference-dashboard-home .sector-stat-row b{font-size:13px}
+ body.reference-dashboard-home .stat-good,body.reference-dashboard-home .stat-bad{font-size:6px;padding:2px 3px}
+ body.reference-dashboard-home .round-chart-body{grid-template-columns:minmax(75px,.9fr) minmax(80px,1fr);padding:0 8px 4px;gap:4px}
+ body.reference-dashboard-home .mint-donut{max-width:125px}
+ body.reference-dashboard-home .mint-donut circle{stroke-width:20}
+ body.reference-dashboard-home .mint-donut-center b{font-size:20px}
+ body.reference-dashboard-home .mint-donut-center span{font-size:6px;margin-top:2px}
+ body.reference-dashboard-home .round-legend{gap:6px}
+ body.reference-dashboard-home .round-legend>div{grid-template-columns:6px minmax(25px,1fr) auto;gap:4px;font-size:6px}
+ body.reference-dashboard-home .round-legend i{width:6px;height:6px}
+ body.reference-dashboard-home .round-legend b{font-size:6px}
+ body.reference-dashboard-home .round-card-foot{margin:0 8px;padding-top:5px;font-size:6px}
+ body.reference-dashboard-home .overview-bottom-note{font-size:6px}
+}
