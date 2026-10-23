@@ -26,11 +26,105 @@ document.addEventListener('click',e=>{
  const toastBtn=e.target.closest('[data-toast]');if(toastBtn){toast(toastBtn.dataset.toast);return}
  if(e.target.closest('[data-modal-close]')||e.target.id==='modal-backdrop'){closeModal()}
 });
-document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
+document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();if(!e.target.matches('.mint-exchange-form'))toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
 document.addEventListener('input',e=>{
  if(e.target.matches('[data-table-search]')){const q=e.target.value.toLowerCase();const table=$(e.target.dataset.tableSearch);if(table)$$('tbody tr',table).forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(q))}
  if(e.target.id==='order-price'||e.target.id==='order-amount'){const p=Number($('#order-price')?.value)||0;const a=Number($('#order-amount')?.value)||0;const out=$('#order-total');if(out)out.textContent='$'+(p*a).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#global-search')?.focus()}});
+
+/* Reference-home interactions: chart ranges, swap calculator, theme and search */
+const homeRates={BTC:67432.21,ETH:3248.56,TON:5.12,USDT:1,BNB:585.32,SOL:142.67};
+const homeSymbols={BTC:'₿',ETH:'◆',TON:'T',USDT:'₮',BNB:'✦',SOL:'≋'};
+const homeMainPaths={
+ Today:'M5 120 C22 145 28 184 46 180 S70 216 89 209 S116 251 133 231 S156 194 176 207 S205 231 223 195 S248 181 265 161 S291 193 309 163 S332 147 350 119 S372 104 389 77 S414 89 432 63 S457 51 476 71 S503 119 521 110 S547 96 564 75 S590 55 610 77 S632 106 650 75 S682 82 705 69',
+ 'Last Week':'M5 185 C26 174 29 154 48 165 S75 197 92 180 S114 155 134 166 S161 203 179 171 S204 135 222 151 S251 179 269 143 S291 119 310 140 S334 158 351 123 S374 105 391 119 S415 141 434 104 S460 81 479 98 S506 117 524 91 S548 72 567 93 S590 123 609 95 S634 71 651 86 S682 65 705 55',
+ 'Last Month':'M5 206 C25 192 31 212 50 191 S74 168 91 184 S115 152 134 174 S157 198 178 166 S201 146 221 155 S245 121 266 141 S289 167 309 128 S332 107 352 129 S373 147 392 100 S414 82 433 93 S459 115 478 70 S501 54 523 82 S548 103 567 63 S589 81 608 58 S633 78 651 49 S683 58 705 40'
+};
+const homeShadowPaths={
+ Today:'M5 71 C22 80 21 111 42 119 S64 151 81 145 S103 188 121 179 S146 211 163 192 S191 155 209 168 S239 194 255 161 S279 143 298 134 S326 161 345 131 S365 95 384 117 S410 149 428 123 S451 91 470 109 S498 149 515 129 S541 110 560 84 S591 121 609 102 S640 128 660 98 S690 82 705 92',
+ 'Last Week':'M5 105 C22 132 26 114 43 128 S67 157 85 143 S111 131 128 151 S151 173 171 149 S193 124 211 143 S234 169 253 132 S276 119 296 131 S319 141 340 112 S365 95 383 123 S405 139 425 114 S452 102 472 123 S495 140 513 113 S539 95 559 111 S583 126 603 98 S633 88 651 104 S683 90 705 75',
+ 'Last Month':'M5 85 C24 103 29 128 48 114 S71 148 90 129 S115 120 134 146 S156 166 177 130 S200 111 222 132 S246 141 266 109 S289 100 307 123 S332 137 351 99 S374 74 394 95 S416 112 438 77 S461 61 481 91 S503 112 524 79 S546 63 568 91 S592 101 612 72 S637 58 656 79 S686 65 705 57'
+};
+function setHomeRange(label){
+ const main=$('.usage-main-line'),shadow=$('.usage-shadow-line'),fill=$('.usage-main-fill');
+ const line=homeMainPaths[label]||homeMainPaths.Today;
+ if(main)main.setAttribute('d',line);
+ if(shadow)shadow.setAttribute('d',homeShadowPaths[label]||homeShadowPaths.Today);
+ if(fill)fill.setAttribute('d',line+' L705 282 L5 282 Z');
+ const mark=$('.usage-chart-marker span');
+ if(mark)mark.textContent=label==='Today'?'+0.25%':label==='Last Week'?'+1.84%':'+6.42%';
+ const foot=$('.usage-chart-foot span:last-child');
+ if(foot)foot.textContent=label+' · Illustrative values';
+}
+function getHomePair(){
+ const from=$('#mint-from'),to=$('#mint-to');
+ return {from:from?.value||'ETH',to:to?.value||'TON'};
+}
+function formatHomeNumber(n){
+ if(!Number.isFinite(n)||n<0)return '0';
+ return n.toLocaleString('en-US',{maximumFractionDigits:n>=1000?2:6});
+}
+function updateHomeExchange(){
+ const amount=$('.mint-asset-row input[aria-label="Amount to swap"]');
+ const output=$('.mint-asset-row input[aria-label="Receive estimate"]');
+ if(!amount||!output)return;
+ const {from,to}=getHomePair();
+ const n=Number(String(amount.value).replace(/,/g,'').trim());
+ const converted=(Number.isFinite(n)&&n>=0)?n*(homeRates[from]||1)/(homeRates[to]||1):0;
+ output.value=formatHomeNumber(converted);
+ const sourceCard=$('#mint-from')?.closest('.mint-asset-box');
+ const destCard=$('#mint-to')?.closest('.mint-asset-box');
+ const applyMeta=(card,token)=>{
+  if(!card)return;
+  const sym=card.querySelector('.mint-asset-icon');
+  const name=card.querySelector('.mint-asset-name');
+  if(sym){sym.textContent=homeSymbols[token]||token.slice(0,1);sym.className='mint-asset-icon '+token.toLowerCase();}
+  if(name)name.textContent=({BTC:'Bitcoin',ETH:'Ethereum',TON:'Toncoin',USDT:'Tether',BNB:'BNB',SOL:'Solana'})[token]||token;
+ };
+ applyMeta(sourceCard,from);applyMeta(destCard,to);
+ const fee=$('.mint-fee b');
+ if(fee)fee.textContent='Est. '+formatHomeNumber(converted*0.001)+' '+to;
+}
+function swapHomeAssets(){
+ const from=$('#mint-from'),to=$('#mint-to');
+ if(!from||!to)return;
+ const oldFrom=from.value,oldTo=to.value;
+ from.value=oldTo;to.value=oldFrom;
+ if(from.value!==oldTo||to.value!==oldFrom){toast('Choose two different assets to swap.','error');return;}
+ updateHomeExchange();
+ toast('Assets swapped in the exchange preview.');
+}
+document.addEventListener('click',e=>{
+ const swap=e.target.closest('[data-swap-home]');
+ if(swap){swapHomeAssets();return;}
+ const chartTab=e.target.closest('.reference-dashboard-home .chart-range-tabs [data-tab]');
+ if(chartTab){setHomeRange(chartTab.textContent.trim());return;}
+ const theme=e.target.closest('[data-theme-toggle]');
+ if(theme){try{localStorage.setItem('gc-exchange-preview-theme',document.body.classList.contains('light-theme')?'light':'dark')}catch(_){}}
+});
+document.addEventListener('input',e=>{
+ if(e.target.matches('.reference-dashboard-home .mint-asset-row input[aria-label="Amount to swap"]'))updateHomeExchange();
+});
+document.addEventListener('change',e=>{
+ if(e.target.matches('.reference-dashboard-home #mint-from,.reference-dashboard-home #mint-to'))updateHomeExchange();
+});
+document.addEventListener('submit',e=>{
+ if(e.target.matches('.reference-dashboard-home .mint-exchange-form')){
+  e.preventDefault();
+  updateHomeExchange();
+  const amount=$('.mint-asset-row input[aria-label="Amount to swap"]')?.value||'0';
+  const output=$('.mint-asset-row input[aria-label="Receive estimate"]')?.value||'0';
+  const pair=getHomePair();
+  toast('Preview: '+amount+' '+pair.from+' ≈ '+output+' '+pair.to+'. No assets were exchanged.');
+ }
+});
+try{if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body.classList.add('light-theme')}catch(_){}
+if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.html'){
+ const params=new URLSearchParams(location.search),q=params.get('q');
+ const input=$('[data-table-search]');
+ if(q&&input){input.value=q;input.dispatchEvent(new Event('input',{bubbles:true}))}
+}
+
 if(window.lucide)lucide.createIcons();
 })();
