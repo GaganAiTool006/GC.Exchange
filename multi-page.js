@@ -1,0 +1,36 @@
+/* GC.Exchange multi-page frontend interactions. Demo only; no authentication or transactions. */
+(function(){
+'use strict';
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+function toast(message,type=''){let stack=$('#toast-stack');if(!stack){stack=document.createElement('div');stack.id='toast-stack';stack.className='toast-stack';document.body.append(stack)}const item=document.createElement('div');item.className='toast '+type;item.textContent=message;stack.append(item);window.setTimeout(()=>item.remove(),3200)}
+function openModal(title,description,fields){const backdrop=$('#modal-backdrop');if(!backdrop){toast(description);return}$('#modal-content').innerHTML='<h2>'+title+'</h2><p>'+description+'</p><form id="preview-modal-form" class="form-grid">'+(fields||'<div class="field full"><label>Amount (preview)</label><input type="number" min="0" placeholder="0.00"></div>')+'<div class="field full"><button class="button primary" type="submit" style="width:100%">Preview action</button></div></form><div class="notice"><i data-lucide="info"></i><span>Frontend preview only. No data will be sent or saved and no funds will move.</span></div>';backdrop.hidden=false;if(window.lucide)lucide.createIcons();$('#preview-modal-form').addEventListener('submit',e=>{e.preventDefault();backdrop.hidden=true;toast('Preview only — nothing was submitted.');})}
+function closeModal(){const b=$('#modal-backdrop');if(b)b.hidden=true}
+document.addEventListener('click',e=>{
+ const menu=e.target.closest('[data-menu-toggle]');if(menu){$('#sidebar')?.classList.toggle('open');return}
+ const mobile=e.target.closest('[data-mobile-nav]');if(mobile){$('#mobile-nav')?.classList.toggle('open');return}
+ const theme=e.target.closest('[data-theme-toggle]');if(theme){document.body.classList.toggle('light-theme');toast('Theme changed for this browser preview.');return}
+ const tab=e.target.closest('[data-tab]');if(tab){const key=tab.dataset.tab;const wrap=tab.closest('[data-tabs]')||tab.parentElement;$$('[data-tab]',wrap).forEach(x=>x.classList.toggle('active',x===tab));const target=tab.dataset.target;if(target){$$('[data-tab-panel]').forEach(p=>p.hidden=p.dataset.tabPanel!==target)}return}
+ const toggle=e.target.closest('[data-toggle]');if(toggle){toggle.classList.toggle('on');toggle.setAttribute('aria-pressed',toggle.classList.contains('on')?'true':'false');toast('Display preference toggled (preview only).');return}
+ const act=e.target.closest('[data-modal]');if(act){const kind=act.dataset.modal;const configs={
+ deposit:['Deposit assets','Review the deposit screen layout. No address is generated.','<div class="field full"><label>Asset</label><select><option>USDT — Tether</option><option>BTC — Bitcoin</option><option>ETH — Ethereum</option></select></div><div class="field full"><label>Network</label><select><option>Select network</option><option>Ethereum</option><option>Polygon</option><option>Bitcoin</option></select></div>'],
+ withdraw:['Withdraw assets','Review the withdrawal form layout. No transaction is submitted.','<div class="field full"><label>Asset</label><select><option>USDT — Tether</option><option>BTC — Bitcoin</option><option>ETH — Ethereum</option></select></div><div class="field full"><label>Destination address</label><input placeholder="Enter sample address"></div><div class="field full"><label>Amount</label><input type="number" min="0" placeholder="0.00"></div>'],
+ transfer:['Transfer assets','Preview an internal transfer form.','<div class="field full"><label>Recipient</label><input placeholder="Recipient ID or email"></div><div class="field full"><label>Amount</label><input type="number" min="0" placeholder="0.00"></div>'],
+ convert:['Convert crypto','Preview a conversion interface.','<div class="field"><label>From</label><select><option>USDT</option><option>BTC</option><option>ETH</option></select></div><div class="field"><label>To</label><select><option>BTC</option><option>ETH</option><option>USDT</option></select></div><div class="field full"><label>Amount</label><input type="number" min="0" placeholder="0.00"></div>'],
+ 'p2p-ad':['Create P2P ad','Ad creation layout only. The ad is not published.','<div class="field"><label>Offer type</label><select><option>Buy</option><option>Sell</option></select></div><div class="field"><label>Asset</label><select><option>USDT</option><option>BTC</option><option>ETH</option></select></div><div class="field"><label>Price</label><input type="number" placeholder="0.00"></div><div class="field"><label>Payment method</label><select><option>Bank transfer</option><option>UPI</option><option>PayPal</option></select></div>'],
+ 'p2p-buy':['Review P2P offer','Sample offer only. No order will be placed.','<div class="field full"><label>Amount (USDT)</label><input type="number" min="0" placeholder="Enter amount"></div><div class="field full"><label>Payment method</label><select><option>Bank transfer</option><option>UPI</option></select></div>'],
+ '2fa':['Set up two-factor authentication','This is a visual setup flow; no authenticator secret exists.','<div class="field full"><label>Authenticator code</label><input inputmode="numeric" placeholder="000 000"></div>'],
+ password:['Change password','Visual-only password settings. Nothing is updated.','<div class="field full"><label>Current password</label><input type="password" placeholder="Current password"></div><div class="field full"><label>New password</label><input type="password" placeholder="New password"></div>'],
+ 'price-alert':['Create price alert','Preview an alert form; no alerts are saved.','<div class="field full"><label>Market</label><select><option>BTC/USDT</option><option>ETH/USDT</option><option>SOL/USDT</option></select></div><div class="field full"><label>Target price</label><input type="number" placeholder="0.00"></div>']
+ };const c=configs[kind]||['Preview action','This interface is for design review only.',''];openModal(c[0],c[1],c[2]);return}
+ const toastBtn=e.target.closest('[data-toast]');if(toastBtn){toast(toastBtn.dataset.toast);return}
+ if(e.target.closest('[data-modal-close]')||e.target.id==='modal-backdrop'){closeModal()}
+});
+document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
+document.addEventListener('input',e=>{
+ if(e.target.matches('[data-table-search]')){const q=e.target.value.toLowerCase();const table=$(e.target.dataset.tableSearch);if(table)$$('tbody tr',table).forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(q))}
+ if(e.target.id==='order-price'||e.target.id==='order-amount'){const p=Number($('#order-price')?.value)||0;const a=Number($('#order-amount')?.value)||0;const out=$('#order-total');if(out)out.textContent='$'+(p*a).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#global-search')?.focus()}});
+if(window.lucide)lucide.createIcons();
+})();
