@@ -4,7 +4,7 @@
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 function toast(message,type=''){let stack=$('#toast-stack');if(!stack){stack=document.createElement('div');stack.id='toast-stack';stack.className='toast-stack';document.body.append(stack)}const item=document.createElement('div');item.className='toast '+type;item.textContent=message;stack.append(item);window.setTimeout(()=>item.remove(),3200)}
-function openModal(title,description,fields){const backdrop=$('#modal-backdrop');if(!backdrop){toast(description);return}$('#modal-content').innerHTML='<h2>'+title+'</h2><p>'+description+'</p><form id="preview-modal-form" class="form-grid">'+(fields||'<div class="field full"><label>Amount (preview)</label><input type="number" min="0" placeholder="0.00"></div>')+'<div class="field full"><button class="button primary" type="submit" style="width:100%">'+(title==='Search markets'?'Search markets':'Preview action')+'</button></div></form><div class="notice"><i data-lucide="info"></i><span>Frontend preview only. No data will be sent or saved and no funds will move.</span></div>';backdrop.hidden=false;if(window.lucide)lucide.createIcons();const form=$('#preview-modal-form');form.addEventListener('submit',e=>{e.preventDefault();if(title==='Search markets'){const q=$('#home-search-query',form)?.value.trim();if(!q){toast('Enter a coin or trading pair to search.','error');return}window.location.href='markets.html?q='+encodeURIComponent(q);return}backdrop.hidden=true;toast('Preview only — nothing was submitted.');});if(title==='Search markets')$('#home-search-query',form)?.focus()}
+function openModal(title,description,fields){const backdrop=$('#modal-backdrop');if(!backdrop){toast(description);return}$('#modal-content').innerHTML='<h2>'+title+'</h2><p>'+description+'</p><form id="preview-modal-form" class="form-grid">'+(fields||'<div class="field full"><label>Amount (preview)</label><input type="number" min="0" placeholder="0.00"></div>')+'<div class="field full"><button class="button primary" type="submit" style="width:100%">'+(title==='Search markets'?'Search markets':title==='Market filters'?'Apply filters':'Preview action')+'</button></div></form><div class="notice"><i data-lucide="info"></i><span>Frontend preview only. No data will be sent or saved and no funds will move.</span></div>';backdrop.hidden=false;if(window.lucide)lucide.createIcons();const form=$('#preview-modal-form');form.addEventListener('submit',e=>{e.preventDefault();if(title==='Search markets'){const q=$('#home-search-query',form)?.value.trim();if(!q){toast('Enter a coin or trading pair to search.','error');return}window.location.href='markets.html?q='+encodeURIComponent(q);return}if(title==='Market filters'){const controls=$('select',form);const category=controls[0]?.value||'All assets';const quote=controls[1]?.value||'USDT';window.location.href='markets.html?category='+encodeURIComponent(category)+'&quote='+encodeURIComponent(quote);return}backdrop.hidden=true;toast('Preview only — nothing was submitted.');});if(title==='Search markets')$('#home-search-query',form)?.focus()}
 function closeModal(){const b=$('#modal-backdrop');if(b)b.hidden=true}
 document.addEventListener('click',e=>{
  const menu=e.target.closest('[data-menu-toggle]');if(menu){$('#sidebar')?.classList.toggle('open');return}
@@ -31,7 +31,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();if(!e.target.matches('.mint-exchange-form'))toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
 document.addEventListener('input',e=>{
- if(e.target.matches('[data-table-search]')){const q=e.target.value.toLowerCase();const table=$(e.target.dataset.tableSearch);if(table)$$('tbody tr',table).forEach(r=>r.hidden=!r.textContent.toLowerCase().includes(q))}
+ if(e.target.matches('[data-table-search]')){applyMarketTableFilters(e.target)}
  if(e.target.id==='order-price'||e.target.id==='order-amount'){const p=Number($('#order-price')?.value)||0;const a=Number($('#order-amount')?.value)||0;const out=$('#order-total');if(out)out.textContent='$'+(p*a).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();$('#global-search')?.focus()}});
@@ -63,6 +63,35 @@ function setHomeRange(label){
 function getHomePair(){
  const from=$('#mint-from'),to=$('#mint-to');
  return {from:from?.value||'ETH',to:to?.value||'TON'};
+}
+function applyMarketTableFilters(input){
+ const table=$(input?.dataset?.tableSearch||'#market-table');
+ if(!table)return;
+ const params=new URLSearchParams(location.search);
+ const q=(input?.value||params.get('q')||'').toLowerCase().trim();
+ const category=params.get('category')||'All assets';
+ const quote=params.get('quote')||'USDT';
+ const rows=$('tbody tr',table);
+ if(category==='Top market cap'){
+  rows.sort((a,b)=>{
+   const capValue=row=>{const txt=row.cells[4]?.textContent||'';const m=txt.match(/([\d.]+)\s*([TBMK]?)/i);if(!m)return 0;const k=(m[2]||'').toUpperCase();return Number(m[1])*({T:1e12,B:1e9,M:1e6,K:1e3}[k]||1)};
+   return capValue(b)-capValue(a);
+  }).forEach(r=>table.tBodies[0].appendChild(r));
+ }
+ rows.forEach(row=>{
+  const change=row.querySelector('td:nth-child(4)');
+  const pair=row.querySelector('td:nth-child(2)')?.textContent||'';
+  const passQuery=!q||row.textContent.toLowerCase().includes(q);
+  const passQuote=quote==='All quotes'||pair.includes('/ '+quote);
+  const passCategory=category==='All assets'||category==='All quotes'||
+   (category==='Top gainers'&&change?.classList.contains('positive'))||
+   (category==='Top losers'&&change?.classList.contains('negative'))||
+   category==='Top market cap';
+  row.hidden=!(passQuery&&passQuote&&passCategory);
+ });
+ const empty=$('#market-search-empty');
+ const visible=rows.filter(r=>!r.hidden).length;
+ if(empty)empty.hidden=visible>0;
 }
 function formatHomeNumber(n){
  if(!Number.isFinite(n)||n<0)return '0';
@@ -126,7 +155,7 @@ try{if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body
 if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.html'){
  const params=new URLSearchParams(location.search),q=params.get('q');
  const input=$('[data-table-search]');
- if(q&&input){input.value=q;input.dispatchEvent(new Event('input',{bubbles:true}))}
+ if(input){if(q)input.value=q;applyMarketTableFilters(input)}
 }
 
 if(window.lucide)lucide.createIcons();
