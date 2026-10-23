@@ -41,11 +41,11 @@ window.renderAuth = function(container, activeTab) {
                         <div class="auth-inputs">
                             <div class="form-group">
                                 <label for="auth-email" id="auth-label-email">${activeTab === 'login' ? 'Email or Phone Number' : 'Email Address'}</label>
-                                <input type="email" class="form-control-input" id="auth-email" placeholder="e.g. gagan@gkexchange.com" value="${activeTab === 'login' ? 'trader@gkexchange.com' : ''}" required autocomplete="email">
+                                <input type="email" class="form-control-input" id="auth-email" placeholder="e.g. gagan@gkexchange.com" value="" required autocomplete="email">
                             </div>
                             <div class="form-group">
                                 <label for="auth-password">Password</label>
-                                <input type="password" class="form-control-input" id="auth-password" placeholder="Enter password (min 6 characters)" value="${activeTab === 'login' ? 'Pass@12345' : ''}" required autocomplete="current-password">
+                                <input type="password" class="form-control-input" id="auth-password" placeholder="Enter password (min 6 characters)" value="" required autocomplete="current-password">
                             </div>
                         </div>
 
