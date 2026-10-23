@@ -1,9 +1,9 @@
 # GC.Exchange — separate-page frontend redesign
 
-This is a **frontend-only design preview** inspired by the supplied reference screenshot. The original all-screens board has been replaced by a real homepage with independent HTML pages.
+This is a **frontend-only design preview** inspired by the supplied reference screenshot. The homepage uses a compact icon rail, dark graphite panels, a mint trend chart, a mint-to-lime exchange widget, lime sector bars and a donut stats panel. Other screens remain on their own independent HTML pages.
 
 ## Pages
-- `index.html` — marketing homepage / entry point
+- `index.html` — dashboard-style overview inspired by the supplied reference image
 - `login.html` — separate login form design
 - `signup.html` — separate registration form design
 - `dashboard.html` — account dashboard, stats, market overview and quick action panels
@@ -21,6 +21,7 @@ This is a **frontend-only design preview** inspired by the supplied reference sc
 ## Shared frontend files
 - `multi-page.css` — shared styles, components and mobile breakpoints
 - `multi-page.js` — browser-only UI behavior (menu, tabs, modal layouts, toasts, search filtering, theme toggle)
+- `trade.html` — separate reference-styled spot trading screen with candlesticks, order book and a buy/sell order preview
 - `assets/reference-login-art.webp` — coin illustration cropped from the user-provided reference
 - `assets/reference-sidebar-art.webp` — phone/coins artwork cropped from the user-provided reference
 
