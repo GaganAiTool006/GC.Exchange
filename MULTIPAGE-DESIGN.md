@@ -18,9 +18,11 @@ This is a **frontend-only design preview** inspired by the supplied reference sc
 - `2fa.html` — authenticator setup mockup
 - `settings.html` — appearance and notification preferences
 
+All separate workspace pages now share the same graphite background, mint/lime accents, compact icon rail, top search/profile controls, rounded cards, and responsive shell. The homepage includes working frontend-only chart-range switching, a sample exchange calculator, asset swapping, market search navigation, theme toggle, and preview modals.
+
 ## Shared frontend files
 - `multi-page.css` — shared styles, components and mobile breakpoints
-- `multi-page.js` — browser-only UI behavior (menu, tabs, modal layouts, toasts, search filtering, theme toggle)
+- `multi-page.js` — browser-only UI behavior (menu, tabs, modal layouts, toasts, search filtering, persistent demo theme, homepage trend ranges and exchange preview calculator)
 - `trade.html` — separate reference-styled spot trading screen with candlesticks, order book and a buy/sell order preview
 - `assets/reference-login-art.webp` — coin illustration cropped from the user-provided reference
 - `assets/reference-sidebar-art.webp` — phone/coins artwork cropped from the user-provided reference

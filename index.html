@@ -19,12 +19,15 @@
    <a class="home-symbol" href="index.html" aria-label="GC.Exchange homepage"><span class="home-brand-mark">G</span></a>
    <nav class="rail-nav" aria-label="Main navigation">
     <a class="rail-link active" href="index.html" aria-label="Overview" title="Overview"><i data-lucide="house"></i></a>
+    <a class="rail-link" href="dashboard.html" aria-label="Dashboard" title="Dashboard"><i data-lucide="layout-dashboard"></i></a>
     <a class="rail-link" href="markets.html" aria-label="Markets" title="Markets"><i data-lucide="chart-no-axes-column"></i></a>
     <a class="rail-link" href="trade.html" aria-label="Spot trading" title="Spot trading"><i data-lucide="candlestick-chart"></i></a>
     <a class="rail-link" href="p2p.html" aria-label="P2P trading" title="P2P trading"><i data-lucide="repeat-2"></i></a>
     <a class="rail-link" href="wallet.html" aria-label="Wallet" title="Wallet"><i data-lucide="wallet"></i></a>
     <a class="rail-link" href="history.html" aria-label="History" title="History"><i data-lucide="history"></i></a>
+    <a class="rail-link" href="profile.html" aria-label="Profile" title="Profile"><i data-lucide="user-round"></i></a>
     <a class="rail-link" href="verification.html" aria-label="Verification" title="Verification"><i data-lucide="badge-check"></i></a>
+    <a class="rail-link" href="security.html" aria-label="Security" title="Security"><i data-lucide="shield-check"></i></a>
    </nav>
    <div class="rail-spacer"></div>
    <a class="rail-link" href="settings.html" aria-label="Settings" title="Settings"><i data-lucide="settings"></i></a>
@@ -35,9 +38,10 @@
     <div class="overview-brand"><span class="home-brand-mark small">G</span><b>GC.Exchange</b><span class="brand-divider"></span><span class="overview-label">Overview</span></div>
     <div class="overview-top-actions">
      <a class="wallet-chip" href="wallet.html"><span class="wallet-chip-token">◆</span><span><b>ETH / TON</b><small>0x345...2w2q</small></span><i data-lucide="chevron-down"></i></a>
-     <button class="round-tool" data-toast="Token filters are visual-only in this preview." aria-label="Market filters"><i data-lucide="sliders-horizontal"></i></button>
-     <button class="round-tool muted-tool" data-toast="Wallet preferences are sample UI only." aria-label="Wallet preferences"><i data-lucide="wallet"></i></button>
+     <button class="round-tool" data-modal="market-filters" aria-label="Market filters"><i data-lucide="sliders-horizontal"></i></button>
+     <a class="round-tool muted-tool" href="wallet.html" aria-label="Wallet preferences" title="Wallet"><i data-lucide="wallet"></i></a>
      <button class="round-tool muted-tool" data-modal="convert" aria-label="Convert assets"><i data-lucide="repeat-2"></i></button>
+     <button class="round-tool" data-modal="home-search" aria-label="Search markets" title="Search markets"><i data-lucide="search"></i></button>
      <span class="topbar-fill"></span>
      <button class="round-tool" data-toast="You have no real notifications in this frontend demo." aria-label="Notifications"><i data-lucide="bell"></i><i class="tiny-notification"></i></button>
      <button class="round-tool" data-theme-toggle aria-label="Switch theme"><i data-lucide="moon"></i></button>
@@ -75,7 +79,7 @@
       <div class="mint-exchange-head"><div><div class="card-eyebrow">INSTANT CONVERT</div><h2>Exchange</h2></div><button class="mint-more" data-toast="More exchange options are demo-only." aria-label="More options"><i data-lucide="more-vertical"></i></button></div>
       <form class="mint-exchange-form" data-demo-form data-message="Exchange preview only — no conversion took place.">
        <div class="mint-asset-box"><div class="mint-field-meta"><label for="mint-from">Swap</label><small>Available: 6.435 USDT</small></div><div class="mint-asset-row"><div class="mint-asset-select"><span class="mint-asset-icon eth">◆</span><select id="mint-from" aria-label="Asset to swap"><option>ETH</option><option>USDT</option><option>BTC</option><option>TON</option></select><i data-lucide="chevron-down"></i></div><input aria-label="Amount to swap" value="2,434" inputmode="decimal"></div><small class="mint-asset-name">Ethereum</small></div>
-       <button class="mint-swap-button" type="button" data-toast="Asset order switch is a visual preview only." aria-label="Switch assets"><i data-lucide="arrow-down-up"></i></button>
+       <button class="mint-swap-button" type="button" data-swap-home aria-label="Switch assets"><i data-lucide="arrow-down-up"></i></button>
        <div class="mint-asset-box"><div class="mint-field-meta"><label for="mint-to">Get</label><small>Balance: 6,440</small></div><div class="mint-asset-row"><div class="mint-asset-select"><span class="mint-asset-icon ton">T</span><select id="mint-to" aria-label="Asset to receive"><option>TON</option><option>ETH</option><option>USDT</option><option>BTC</option></select><i data-lucide="chevron-down"></i></div><input aria-label="Receive estimate" value="0.02344" readonly></div><small class="mint-asset-name">Toncoin</small></div>
        <div class="mint-fee"><span>Exchange Fee <i data-lucide="circle-help"></i></span><b>0.000040 TON</b></div>
        <button type="submit" class="mint-submit">Exchange <i data-lucide="arrow-up-right"></i></button>
@@ -85,7 +89,7 @@
     </section>
     <section class="overview-lower-grid">
      <article class="overview-card sectors-card">
-      <div class="overview-panel-head"><div><h2>Trending Sectors</h2><p>Illustrative activity across popular categories</p></div><button class="round-tool mini-tool" data-toast="Sector chart options are visual-only." aria-label="Sector options"><i data-lucide="sliders-horizontal"></i></button></div>
+      <div class="overview-panel-head"><div><h2>Trending Sectors</h2><p>Illustrative activity across popular categories</p></div><button class="round-tool mini-tool" data-modal="sector-info" aria-label="Sector options"><i data-lucide="sliders-horizontal"></i></button></div>
       <div class="lime-bar-chart" role="img" aria-label="Trending sectors lime bar chart">
        <div class="lime-bar-col"><div class="lime-hatch" style="height:25px"></div><div class="lime-bar" style="height:37px" title="Memes"></div><small>Memes</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:25px"></div><div class="lime-bar" style="height:61px" title="AI"></div><small>AI</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:20px"></div><div class="lime-bar" style="height:38px" title="Privacy"></div><small>Privacy</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:31px"></div><div class="lime-bar" style="height:85px" title="PEPE"></div><small>PEPE</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:24px"></div><div class="lime-bar" style="height:54px" title="DeFi"></div><small>DeFi</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:18px"></div><div class="lime-bar" style="height:40px" title="Gaming"></div><small>Gaming</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:26px"></div><div class="lime-bar" style="height:69px" title="L1"></div><small>L1</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:20px"></div><div class="lime-bar" style="height:37px" title="RWA"></div><small>RWA</small></div><div class="lime-bar-col"><div class="lime-hatch" style="height:24px"></div><div class="lime-bar" style="height:52px" title="NFT"></div><small>NFT</small></div>
       </div>
