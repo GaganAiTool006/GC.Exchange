@@ -38,6 +38,7 @@
      <button class="round-tool" data-toast="Token filters are visual-only in this preview." aria-label="Market filters"><i data-lucide="sliders-horizontal"></i></button>
      <button class="round-tool muted-tool" data-toast="Wallet preferences are sample UI only." aria-label="Wallet preferences"><i data-lucide="wallet"></i></button>
      <button class="round-tool muted-tool" data-modal="convert" aria-label="Convert assets"><i data-lucide="repeat-2"></i></button>
+     <a class="round-tool" href="markets.html" aria-label="Search markets" title="Search markets"><i data-lucide="search"></i></a>
      <span class="topbar-fill"></span>
      <button class="round-tool" data-toast="You have no real notifications in this frontend demo." aria-label="Notifications"><i data-lucide="bell"></i><i class="tiny-notification"></i></button>
      <button class="round-tool" data-theme-toggle aria-label="Switch theme"><i data-lucide="moon"></i></button>
@@ -75,7 +76,7 @@
       <div class="mint-exchange-head"><div><div class="card-eyebrow">INSTANT CONVERT</div><h2>Exchange</h2></div><button class="mint-more" data-toast="More exchange options are demo-only." aria-label="More options"><i data-lucide="more-vertical"></i></button></div>
       <form class="mint-exchange-form" data-demo-form data-message="Exchange preview only — no conversion took place.">
        <div class="mint-asset-box"><div class="mint-field-meta"><label for="mint-from">Swap</label><small>Available: 6.435 USDT</small></div><div class="mint-asset-row"><div class="mint-asset-select"><span class="mint-asset-icon eth">◆</span><select id="mint-from" aria-label="Asset to swap"><option>ETH</option><option>USDT</option><option>BTC</option><option>TON</option></select><i data-lucide="chevron-down"></i></div><input aria-label="Amount to swap" value="2,434" inputmode="decimal"></div><small class="mint-asset-name">Ethereum</small></div>
-       <button class="mint-swap-button" type="button" data-toast="Asset order switch is a visual preview only." aria-label="Switch assets"><i data-lucide="arrow-down-up"></i></button>
+       <button class="mint-swap-button" type="button" data-swap-home aria-label="Switch assets"><i data-lucide="arrow-down-up"></i></button>
        <div class="mint-asset-box"><div class="mint-field-meta"><label for="mint-to">Get</label><small>Balance: 6,440</small></div><div class="mint-asset-row"><div class="mint-asset-select"><span class="mint-asset-icon ton">T</span><select id="mint-to" aria-label="Asset to receive"><option>TON</option><option>ETH</option><option>USDT</option><option>BTC</option></select><i data-lucide="chevron-down"></i></div><input aria-label="Receive estimate" value="0.02344" readonly></div><small class="mint-asset-name">Toncoin</small></div>
        <div class="mint-fee"><span>Exchange Fee <i data-lucide="circle-help"></i></span><b>0.000040 TON</b></div>
        <button type="submit" class="mint-submit">Exchange <i data-lucide="arrow-up-right"></i></button>
