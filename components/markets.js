@@ -1,222 +1,243 @@
-let activeCategory = 'all';
-let searchQuery = '';
+/* ============================================
+   GK EXCHANGE - Markets Component
+   components/markets.js
+   ============================================ */
 
-window.renderMarkets = function(params) {
-    // Check if query parameters passed search term
+var _marketActiveCategory = 'all';
+var _marketSearchQuery = '';
+
+window.renderMarkets = function(container, params) {
     if (params && params.search) {
-        searchQuery = decodeURIComponent(params.search).toUpperCase();
-    } else {
-        searchQuery = '';
+        _marketSearchQuery = decodeURIComponent(params.search).toUpperCase();
     }
-    
-    return `
-        <div class="markets-container">
-            <div class="markets-header-row">
-                <h1>Markets Overview</h1>
-                <div class="markets-nav-bar">
-                    <button class="market-tab-btn ${activeCategory === 'all' ? 'active' : ''}" data-cat="all">All Cryptos</button>
-                    <button class="market-tab-btn ${activeCategory === 'favorites' ? 'active' : ''}" data-cat="favorites"><i data-lucide="star" style="width: 12px; height: 12px; display: inline; vertical-align: middle;"></i> Favorites</button>
-                    <button class="market-tab-btn ${activeCategory === 'l1' ? 'active' : ''}" data-cat="l1">Layer 1</button>
-                    <button class="market-tab-btn ${activeCategory === 'defi' ? 'active' : ''}" data-cat="defi">DeFi</button>
-                    <button class="market-tab-btn ${activeCategory === 'meme' ? 'active' : ''}" data-cat="meme">Meme</button>
+
+    var coinMeta = {
+        'BTC': { name: 'Bitcoin', color: '#f7931a', cat: ['l1'] },
+        'ETH': { name: 'Ethereum', color: '#627eea', cat: ['l1', 'defi'] },
+        'BNB': { name: 'BNB', color: '#f0b90b', cat: ['l1'] },
+        'SOL': { name: 'Solana', color: '#9945ff', cat: ['l1'] },
+        'XRP': { name: 'XRP', color: '#00aae4', cat: ['l1'] },
+        'ADA': { name: 'Cardano', color: '#3cc8c8', cat: ['l1'] },
+        'DOT': { name: 'Polkadot', color: '#e6007a', cat: ['l1', 'defi'] },
+        'DOGE': { name: 'Dogecoin', color: '#c2a633', cat: ['meme'] },
+        'AVAX': { name: 'Avalanche', color: '#e84142', cat: ['l1', 'defi'] },
+        'LTC': { name: 'Litecoin', color: '#bfbbbb', cat: ['l1'] }
+    };
+
+    container.innerHTML = `
+        <div class="markets-container" style="max-width:1280px;margin:0 auto;padding:40px 24px;">
+            <div class="markets-header-row" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:16px;">
+                <div>
+                    <h1 style="font-family:var(--font-heading);font-size:32px;font-weight:900;">Markets Overview</h1>
+                    <p style="color:var(--text-secondary);font-size:14px;margin-top:4px;">Real-time cryptocurrency prices, volume, and 24h market performance</p>
+                </div>
+                <div class="markets-nav-bar" style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="market-tab-btn ${_marketActiveCategory === 'all' ? 'active' : ''}" data-cat="all">All Cryptos</button>
+                    <button class="market-tab-btn ${_marketActiveCategory === 'favorites' ? 'active' : ''}" data-cat="favorites">⭐ Favorites</button>
+                    <button class="market-tab-btn ${_marketActiveCategory === 'l1' ? 'active' : ''}" data-cat="l1">Layer 1</button>
+                    <button class="market-tab-btn ${_marketActiveCategory === 'defi' ? 'active' : ''}" data-cat="defi">DeFi</button>
+                    <button class="market-tab-btn ${_marketActiveCategory === 'meme' ? 'active' : ''}" data-cat="meme">Meme</button>
+                    <button class="market-tab-btn ${_marketActiveCategory === 'gainers' ? 'active' : ''}" data-cat="gainers">🔥 Top Gainers</button>
                 </div>
             </div>
 
-            <div class="markets-table-card">
-                <div class="table-filter-bar">
-                    <div class="market-search-box">
-                        <i data-lucide="search"></i>
-                        <input type="text" id="market-search-input" placeholder="Search symbol or name..." value="${searchQuery}">
+            <div class="markets-table-card" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow-md);">
+                <div class="table-filter-bar" style="margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;">
+                    <div class="market-search-box" style="display:flex;align-items:center;background:var(--bg-hover);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:8px 14px;gap:8px;min-width:260px;">
+                        <i data-lucide="search" style="width:16px;height:16px;color:var(--text-muted);"></i>
+                        <input type="text" id="market-search-input" placeholder="Search symbol or name..." value="${_marketSearchQuery}" style="font-size:13px;width:100%;color:var(--text-primary);">
+                    </div>
+                    <div style="font-size:12px;color:var(--text-muted);">
+                        Showing live WebSocket prices (updated every 1.2s)
                     </div>
                 </div>
 
-                <div class="market-table-container">
-                    <table class="market-table">
+                <div class="market-table-container" style="overflow-x:auto;">
+                    <table class="market-table" style="width:100%;border-collapse:collapse;font-size:13px;">
                         <thead>
-                            <tr>
-                                <th style="width: 50px;"></th>
-                                <th>Name</th>
-                                <th>Price</th>
-                                <th>24h Change</th>
-                                <th>24h High</th>
-                                <th>24h Low</th>
-                                <th>24h Volume</th>
-                                <th>Action</th>
+                            <tr style="border-bottom:1px solid var(--border-light);text-align:left;color:var(--text-muted);font-size:11px;text-transform:uppercase;">
+                                <th style="width: 44px; padding:12px 10px;"></th>
+                                <th style="padding:12px 14px;">Name</th>
+                                <th style="padding:12px 14px;">Price</th>
+                                <th style="padding:12px 14px;">24h Change</th>
+                                <th style="padding:12px 14px;">24h High</th>
+                                <th style="padding:12px 14px;">24h Low</th>
+                                <th style="padding:12px 14px;">24h Volume</th>
+                                <th style="padding:12px 14px;text-align:right;">Action</th>
                             </tr>
                         </thead>
                         <tbody id="markets-tbody">
-                            <!-- Rows will be injected here by script -->
+                            <!-- Injected by script -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     `;
-}
 
-window.initMarkets = function(params) {
-    activeCategory = 'all';
-    
-    // Wire tab buttons
-    document.querySelectorAll('.market-tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.market-tab-btn').forEach(b => b.classList.remove('active'));
+    function renderMarketRows() {
+        const tbody = document.getElementById('markets-tbody');
+        if (!tbody) return;
+
+        const pairs = Object.keys(state.tickers);
+        const filtered = pairs.filter(function(pair) {
+            const tk = state.tickers[pair];
+            const base = pair.replace('USDT', '');
+            const meta = coinMeta[base] || { name: base, color: '#f0b90b', cat: [] };
+            
+            // Search query filter
+            if (_marketSearchQuery) {
+                const q = _marketSearchQuery.toLowerCase();
+                if (!pair.toLowerCase().includes(q) && !meta.name.toLowerCase().includes(q) && !base.toLowerCase().includes(q)) {
+                    return false;
+                }
+            }
+
+            // Category filter
+            if (_marketActiveCategory === 'favorites') {
+                return (state.favorites || []).includes(pair);
+            } else if (_marketActiveCategory === 'l1') {
+                return (meta.cat || []).includes('l1');
+            } else if (_marketActiveCategory === 'defi') {
+                return (meta.cat || []).includes('defi');
+            } else if (_marketActiveCategory === 'meme') {
+                return (meta.cat || []).includes('meme');
+            } else if (_marketActiveCategory === 'gainers') {
+                return tk.change > 0;
+            }
+
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" style="padding: 50px 20px; text-align: center; color: var(--text-secondary);">
+                        <i data-lucide="inbox" style="width:36px;height:36px;margin-bottom:8px;opacity:0.5;"></i>
+                        <div>No trading pairs found matching your criteria.</div>
+                    </td>
+                </tr>
+            `;
+            if (window.lucide) lucide.createIcons();
+            return;
+        }
+
+        tbody.innerHTML = filtered.map(function(pair) {
+            const tk = state.tickers[pair];
+            const base = pair.replace('USDT', '');
+            const meta = coinMeta[base] || { name: base, color: '#f0b90b' };
+            const isFav = (state.favorites || []).includes(pair);
+            const isUp = tk.change >= 0;
+            const sign = isUp ? '+' : '';
+            const colorClass = isUp ? 'text-green' : 'text-red';
+            const priceFormatted = '$' + formatNum(tk.price, tk.price < 1 ? 4 : 2);
+            const highFormatted = '$' + formatNum(tk.high, tk.high < 1 ? 4 : 2);
+            const lowFormatted = '$' + formatNum(tk.low, tk.low < 1 ? 4 : 2);
+            const volUSDFormatted = tk.volUSD ? ('$' + (tk.volUSD / 1e6).toFixed(1) + 'M') : ('$' + formatNum(tk.vol * tk.price));
+
+            return `
+                <tr style="border-bottom:1px solid var(--border-light);cursor:pointer;transition:background var(--transition-fast);" onmouseover="this.style.background='var(--bg-hover)'" onmouseout="this.style.background='transparent'" onclick="state.currentPair='${pair}';navigate('trade');">
+                    <td style="padding:14px 10px;" onclick="event.stopPropagation();">
+                        <button class="btn-toggle-fav" data-pair="${pair}" style="background:none;border:none;cursor:pointer;font-size:16px;line-height:1;" title="${isFav ? 'Remove from favorites' : 'Add to favorites'}">
+                            ${isFav ? '⭐' : '☆'}
+                        </button>
+                    </td>
+                    <td style="padding:14px;">
+                        <div class="coin-cell" style="display:flex;align-items:center;gap:10px;">
+                            <div class="coin-icon" style="background:${meta.color}22;color:${meta.color};width:32px;height:32px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;">
+                                ${base.substring(0,2)}
+                            </div>
+                            <div>
+                                <div style="font-weight:700;font-size:14px;color:var(--text-primary);">${base}<span style="color:var(--text-muted);font-size:12px;">/USDT</span></div>
+                                <div style="font-size:11px;color:var(--text-secondary);">${meta.name}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="padding:14px;font-weight:700;font-family:var(--font-heading);" id="mk-price-${pair}">
+                        ${priceFormatted}
+                    </td>
+                    <td style="padding:14px;font-weight:700;" class="${colorClass}" id="mk-change-${pair}">
+                        ${sign}${tk.change.toFixed(2)}%
+                    </td>
+                    <td style="padding:14px;color:var(--text-secondary);" id="mk-high-${pair}">
+                        ${highFormatted}
+                    </td>
+                    <td style="padding:14px;color:var(--text-secondary);" id="mk-low-${pair}">
+                        ${lowFormatted}
+                    </td>
+                    <td style="padding:14px;color:var(--text-secondary);" id="mk-vol-${pair}">
+                        ${volUSDFormatted}
+                    </td>
+                    <td style="padding:14px;text-align:right;" onclick="event.stopPropagation();">
+                        <button class="action-btn-sm" style="background:var(--primary);color:var(--text-on-gold);font-weight:700;padding:6px 16px;border-radius:var(--radius-sm);font-size:12px;" onclick="state.currentPair='${pair}';navigate('trade');">
+                            Trade
+                        </button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // Wire favorite buttons
+        document.querySelectorAll('.btn-toggle-fav').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var p = btn.getAttribute('data-pair');
+                if (!Array.isArray(state.favorites)) state.favorites = [];
+                var idx = state.favorites.indexOf(p);
+                if (idx > -1) {
+                    state.favorites.splice(idx, 1);
+                    showToast('Removed ' + p + ' from favorites', 'info');
+                } else {
+                    state.favorites.push(p);
+                    showToast('Added ' + p + ' to favorites ⭐', 'success');
+                }
+                saveState();
+                renderMarketRows();
+            });
+        });
+
+        if (window.lucide) lucide.createIcons();
+    }
+
+    // Category button clicks
+    document.querySelectorAll('.market-tab-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.market-tab-btn').forEach(function(b) { b.classList.remove('active'); });
             btn.classList.add('active');
-            activeCategory = btn.dataset.cat;
+            _marketActiveCategory = btn.getAttribute('data-cat');
             renderMarketRows();
         });
     });
 
-    // Wire search input
+    // Search input
     const searchInput = document.getElementById('market-search-input');
     if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            searchQuery = e.target.value.toUpperCase();
+        searchInput.addEventListener('input', function(e) {
+            _marketSearchQuery = e.target.value.trim();
             renderMarketRows();
         });
     }
 
+    // Real-time price updates
+    window.addEventListener('tickerUpdate', function marketTickerHandler(e) {
+        if (!document.getElementById('markets-tbody')) {
+            window.removeEventListener('tickerUpdate', marketTickerHandler);
+            return;
+        }
+        var pair = e.detail.pair;
+        var pEl = document.getElementById('mk-price-' + pair);
+        var cEl = document.getElementById('mk-change-' + pair);
+        if (pEl && cEl) {
+            var isUp = e.detail.price >= e.detail.prevPrice;
+            pEl.textContent = '$' + formatNum(e.detail.price, e.detail.price < 1 ? 4 : 2);
+            cEl.textContent = (e.detail.ticker.change >= 0 ? '+' : '') + e.detail.ticker.change.toFixed(2) + '%';
+            cEl.className = e.detail.ticker.change >= 0 ? 'text-green' : 'text-red';
+
+            pEl.classList.remove('flash-green-anim', 'flash-red-anim');
+            void pEl.offsetWidth;
+            pEl.classList.add(isUp ? 'flash-green-anim' : 'flash-red-anim');
+        }
+    });
+
     renderMarketRows();
-}
-
-function getFilteredPairs() {
-    const allTickers = Object.entries(state.tickers);
-    
-    return allTickers.filter(([pair, info]) => {
-        // 1. Search Query Filter
-        const matchesSearch = pair.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                              info.name.toLowerCase().includes(searchQuery.toLowerCase());
-        if (!matchesSearch) return false;
-
-        // 2. Category Filter
-        if (activeCategory === 'favorites') {
-            return state.favorites.includes(pair);
-        } else if (activeCategory === 'l1') {
-            // Layer 1 tags
-            return ['BTC', 'ETH', 'BNB', 'SOL', 'ADA', 'DOT'].includes(info.symbol);
-        } else if (activeCategory === 'defi') {
-            // DeFi mock tags
-            return ['ETH', 'DOT'].includes(info.symbol);
-        } else if (activeCategory === 'meme') {
-            return ['DOGE'].includes(info.symbol);
-        }
-        
-        return true;
-    });
-}
-
-function renderMarketRows() {
-    const tbody = document.getElementById('markets-tbody');
-    if (!tbody) return;
-
-    const filtered = getFilteredPairs();
-    
-    if (filtered.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="8" class="text-center" style="padding: 40px; text-align: center; color: var(--text-secondary);">
-                    No trading pairs match your search criteria.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    let rowsHTML = '';
-    filtered.forEach(([pair, info]) => {
-        const isFav = state.favorites.includes(pair);
-        const isPositive = info.change24h >= 0;
-        const sign = isPositive ? '+' : '';
-        const classColor = isPositive ? 'text-green' : 'text-red';
-        
-        rowsHTML += `
-            <tr onclick="window.location.hash='#trade?pair=${info.symbol}/USDT'" style="cursor: pointer;">
-                <td onclick="event.stopPropagation();">
-                    <i data-lucide="star" class="favorite-star ${isFav ? 'active' : ''}" data-pair="${pair}" style="fill: ${isFav ? 'var(--primary)' : 'none'}; width: 16px; height: 16px;"></i>
-                </td>
-                <td>
-                    <div class="coin-cell">
-                        <div class="coin-icon" style="background-color: ${info.color}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; color: #000;">
-                            ${info.symbol[0]}
-                        </div>
-                        <div>
-                            <span class="coin-symbol">${info.symbol}/USDT</span>
-                            <span class="coin-name">${info.name}</span>
-                        </div>
-                    </div>
-                </td>
-                <td id="markets-price-${info.symbol}" class="ticker-val-cell">$${info.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
-                <td id="markets-change-${info.symbol}" class="${classColor}">${sign}${info.change24h.toFixed(2)}%</td>
-                <td>$${info.high24h.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                <td>$${info.low24h.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                <td>$${(info.volume24h * info.price).toLocaleString('en-US', { maximumFractionDigits: 0 })}</td>
-                <td>
-                    <button class="action-btn-sm" onclick="event.stopPropagation(); window.location.hash='#trade?pair=${info.symbol}/USDT'">Trade</button>
-                </td>
-            </tr>
-        `;
-    });
-
-    tbody.innerHTML = rowsHTML;
-    
-    // Wire favorites click events
-    document.querySelectorAll('.favorite-star').forEach(star => {
-        star.addEventListener('click', (e) => {
-            const pair = star.dataset.pair;
-            const index = state.favorites.indexOf(pair);
-            if (index > -1) {
-                state.favorites.splice(index, 1);
-                star.classList.remove('active');
-                star.style.fill = 'none';
-            } else {
-                state.favorites.push(pair);
-                star.classList.add('active');
-                star.style.fill = 'var(--primary)';
-            }
-            
-            // Save state
-            localStorage.setItem('binance_clone_state', JSON.stringify({
-                user: state.user,
-                favorites: state.favorites,
-                openOrders: state.openOrders,
-                orderHistory: state.orderHistory,
-                p2pOrders: state.p2pOrders,
-                theme: state.theme
-            }));
-            
-            // Re-render if we are in favorites category
-            if (activeCategory === 'favorites') {
-                renderMarketRows();
-            }
-        });
-    });
-
-    if (window.lucide) {
-        lucide.createIcons();
-    }
-}
-
-// Live update function triggered from app.js price updates
-window.updateMarketsLive = function(changes) {
-    changes.forEach(change => {
-        const symbolOnly = change.pair.split('/')[0];
-        
-        // Update price cell
-        const priceCell = document.getElementById(`markets-price-${symbolOnly}`);
-        const changeCell = document.getElementById(`markets-change-${symbolOnly}`);
-        
-        if (priceCell && changeCell) {
-            priceCell.textContent = `$${change.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`;
-            
-            const isPositive = change.change24h >= 0;
-            const sign = isPositive ? '+' : '';
-            changeCell.textContent = `${sign}${change.change24h.toFixed(2)}%`;
-            changeCell.className = isPositive ? 'text-green' : 'text-red';
-
-            // Flash glow classes
-            priceCell.classList.remove('flash-green-anim', 'flash-red-anim');
-            void priceCell.offsetWidth; // trigger reflow
-            priceCell.classList.add(change.isUp ? 'flash-green-anim' : 'flash-red-anim');
-        }
-    });
-}
+};
