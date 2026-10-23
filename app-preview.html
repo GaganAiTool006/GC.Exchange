@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061225"><meta name="description" content="GC.Exchange professional crypto exchange UI concept">
+<title>GC.Exchange — Interactive UI Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app-preview.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+<div class="announcement" id="announcement"><span class="announce-dot"></span> GC.Exchange design preview <span class="announce-note">Demo interface · No real trades or funds</span><button class="icon-btn small" data-action="dismiss-announcement" aria-label="Dismiss announcement"><i data-lucide="x"></i></button></div>
+<div class="app-shell">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="#dashboard" data-view="dashboard"><span class="brand-mark"><i data-lucide="activity"></i></span><span><b>GC.Exchange</b><small>Trade smarter. Grow faster.</small></span></a>
+<div class="side-label">WORKSPACE</div>
+<nav class="side-nav">
+<button class="nav-link active" data-view="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+<button class="nav-link" data-view="markets"><i data-lucide="chart-no-axes-combined"></i> Markets <span class="nav-pill">Live</span></button>
+<button class="nav-link" data-view="trade"><i data-lucide="candlestick-chart"></i> Spot trading</button>
+<button class="nav-link" data-view="p2p"><i data-lucide="users"></i> P2P trading</button>
+<button class="nav-link" data-view="wallet"><i data-lucide="wallet"></i> Wallet</button>
+<button class="nav-link" data-view="history"><i data-lucide="history"></i> Order history</button>
+</nav>
+<div class="side-label side-label-spaced">ACCOUNT</div>
+<nav class="side-nav">
+<button class="nav-link" data-view="profile"><i data-lucide="user-round"></i> Profile</button>
+<button class="nav-link" data-view="kyc"><i data-lucide="badge-check"></i> Verification <span class="tiny-status">Demo</span></button>
+<button class="nav-link" data-view="security"><i data-lucide="shield-check"></i> Security</button>
+<button class="nav-link" data-view="settings"><i data-lucide="settings-2"></i> Settings</button>
+</nav>
+<div class="sidebar-bottom"><div class="support-icon"><i data-lucide="headset"></i></div><div><b>Need a hand?</b><small>Visit help center</small></div><i data-lucide="arrow-up-right" class="support-arrow"></i></div>
+<div class="sidebar-user"><div class="avatar">G</div><div class="user-label"><b>Guest Trader</b><small>Design preview</small></div><button class="icon-btn small" data-view="profile" aria-label="Profile"><i data-lucide="chevron-down"></i></button></div>
+</aside>
+<div class="main-area">
+<header class="topbar"><button class="icon-btn mobile-menu" data-action="toggle-sidebar" aria-label="Open menu"><i data-lucide="menu"></i></button><div class="breadcrumb"><span>Workspace</span><i data-lucide="chevron-right"></i><b id="page-name">Dashboard</b></div><div class="top-actions"><label class="global-search"><i data-lucide="search"></i><input id="global-search" placeholder="Search coin or market..." aria-label="Search markets"><kbd>⌘ K</kbd></label><button class="icon-btn" data-action="notifications" aria-label="Notifications"><i data-lucide="bell"></i><span class="notification-dot"></span></button><button class="icon-btn" data-action="toggle-theme" aria-label="Toggle theme"><i data-lucide="sun-moon"></i></button><div class="top-profile"><div class="avatar small-avatar">G</div><div><b>Guest Trader</b><small><span class="green-dot"></span> Preview mode</small></div><i data-lucide="chevron-down"></i></div></div></header>
+<main id="screen" class="screen" tabindex="-1"></main>
+<footer class="footer"><span>© 2026 GC.Exchange · Frontend concept</span><span><i data-lucide="shield-check"></i> Demo only · No real money movement</span></footer>
+</div></div>
+<main id="auth-screen" class="auth-screen" hidden></main>
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+<div class="modal-backdrop" id="modal-backdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="icon-btn modal-close" data-action="close-modal" aria-label="Close"><i data-lucide="x"></i></button><div id="modal-content"></div></section></div>
+<script src="app-preview.js"></script>
+</body></html>
