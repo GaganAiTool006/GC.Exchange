@@ -8,14 +8,19 @@ function openModal(title,description,fields){const backdrop=$('#modal-backdrop')
 function closeModal(){const b=$('#modal-backdrop');if(b)b.hidden=true}
 document.addEventListener('click',e=>{
  const menu=e.target.closest('[data-menu-toggle]');if(menu){
-  if(document.body.classList.contains('reference-subpage')){
-   document.body.classList.toggle('menu-collapsed');
-   menu.setAttribute('aria-expanded',document.body.classList.contains('menu-collapsed')?'false':'true');
-   try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}
-  }else if(document.body.classList.contains('reference-trade-page')){
-   document.body.classList.toggle('menu-collapsed');
-   menu.setAttribute('aria-expanded',document.body.classList.contains('menu-collapsed')?'false':'true');
-   try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}
+  const subpage=document.body.classList.contains('reference-subpage');
+  const tradePage=document.body.classList.contains('reference-trade-page');
+  if(subpage||tradePage){
+   const mobile=window.matchMedia('(max-width: 900px)').matches;
+   const cls=mobile?'mobile-menu-open':'menu-collapsed';
+   document.body.classList.toggle(cls);
+   const open=document.body.classList.contains(cls);
+   menu.setAttribute('aria-expanded',open?'true':(mobile?'false':'true'));
+   menu.setAttribute('aria-label',mobile?(open?'Close navigation':'Open navigation'):(document.body.classList.contains('menu-collapsed')?'Expand navigation':'Collapse navigation'));
+   menu.title=menu.getAttribute('aria-label');
+   menu.innerHTML='<i data-lucide="'+(mobile?(open?'x':'menu'):(document.body.classList.contains('menu-collapsed')?'panel-left-open':'panel-left-close'))+'"></i>';
+   if(window.lucide)lucide.createIcons();
+   if(!mobile){try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}}
   }else{$('#sidebar')?.classList.toggle('open')}
   return;
  }
@@ -25,7 +30,14 @@ document.addEventListener('click',e=>{
   try{localStorage.setItem('gc-exchange-preview-theme',document.body.classList.contains('light-theme')?'light':'dark')}catch(_){}
   toast('Theme changed for this browser preview.');return
  }
- const tab=e.target.closest('[data-tab]');if(tab){const key=tab.dataset.tab;const wrap=tab.closest('[data-tabs]')||tab.parentElement;$$('[data-tab]',wrap).forEach(x=>x.classList.toggle('active',x===tab));const target=tab.dataset.target;if(target){$$('[data-tab-panel]').forEach(p=>p.hidden=p.dataset.tabPanel!==target)}return}
+ const tab=e.target.closest('[data-tab]');if(tab){
+  const wrap=tab.closest('[data-tabs]')||tab.parentElement;
+  if(tab.closest('.chart-range-tabs')&&document.body.classList.contains('reference-dashboard-home')){setHomeRange(tab.textContent.trim());}
+  $('.chart-range-tabs [data-tab]').forEach(x=>x.classList.toggle('active',x===tab));
+  $('[data-tab]',wrap).forEach(x=>x.classList.toggle('active',x===tab));
+  const target=tab.dataset.target;if(target){$('[data-tab-panel]').forEach(p=>p.hidden=p.dataset.tabPanel!==target)}
+  return
+ }
  const toggle=e.target.closest('[data-toggle]');if(toggle){toggle.classList.toggle('on');toggle.setAttribute('aria-pressed',toggle.classList.contains('on')?'true':'false');toast('Display preference toggled (preview only).');return}
  const act=e.target.closest('[data-modal]');if(act){const kind=act.dataset.modal;const configs={
  deposit:['Deposit assets','Review the deposit screen layout. No address is generated.','<div class="field full"><label>Asset</label><select><option>USDT — Tether</option><option>BTC — Bitcoin</option><option>ETH — Ethereum</option></select></div><div class="field full"><label>Network</label><select><option>Select network</option><option>Ethereum</option><option>Polygon</option><option>Bitcoin</option></select></div>'],
