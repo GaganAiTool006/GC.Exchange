@@ -854,3 +854,16 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
  .reference-subpage .subpage-menu-toggle{margin-right:7px}
  .reference-trade-page .trade-mobile-menu{display:grid}
 }
+
+/* Mint/lime accents remain consistent in Settings and security preferences */
+.reference-subpage .subpage-content .eyebrow,.reference-subpage .subpage-content .section-kicker{color:#80e8b5}
+.reference-subpage .subpage-content .tag,.reference-subpage .subpage-content .status-pill{border-color:#35533d;background:#1a3022;color:#8de7b9}
+.reference-subpage .subpage-content .tag.warning,.reference-subpage .subpage-content .status-pill.warning{background:#30331a;border-color:#53552c;color:#d7e66f}
+.reference-subpage .subpage-content a:not(.subpage-rail-link):not(.profile-chip){text-underline-offset:3px}
+.reference-subpage .subpage-content a:not(.button):not(.subpage-rail-link):not(.profile-chip){color:#8de7b9}
+.reference-subpage .subpage-content .progress-track,.reference-subpage .subpage-content progress{accent-color:#55dfaa}
+.reference-subpage .subpage-content input[type="checkbox"],.reference-subpage .subpage-content input[type="radio"]{accent-color:#55dfaa}
+.reference-subpage.light-theme .subpage-content .eyebrow,.reference-subpage.light-theme .subpage-content .section-kicker{color:#237c59}
+.reference-subpage.light-theme .subpage-content .tag,.reference-subpage.light-theme .subpage-content .status-pill{background:#e2f4e7;border-color:#c4e4ce;color:#216849}
+.reference-subpage.light-theme .subpage-content .tag.warning,.reference-subpage.light-theme .subpage-content .status-pill.warning{background:#f1f4d7;border-color:#dfe5a8;color:#5a671a}
+.reference-subpage.light-theme .subpage-content a:not(.button):not(.subpage-rail-link):not(.profile-chip){color:#237c59}
