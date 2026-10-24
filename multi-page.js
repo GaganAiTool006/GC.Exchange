@@ -7,9 +7,24 @@ function toast(message,type=''){let stack=$('#toast-stack');if(!stack){stack=doc
 function openModal(title,description,fields){const backdrop=$('#modal-backdrop');if(!backdrop){toast(description);return}$('#modal-content').innerHTML='<h2>'+title+'</h2><p>'+description+'</p><form id="preview-modal-form" class="form-grid">'+(fields||'<div class="field full"><label>Amount (preview)</label><input type="number" min="0" placeholder="0.00"></div>')+'<div class="field full"><button class="button primary" type="submit" style="width:100%">'+(title==='Search markets'?'Search markets':title==='Market filters'?'Apply filters':'Preview action')+'</button></div></form><div class="notice"><i data-lucide="info"></i><span>Frontend preview only. No data will be sent or saved and no funds will move.</span></div>';backdrop.hidden=false;if(window.lucide)lucide.createIcons();const form=$('#preview-modal-form');form.addEventListener('submit',e=>{e.preventDefault();if(title==='Search markets'){const q=$('#home-search-query',form)?.value.trim();if(!q){toast('Enter a coin or trading pair to search.','error');return}window.location.href='markets.html?q='+encodeURIComponent(q);return}if(title==='Market filters'){const controls=$('select',form);const category=controls[0]?.value||'All assets';const quote=controls[1]?.value||'USDT';window.location.href='markets.html?category='+encodeURIComponent(category)+'&quote='+encodeURIComponent(quote);return}backdrop.hidden=true;toast('Preview only — nothing was submitted.');});if(title==='Search markets')$('#home-search-query',form)?.focus()}
 function closeModal(){const b=$('#modal-backdrop');if(b)b.hidden=true}
 document.addEventListener('click',e=>{
- const menu=e.target.closest('[data-menu-toggle]');if(menu){$('#sidebar')?.classList.toggle('open');return}
+ const menu=e.target.closest('[data-menu-toggle]');if(menu){
+  if(document.body.classList.contains('reference-subpage')){
+   document.body.classList.toggle('menu-collapsed');
+   menu.setAttribute('aria-expanded',document.body.classList.contains('menu-collapsed')?'false':'true');
+   try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}
+  }else if(document.body.classList.contains('reference-trade-page')){
+   document.body.classList.toggle('menu-collapsed');
+   menu.setAttribute('aria-expanded',document.body.classList.contains('menu-collapsed')?'false':'true');
+   try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}
+  }else{$('#sidebar')?.classList.toggle('open')}
+  return;
+ }
  const mobile=e.target.closest('[data-mobile-nav]');if(mobile){$('#mobile-nav')?.classList.toggle('open');return}
- const theme=e.target.closest('[data-theme-toggle]');if(theme){document.body.classList.toggle('light-theme');toast('Theme changed for this browser preview.');return}
+ const theme=e.target.closest('[data-theme-toggle]');if(theme){
+  document.body.classList.toggle('light-theme');
+  try{localStorage.setItem('gc-exchange-preview-theme',document.body.classList.contains('light-theme')?'light':'dark')}catch(_){}
+  toast('Theme changed for this browser preview.');return
+ }
  const tab=e.target.closest('[data-tab]');if(tab){const key=tab.dataset.tab;const wrap=tab.closest('[data-tabs]')||tab.parentElement;$$('[data-tab]',wrap).forEach(x=>x.classList.toggle('active',x===tab));const target=tab.dataset.target;if(target){$$('[data-tab-panel]').forEach(p=>p.hidden=p.dataset.tabPanel!==target)}return}
  const toggle=e.target.closest('[data-toggle]');if(toggle){toggle.classList.toggle('on');toggle.setAttribute('aria-pressed',toggle.classList.contains('on')?'true':'false');toast('Display preference toggled (preview only).');return}
  const act=e.target.closest('[data-modal]');if(act){const kind=act.dataset.modal;const configs={
@@ -151,7 +166,10 @@ document.addEventListener('submit',e=>{
   toast('Preview: '+amount+' '+pair.from+' ≈ '+output+' '+pair.to+'. No assets were exchanged.');
  }
 });
-try{if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body.classList.add('light-theme')}catch(_){}
+try{
+ if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body.classList.add('light-theme');
+ if(localStorage.getItem('gc-exchange-menu-collapsed')==='1'&&(document.body.classList.contains('reference-subpage')||document.body.classList.contains('reference-trade-page')))document.body.classList.add('menu-collapsed');
+}catch(_){} 
 if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.html'){
  const params=new URLSearchParams(location.search),q=params.get('q');
  const input=$('[data-table-search]');
