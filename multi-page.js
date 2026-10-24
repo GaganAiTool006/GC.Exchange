@@ -12,6 +12,7 @@ document.addEventListener('click',e=>{
   const tradePage=document.body.classList.contains('reference-trade-page');
   if(subpage||tradePage){
    const mobile=window.matchMedia('(max-width: 900px)').matches;
+   if(mobile)document.body.classList.remove('menu-collapsed');
    const cls=mobile?'mobile-menu-open':'menu-collapsed';
    document.body.classList.toggle(cls);
    const open=document.body.classList.contains(cls);
@@ -180,7 +181,7 @@ document.addEventListener('submit',e=>{
 });
 try{
  if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body.classList.add('light-theme');
- if(localStorage.getItem('gc-exchange-menu-collapsed')==='1'&&(document.body.classList.contains('reference-subpage')||document.body.classList.contains('reference-trade-page')))document.body.classList.add('menu-collapsed');
+ if(localStorage.getItem('gc-exchange-menu-collapsed')==='1'&&window.matchMedia('(min-width: 901px)').matches&&(document.body.classList.contains('reference-subpage')||document.body.classList.contains('reference-trade-page')))document.body.classList.add('menu-collapsed');
 }catch(_){} 
 if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.html'){
  const params=new URLSearchParams(location.search),q=params.get('q');
