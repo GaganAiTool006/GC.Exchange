@@ -698,3 +698,48 @@ body.reference-dashboard-home .home-rail .rail-spacer{flex:1 0 12px}
  body.reference-dashboard-home .round-card-foot{margin:0 8px;padding-top:5px;font-size:6px}
  body.reference-dashboard-home .overview-bottom-note{font-size:6px}
 }
+
+/* ===== Shared homepage shell across every workspace page =====
+   Keep each route's own content, but make the outer canvas, sidebar,
+   frame, and spacing match the reference homepage exactly. */
+html:has(body.reference-subpage){min-height:100%;background:#282c2a}
+body.reference-subpage{margin:0;min-height:100vh;padding:clamp(14px,3.5vw,42px);background:radial-gradient(ellipse at 6% 6%,#353a37 0,transparent 44%),radial-gradient(ellipse at 100% 75%,#233a28 0,transparent 36%),#282c2a;color:#f0f3eb;overflow-x:hidden}
+.reference-subpage .subpage-shell{width:min(1480px,100%);min-height:min(810px,calc(100vh - 50px));margin:0 auto;display:grid;grid-template-columns:68px minmax(0,1fr);overflow:hidden;border-radius:30px;border:1px solid #252b27;background:#0a0c0b;box-shadow:0 35px 100px #0006}
+.reference-subpage .subpage-rail{position:relative;top:auto;height:auto;min-height:0;align-self:stretch;padding:16px 8px 12px;gap:7px;background:#080a09;border-right:1px solid #242925}
+.reference-subpage .subpage-home-mark{width:43px;height:44px;margin-bottom:15px}
+.reference-subpage .subpage-rail-nav{gap:9px;width:100%;justify-items:center}
+.reference-subpage .subpage-rail-link{width:38px;height:38px;border-radius:50%;background:transparent;border:1px solid transparent;color:#b1b9ae}
+.reference-subpage .subpage-rail-link svg{width:17px;height:17px}
+.reference-subpage .subpage-rail-link:hover{background:#202820;border-color:#3a443b;color:#f3f5ef}
+.reference-subpage .subpage-rail-link.active{background:linear-gradient(145deg,#5ae5bc,#4edb95);border-color:transparent;color:#102018;box-shadow:0 0 24px #48dc9b22}
+.reference-subpage .subpage-main{min-width:0;min-height:0;background:radial-gradient(ellipse at 96% 100%,#1e311e28,transparent 28%),#0b0d0c}
+.reference-subpage .subpage-topbar{height:63px;min-height:63px;flex-basis:63px;padding:0 clamp(15px,2.3vw,32px);background:#0b0d0c;border-bottom:1px solid #242925;backdrop-filter:none}
+.reference-subpage .subpage-content{max-width:none;padding:0 clamp(15px,2.2vw,31px) 17px;flex:1 0 auto}
+.reference-subpage .subpage-content .page-heading{padding-top:18px;margin-bottom:18px}
+.reference-subpage .subpage-content .page-heading h1{font:600 24px var(--display);letter-spacing:-.6px}
+.reference-subpage .subpage-content .page-heading p{font-size:10px;color:#929c8c}
+.reference-subpage .subpage-content .panel,.reference-subpage .subpage-content .stat-card{border-color:#323932;background:linear-gradient(145deg,#171917,#121512);box-shadow:none;border-radius:15px}
+.reference-subpage .subpage-content .panel-head{border-color:#2a302a}
+.reference-subpage .subpage-content .panel-head h2,.reference-subpage .subpage-content .panel-head h3{font:700 13px var(--display)}
+.reference-subpage .subpage-content .button.primary{background:#c8db63;border-color:#d8e882;color:#13180e;box-shadow:none}
+.reference-subpage .subpage-content .tag.blue{background:#1d3427;color:#88e6b7}
+.reference-subpage .subpage-content .field input,.reference-subpage .subpage-content .field select,.reference-subpage .subpage-content .field textarea{background:#101310;border-color:#363d35;color:#edf4e9}
+.reference-subpage .subpage-content .tabs,.reference-subpage .subpage-content .segmented{background:#0e100f;border-color:#303731}
+.reference-subpage .subpage-content .tabs button.active,.reference-subpage .subpage-content .segmented button.active{background:#c8db63;color:#12160e}
+@media(max-width:900px){
+ body.reference-subpage{padding:0}
+ .reference-subpage .subpage-shell{width:100%;min-height:100vh;margin:0;border-radius:0;grid-template-columns:55px minmax(0,1fr)}
+ .reference-subpage .subpage-rail{padding:12px 4px;gap:6px}
+ .reference-subpage .subpage-home-mark{width:37px;height:39px;margin-bottom:5px}
+ .reference-subpage .subpage-rail-link{width:33px;height:33px}
+ .reference-subpage .subpage-rail-link svg{width:15px;height:15px}
+ .reference-subpage .subpage-content{padding:16px 13px}
+}
+@media(max-width:600px){
+ .reference-subpage .subpage-shell{grid-template-columns:44px minmax(0,1fr)}
+ .reference-subpage .subpage-rail{padding:10px 3px}
+ .reference-subpage .subpage-rail-link{width:30px;height:30px}
+ .reference-subpage .subpage-rail-link svg{width:14px;height:14px}
+ .reference-subpage .subpage-content{padding:12px 9px}
+ .reference-subpage .subpage-content .page-heading{padding-top:12px}
+}
