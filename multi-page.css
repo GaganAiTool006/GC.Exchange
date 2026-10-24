@@ -867,3 +867,27 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
 .reference-subpage.light-theme .subpage-content .tag,.reference-subpage.light-theme .subpage-content .status-pill{background:#e2f4e7;border-color:#c4e4ce;color:#216849}
 .reference-subpage.light-theme .subpage-content .tag.warning,.reference-subpage.light-theme .subpage-content .status-pill.warning{background:#f1f4d7;border-color:#dfe5a8;color:#5a671a}
 .reference-subpage.light-theme .subpage-content a:not(.button):not(.subpage-rail-link):not(.profile-chip){color:#237c59}
+
+/* Homepage navigation matches the shared workspace rail and has a real collapse control */
+.home-menu-toggle{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;border:1px solid #303a33;border-radius:9px;background:#111713;color:#a9c5b5;cursor:pointer;transition:background .18s ease,border-color .18s ease,color .18s ease}
+.home-menu-toggle:hover{background:#1b2b22;border-color:#55dfaa;color:#8de7b9}
+.home-menu-toggle svg{width:15px;height:15px}
+.overview-brand{min-width:0}
+.home-menu-collapsed .home-shell{grid-template-columns:48px minmax(0,1fr)}
+.home-menu-collapsed .home-rail{padding-left:5px;padding-right:5px}
+.home-menu-collapsed .home-rail .rail-link{width:34px;height:34px}
+.home-menu-collapsed .home-rail .home-symbol{width:34px}
+.home-mobile-menu-open .home-rail{transform:translateX(0);box-shadow:18px 0 45px #0009}
+.home-rail{transition:transform .22s ease,width .22s ease}
+@media(max-width:900px){
+ .home-menu-toggle{width:28px;height:28px;flex-basis:28px}
+ .home-rail{position:fixed;z-index:120;left:0;top:0;bottom:0;width:224px;min-height:100dvh;padding:18px 12px 14px;align-items:stretch;transform:translateX(-110%);border:1px solid #29342c;border-radius:0 18px 18px 0;background:#080d0a;box-shadow:none;overflow-y:auto}
+ .home-rail .home-symbol{width:100%;height:42px;justify-content:flex-start;margin:0 0 12px 3px}
+ .home-rail .rail-nav{align-items:stretch;gap:5px}
+ .home-rail .rail-link{width:100%;height:40px;display:flex;justify-content:flex-start;gap:12px;padding:0 12px;border-radius:10px}
+ .home-rail .rail-link:before{content:attr(aria-label);font-size:12px;color:#c6d6cc;white-space:nowrap}
+ .home-rail .rail-link.active:before{color:#a0f0c2}
+ .home-rail .rail-spacer{min-height:18px}
+ .home-menu-collapsed .home-shell{grid-template-columns:47px minmax(0,1fr)}
+ .home-menu-collapsed .home-rail{padding:18px 12px 14px}
+}
