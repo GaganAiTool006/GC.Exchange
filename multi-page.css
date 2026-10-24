@@ -841,3 +841,16 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
  .reference-subpage .subpage-topbar .subpage-search-box input{width:0;min-width:0}
  .reference-subpage .subpage-topbar .profile-chip{display:none}
 }
+
+/* Keep the trading-page menu button visible on desktop and mobile */
+.reference-trade-page .trade-mobile-menu{display:grid}
+.reference-trade-page .trade-mobile-menu svg{width:16px;height:16px}
+.reference-subpage .subpage-menu-toggle svg{width:16px;height:16px}
+.reference-subpage .subpage-menu-toggle:focus-visible,.reference-trade-page .trade-mobile-menu:focus-visible{outline:2px solid #58e6b4;outline-offset:2px}
+.reference-subpage .subpage-rail-link:focus-visible,.reference-trade-page .trade-rail .rail-link:focus-visible{outline:2px solid #58e6b4;outline-offset:2px}
+.reference-subpage .subpage-rail-link::after,.reference-trade-page .trade-rail .rail-link::after{transition:color .15s ease}
+.reference-subpage .subpage-rail-link:hover::after,.reference-trade-page .trade-rail .rail-link:hover::after{color:#b8f3d3}
+@media(max-width:900px){
+ .reference-subpage .subpage-menu-toggle{margin-right:7px}
+ .reference-trade-page .trade-mobile-menu{display:grid}
+}
