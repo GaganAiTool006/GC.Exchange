@@ -743,3 +743,127 @@ body.reference-subpage{margin:0;min-height:100vh;padding:clamp(14px,3.5vw,42px);
  .reference-subpage .subpage-content{padding:12px 9px}
  .reference-subpage .subpage-content .page-heading{padding-top:12px}
 }
+
+/* ===== Full-screen workspace pages, expandable labeled navigation ===== */
+html:has(body.reference-subpage),html:has(body.reference-trade-page){width:100%;min-height:100%;background:#0b0d0c}
+body.reference-subpage,body.reference-trade-page{width:100%;height:100vh;min-height:100vh;margin:0;padding:0;overflow:hidden;background:#0b0d0c;color:#eff3e9}
+.reference-subpage .subpage-shell{width:100%;height:100vh;min-height:100vh;max-height:100vh;margin:0;border:0;border-radius:0;box-shadow:none;grid-template-columns:220px minmax(0,1fr);overflow:hidden}
+.reference-subpage .subpage-rail{height:100vh;min-height:0;overflow-y:auto;align-items:stretch;padding:14px 11px 12px;gap:7px}
+.reference-subpage .subpage-home-mark{width:100%;height:43px;display:flex;align-items:center;justify-content:flex-start;padding-left:12px;margin:0 0 12px}
+.reference-subpage .subpage-rail-nav{display:flex;flex-direction:column;align-items:stretch;gap:5px}
+.reference-subpage .subpage-rail-link{width:100%;height:37px;min-height:37px;display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:0 11px;border-radius:9px;font-size:11px;white-space:nowrap;text-decoration:none}
+.reference-subpage .subpage-rail-link::after{content:attr(aria-label);display:block;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:500;letter-spacing:0}
+.reference-subpage .subpage-rail-link svg{width:16px;height:16px;flex:0 0 16px}
+.reference-subpage .subpage-rail-link.active{background:#1a2a20;color:#8de7b9;border-color:#344b3a;box-shadow:inset 3px 0 #54e4b5}
+.reference-subpage .subpage-rail-spacer{flex:1 0 12px}
+.reference-subpage .subpage-main{height:100vh;min-height:0;overflow:auto}
+.reference-subpage .subpage-topbar{position:sticky;top:0;height:63px;min-height:63px;flex:0 0 63px}
+.reference-subpage .subpage-content{width:100%;max-width:none;padding:0 clamp(18px,3vw,48px) 24px}
+.reference-subpage .subpage-footer{flex:0 0 auto}
+.reference-subpage .subpage-menu-toggle{width:34px;height:34px;display:inline-grid;place-items:center;flex:0 0 34px;margin-right:10px;border:1px solid #303831;border-radius:9px;background:#151916;color:#dbe5d7;cursor:pointer}
+.reference-subpage .subpage-menu-toggle:hover,.reference-trade-page .trade-menu-toggle:hover{background:#203026;border-color:#4b6a52;color:#9aefc2}
+.reference-subpage .subpage-topbar .overview-brand{min-width:0}
+.reference-subpage .subpage-topbar .overview-top-actions{min-width:0}
+.reference-subpage .subpage-topbar .profile-chip{flex-shrink:0}
+body.reference-subpage.menu-collapsed .subpage-shell{grid-template-columns:68px minmax(0,1fr)}
+body.reference-subpage.menu-collapsed .subpage-rail{align-items:center;padding:13px 7px}
+body.reference-subpage.menu-collapsed .subpage-home-mark{justify-content:center;padding:0}
+body.reference-subpage.menu-collapsed .subpage-rail-nav{align-items:center}
+body.reference-subpage.menu-collapsed .subpage-rail-link{width:40px;min-width:40px;padding:0;justify-content:center;gap:0}
+body.reference-subpage.menu-collapsed .subpage-rail-link::after{display:none}
+body.reference-subpage.menu-collapsed .subpage-rail-spacer{width:100%}
+body.reference-trade-page .trade-shell{width:100%;height:100vh;min-height:100vh;max-height:100vh;margin:0;border:0;border-radius:0;grid-template-columns:220px minmax(0,1fr);overflow:hidden}
+body.reference-trade-page .trade-rail{width:auto;position:relative;top:auto;height:100vh;min-height:0;align-items:stretch;padding:14px 11px 12px;overflow-y:auto}
+body.reference-trade-page .trade-rail .home-symbol{width:100%;height:43px;display:flex;justify-content:flex-start;padding-left:12px;margin-bottom:12px}
+body.reference-trade-page .trade-rail .rail-nav{display:flex;flex-direction:column;align-items:stretch;gap:5px;width:100%}
+body.reference-trade-page .trade-rail .rail-link{width:100%;height:37px;min-height:37px;display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:0 11px;border-radius:9px}
+body.reference-trade-page .trade-rail .rail-link::after{content:attr(aria-label);font-size:11px;font-weight:500;white-space:nowrap}
+body.reference-trade-page .trade-rail .rail-link svg{width:16px;height:16px;flex:0 0 16px}
+body.reference-trade-page .trade-rail .rail-link.active{background:#1a2a20;color:#8de7b9;border-color:#344b3a;box-shadow:inset 3px 0 #54e4b5}
+body.reference-trade-page .trade-main{height:100vh;min-height:0;overflow:auto}
+body.reference-trade-page .trade-menu-toggle{display:inline-grid;place-items:center;flex:0 0 34px;margin-right:10px}
+body.reference-trade-page.menu-collapsed .trade-shell{grid-template-columns:68px minmax(0,1fr)}
+body.reference-trade-page.menu-collapsed .trade-rail{align-items:center;padding:13px 7px}
+body.reference-trade-page.menu-collapsed .trade-rail .home-symbol{justify-content:center;padding:0}
+body.reference-trade-page.menu-collapsed .trade-rail .rail-nav{align-items:center}
+body.reference-trade-page.menu-collapsed .trade-rail .rail-link{width:40px;min-width:40px;padding:0;justify-content:center;gap:0}
+body.reference-trade-page.menu-collapsed .trade-rail .rail-link::after{display:none}
+body.reference-trade-page .trade-main>.overview-topbar{position:sticky;top:0;z-index:25}
+body.reference-subpage .subpage-content .panel,body.reference-subpage .subpage-content .stat-card{background:linear-gradient(145deg,#171a17,#111411);border-color:#303830;color:#edf4e9}
+body.reference-subpage .subpage-content .panel-head h2,body.reference-subpage .subpage-content .panel-head h3,body.reference-subpage .subpage-content .setting-row b,body.reference-subpage .subpage-content .page-heading h1{color:#edf4e9}
+body.reference-subpage .subpage-content .setting-row,body.reference-subpage .subpage-content .security-line{border-color:#2a302a}
+body.reference-subpage .subpage-content .setting-row small,body.reference-subpage .subpage-content .security-line small{color:#9aa997}
+body.reference-subpage .subpage-content .field input,body.reference-subpage .subpage-content .field select,body.reference-subpage .subpage-content .field textarea,body.reference-subpage .subpage-content select.field{background:#101310;border-color:#363d35;color:#edf4e9}
+body.reference-subpage .subpage-content .button{background:#191d19;border-color:#394139;color:#e7eee3}
+body.reference-subpage .subpage-content .button.primary{background:#c8db63;border-color:#d8e882;color:#13180e}
+body.reference-subpage .subpage-content .toggle{background:#3a4439}
+body.reference-subpage .subpage-content .toggle.on{background:#46dca5}
+body.reference-subpage .subpage-content .toggle:after{background:#e9f3e6}
+body.reference-subpage .subpage-content .tabs button,body.reference-subpage .subpage-content .segmented button{color:#b4c0b0}
+body.reference-subpage .subpage-content .tabs button.active,body.reference-subpage .subpage-content .segmented button.active{background:#c8db63;color:#12160e}
+body.reference-subpage.light-theme,body.reference-trade-page.light-theme{background:#eef3ed;color:#17231a}
+body.reference-subpage.light-theme .subpage-shell,body.reference-subpage.light-theme .subpage-main,body.reference-trade-page.light-theme .trade-shell,body.reference-trade-page.light-theme .trade-main{background:#eef3ed;color:#17231a}
+body.reference-subpage.light-theme .subpage-rail,body.reference-subpage.light-theme .subpage-topbar,body.reference-trade-page.light-theme .trade-rail,body.reference-trade-page.light-theme .overview-topbar{background:#fbfdf9;border-color:#d7e0d4}
+body.reference-subpage.light-theme .subpage-rail-link,body.reference-trade-page.light-theme .trade-rail .rail-link{color:#586858}
+body.reference-subpage.light-theme .subpage-rail-link.active,body.reference-trade-page.light-theme .trade-rail .rail-link.active{background:#dff4e7;color:#176747;border-color:#b8dec8}
+body.reference-subpage.light-theme .subpage-content .panel,body.reference-subpage.light-theme .subpage-content .stat-card{background:#fff;border-color:#d8e2d5;color:#17231a}
+body.reference-subpage.light-theme .subpage-content .panel-head h2,body.reference-subpage.light-theme .subpage-content .panel-head h3,body.reference-subpage.light-theme .subpage-content .setting-row b,body.reference-subpage.light-theme .subpage-content .page-heading h1{color:#17231a}
+body.reference-subpage.light-theme .subpage-content .page-heading p,body.reference-subpage.light-theme .subpage-content .setting-row small,body.reference-subpage.light-theme .subpage-content .security-line small{color:#637260}
+body.reference-subpage.light-theme .subpage-content .field input,body.reference-subpage.light-theme .subpage-content .field select,body.reference-subpage.light-theme .subpage-content .field textarea,body.reference-subpage.light-theme .subpage-content select.field{background:#f7faf5;border-color:#d4dfd0;color:#17231a}
+body.reference-subpage.light-theme .subpage-content .button{background:#f5f8f2;border-color:#d2ddce;color:#233124}
+body.reference-subpage.light-theme .subpage-content .button.primary{background:#c8db63;border-color:#b5ca52;color:#18200f}
+body.reference-subpage.light-theme .subpage-content .setting-row,body.reference-subpage.light-theme .subpage-content .security-line,body.reference-subpage.light-theme .subpage-content .panel-head{border-color:#e0e8dc}
+body.reference-subpage.light-theme .subpage-content .tabs,body.reference-subpage.light-theme .subpage-content .segmented{background:#f1f6ee;border-color:#d7e1d2}
+body.reference-subpage.light-theme .subpage-content .tabs button,body.reference-subpage.light-theme .subpage-content .segmented button{color:#50634e}
+body.reference-subpage.light-theme .subpage-content .tabs button.active,body.reference-subpage.light-theme .subpage-content .segmented button.active{background:#c8db63;color:#17200f}
+body.reference-subpage.light-theme .subpage-content .toggle{background:#c8d3c2}
+body.reference-subpage.light-theme .subpage-content .toggle.on{background:#38bd8a}
+body.reference-subpage.light-theme .subpage-content .toggle:after{background:#fff}
+body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#667561}
+@media(max-width:900px){
+ .reference-subpage .subpage-shell{grid-template-columns:220px minmax(0,1fr)}
+ .reference-subpage .subpage-rail{position:fixed;left:0;top:0;z-index:60;width:220px;box-shadow:15px 0 40px #0006;transform:translateX(-102%);transition:transform .22s}
+ body.reference-subpage.mobile-menu-open .subpage-rail{transform:translateX(0)}
+ body.reference-subpage.menu-collapsed .subpage-shell{grid-template-columns:0 minmax(0,1fr)}
+ body.reference-subpage.menu-collapsed .subpage-rail{transform:translateX(-102%)}
+ body.reference-trade-page .trade-shell{grid-template-columns:220px minmax(0,1fr)}
+ body.reference-trade-page .trade-rail{position:fixed;left:0;top:0;z-index:60;width:220px;box-shadow:15px 0 40px #0006;transform:translateX(-102%);transition:transform .22s}
+ body.reference-trade-page.mobile-menu-open .trade-rail{transform:translateX(0)}
+ body.reference-trade-page.menu-collapsed .trade-shell{grid-template-columns:0 minmax(0,1fr)}
+ body.reference-trade-page.menu-collapsed .trade-rail{transform:translateX(-102%)}
+}
+@media(max-width:600px){
+ .reference-subpage .subpage-content{padding:12px 10px 18px}
+ .reference-subpage .subpage-content .page-heading{padding-top:12px}
+ .reference-subpage .subpage-topbar{padding:0 10px}
+ .reference-subpage .subpage-topbar .overview-label{display:none}
+ .reference-subpage .subpage-topbar .subpage-search-box{width:34px}
+ .reference-subpage .subpage-topbar .subpage-search-box input{width:0;min-width:0}
+ .reference-subpage .subpage-topbar .profile-chip{display:none}
+}
+
+/* Keep the trading-page menu button visible on desktop and mobile */
+.reference-trade-page .trade-mobile-menu{display:grid}
+.reference-trade-page .trade-mobile-menu svg{width:16px;height:16px}
+.reference-subpage .subpage-menu-toggle svg{width:16px;height:16px}
+.reference-subpage .subpage-menu-toggle:focus-visible,.reference-trade-page .trade-mobile-menu:focus-visible{outline:2px solid #58e6b4;outline-offset:2px}
+.reference-subpage .subpage-rail-link:focus-visible,.reference-trade-page .trade-rail .rail-link:focus-visible{outline:2px solid #58e6b4;outline-offset:2px}
+.reference-subpage .subpage-rail-link::after,.reference-trade-page .trade-rail .rail-link::after{transition:color .15s ease}
+.reference-subpage .subpage-rail-link:hover::after,.reference-trade-page .trade-rail .rail-link:hover::after{color:#b8f3d3}
+@media(max-width:900px){
+ .reference-subpage .subpage-menu-toggle{margin-right:7px}
+ .reference-trade-page .trade-mobile-menu{display:grid}
+}
+
+/* Mint/lime accents remain consistent in Settings and security preferences */
+.reference-subpage .subpage-content .eyebrow,.reference-subpage .subpage-content .section-kicker{color:#80e8b5}
+.reference-subpage .subpage-content .tag,.reference-subpage .subpage-content .status-pill{border-color:#35533d;background:#1a3022;color:#8de7b9}
+.reference-subpage .subpage-content .tag.warning,.reference-subpage .subpage-content .status-pill.warning{background:#30331a;border-color:#53552c;color:#d7e66f}
+.reference-subpage .subpage-content a:not(.subpage-rail-link):not(.profile-chip){text-underline-offset:3px}
+.reference-subpage .subpage-content a:not(.button):not(.subpage-rail-link):not(.profile-chip){color:#8de7b9}
+.reference-subpage .subpage-content .progress-track,.reference-subpage .subpage-content progress{accent-color:#55dfaa}
+.reference-subpage .subpage-content input[type="checkbox"],.reference-subpage .subpage-content input[type="radio"]{accent-color:#55dfaa}
+.reference-subpage.light-theme .subpage-content .eyebrow,.reference-subpage.light-theme .subpage-content .section-kicker{color:#237c59}
+.reference-subpage.light-theme .subpage-content .tag,.reference-subpage.light-theme .subpage-content .status-pill{background:#e2f4e7;border-color:#c4e4ce;color:#216849}
+.reference-subpage.light-theme .subpage-content .tag.warning,.reference-subpage.light-theme .subpage-content .status-pill.warning{background:#f1f4d7;border-color:#dfe5a8;color:#5a671a}
+.reference-subpage.light-theme .subpage-content a:not(.button):not(.subpage-rail-link):not(.profile-chip){color:#237c59}
