@@ -10,18 +10,21 @@ document.addEventListener('click',e=>{
  const menu=e.target.closest('[data-menu-toggle]');if(menu){
   const subpage=document.body.classList.contains('reference-subpage');
   const tradePage=document.body.classList.contains('reference-trade-page');
-  if(subpage||tradePage){
+  const homePage=document.body.classList.contains('reference-home');
+  if(subpage||tradePage||homePage){
    const mobile=window.matchMedia('(max-width: 900px)').matches;
    if(mobile)document.body.classList.remove('menu-collapsed');
-   const cls=mobile?'mobile-menu-open':'menu-collapsed';
+   const collapsedClass=homePage?'home-menu-collapsed':'menu-collapsed';
+   const mobileClass=homePage?'home-mobile-menu-open':'mobile-menu-open';
+   const cls=mobile?mobileClass:collapsedClass;
    document.body.classList.toggle(cls);
    const open=document.body.classList.contains(cls);
-   menu.setAttribute('aria-expanded',open?'true':(mobile?'false':'true'));
-   menu.setAttribute('aria-label',mobile?(open?'Close navigation':'Open navigation'):(document.body.classList.contains('menu-collapsed')?'Expand navigation':'Collapse navigation'));
+   menu.setAttribute('aria-expanded',open?'true':'false');
+   menu.setAttribute('aria-label',mobile?(open?'Close navigation':'Open navigation'):(open?'Expand navigation':'Collapse navigation'));
    menu.title=menu.getAttribute('aria-label');
-   menu.innerHTML='<i data-lucide="'+(mobile?(open?'x':'menu'):(document.body.classList.contains('menu-collapsed')?'panel-left-open':'panel-left-close'))+'"></i>';
+   menu.innerHTML='<i data-lucide="'+(mobile?(open?'x':'menu'):(open?'panel-left-open':'panel-left-close'))+'"></i>';
    if(window.lucide)lucide.createIcons();
-   if(!mobile){try{localStorage.setItem('gc-exchange-menu-collapsed',document.body.classList.contains('menu-collapsed')?'1':'0')}catch(_){}}
+   try{localStorage.setItem(homePage?'gc-exchange-home-menu-collapsed':'gc-exchange-menu-collapsed',!mobile&&open?'1':'0')}catch(_){}
   }else{$('#sidebar')?.classList.toggle('open')}
   return;
  }
@@ -181,7 +184,12 @@ document.addEventListener('submit',e=>{
 });
 try{
  if(localStorage.getItem('gc-exchange-preview-theme')==='light')document.body.classList.add('light-theme');
- if(localStorage.getItem('gc-exchange-menu-collapsed')==='1'&&window.matchMedia('(min-width: 901px)').matches&&(document.body.classList.contains('reference-subpage')||document.body.classList.contains('reference-trade-page')))document.body.classList.add('menu-collapsed');
+ if(window.matchMedia('(min-width: 901px)').matches){
+ try{
+  if(localStorage.getItem('gc-exchange-menu-collapsed')==='1'&&(document.body.classList.contains('reference-subpage')||document.body.classList.contains('reference-trade-page')))document.body.classList.add('menu-collapsed');
+  if(localStorage.getItem('gc-exchange-home-menu-collapsed')==='1'&&document.body.classList.contains('reference-home'))document.body.classList.add('home-menu-collapsed');
+ }catch(_){}
+}
 }catch(_){} 
 if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.html'){
  const params=new URLSearchParams(location.search),q=params.get('q');
