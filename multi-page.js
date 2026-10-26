@@ -229,4 +229,39 @@ if(location.pathname.endsWith('/markets.html')||location.pathname==='markets.htm
 if(window.lucide)lucide.createIcons();
 animateOnLoad();
 startDemoPriceTape();
+
+function initTradeDemo(){
+ if(!document.body.classList.contains('reference-trade-page'))return;
+ const $=s=>document.querySelector(s), $=s=>Array.from(document.querySelectorAll(s));
+ const chart=$('.trade-candle-chart'),svg=chart?.querySelector('svg'),price=$('.trade-market-price strong'),mid=$('.trade-mid-price strong'),input=$('#order-price'),amount=$('#order-amount'),total=$('#order-total'),form=$('.trade-form-fields'),type=form?.querySelector('select');
+ if(!chart||!svg)return;
+ let btc=67432.21,idx=0;const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+ const tip=document.createElement('div');tip.className='trade-hover-tooltip';tip.hidden=true;tip.innerHTML='<b>BTC / USDT</b><span>Price: —</span><span>Time: —</span><span>Volume: —</span>';chart.append(tip);
+ const candles=[...svg.querySelectorAll('rect.candle-up,rect.candle-down')],wicks=[...svg.querySelectorAll('line.candle-wick')],vols=[...svg.querySelectorAll('.trade-volume-bar')],rows=[...document.querySelectorAll('.trade-book-row')];
+ function calc(){if(total)total.textContent='
+})();+(((+input?.value)||0)*((+amount?.value)||0)).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+ function tick(){
+  const old=btc;btc=Math.max(100,btc*(1+(Math.random()-.485)*.001));const up=btc>=old;
+  [price,mid].forEach(el=>{if(el){el.textContent='
+})();+fmt(btc);el.classList.remove('price-tick-up','price-tick-down');void el.offsetWidth;el.classList.add(up?'price-tick-up':'price-tick-down')}});
+  const pct=$('.trade-market-price span');if(pct){pct.className=up?'positive':'negative';pct.textContent=(up?'↗ +':'↘ ')+(1.82+Math.random()*.06).toFixed(2)+'% (24h)'}
+  if(type?.value==='Market'&&input&&document.activeElement!==input){input.value=btc.toFixed(2);calc()}
+  rows.forEach((r,i)=>{const spans=r.querySelectorAll('span'),ask=r.classList.contains('sell'),p=btc+(ask?((5-i)*7+4):(-((i+1)*7+2)));if(spans[0])spans[0].textContent=Math.round(p).toLocaleString('en-US');if(spans[1])spans[1].textContent=(.1+Math.random()*.3).toFixed(3);if(spans[2])spans[2].textContent=Math.round(p*(.1+Math.random()*.3)).toLocaleString('en-US');r.style.setProperty('--depth',(25+Math.random()*70)+'%')});
+  const r=candles[idx%candles.length],w=wicks[idx%Math.max(1,wicks.length)],v=vols[idx%Math.max(1,vols.length)];
+  if(r){const y=25+Math.random()*260,h=4+Math.random()*13;r.setAttribute('y',y);r.setAttribute('height',h);r.classList.toggle('candle-up',up);r.classList.toggle('candle-down',!up);if(w){w.setAttribute('y1',Math.max(15,y-10));w.setAttribute('y2',y+h+10);w.classList.toggle('candle-up',up);w.classList.toggle('candle-down',!up)}if(v){const vh=8+Math.random()*36;v.setAttribute('height',vh);v.setAttribute('y',390-vh);v.classList.toggle('down',!up)}idx++}
+ }
+ chart.addEventListener('pointermove',e=>{const r=chart.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(r.width-185,e.clientX-r.left+12))+'px';tip.style.top=Math.max(8,Math.min(r.height-90,e.clientY-r.top+12))+'px';tip.querySelectorAll('span')[0].textContent='Price: 
+})();+fmt(btc);tip.querySelectorAll('span')[1].textContent='Time: '+new Date().toLocaleTimeString();tip.querySelectorAll('span')[2].textContent='Volume: '+(.1+Math.random()*2).toFixed(3)+' BTC';tip.hidden=false});
+ chart.addEventListener('pointerleave',()=>tip.hidden=true);
+ chart.addEventListener('click',e=>{if(e.target.closest('button')||!input||type?.value==='Market')return;const r=chart.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,(e.clientX-r.left)/r.width));input.value=(btc*(.997+ratio*.006)).toFixed(2);calc()});
+ $('.trade-chart-tools [data-tab]').forEach(b=>b.addEventListener('click',()=>{svg.style.filter='saturate('+(1+Math.random()*.4)+')';chart.dataset.interval=b.textContent.trim()}));
+ $('.book-modes button').forEach((b,i)=>b.addEventListener('click',()=>{rows.forEach(r=>r.hidden=i===1?!r.classList.contains('buy'):i===2?!r.classList.contains('sell'):false)}));
+ type?.addEventListener('change',()=>{if(type.value==='Market'&&input)input.value=btc.toFixed(2);if(input)input.readOnly=type.value==='Market';calc()});
+ [input,amount].forEach(el=>el?.addEventListener('input',calc));
+ document.addEventListener('submit',e=>{if(!e.target.matches('.trade-form-fields'))return;const p=+input?.value||0,a=+amount?.value||0;if(!p||!a)return;const panel=$('.trade-recent-card');if(!panel)return;let list=panel.querySelector('.trade-demo-orders');if(!list){list=document.createElement('div');list.className='trade-demo-orders';list.style.cssText='padding:12px;display:grid;gap:8px';panel.append(list)}const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';const side=form.dataset.orderSide==='sell'?'SELL':'BUY';const label=document.createElement('b');label.textContent=side+' · '+a+' BTC';const val=document.createElement('span');val.textContent='
+})();+fmt(p*a);const note=document.createElement('small');note.textContent='Preview only';row.append(label,val,note);list.prepend(row);while(list.children.length>5)list.lastElementChild.remove()});
+ calc();tick();setInterval(tick,1800);
+}
+
+initTradeDemo();
 })();
