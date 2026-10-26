@@ -1383,3 +1383,29 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
   body.reference-trade-page .trade-rail,
   body.reference-dashboard-home .home-rail { transition:none !important; }
 }
+
+
+/* Trading chart interaction polish */
+.reference-trade-page .trade-candle-chart { position:relative; cursor:crosshair; }
+.reference-trade-page .trade-hover-tooltip {
+ position:absolute; z-index:20; pointer-events:none; min-width:164px;
+ padding:10px 12px; display:grid; gap:5px; border:1px solid #425246;
+ border-radius:9px; background:rgba(10,16,12,.96); color:#eef8f0;
+ box-shadow:0 12px 30px #0008; font-size:11px; backdrop-filter:blur(10px);
+}
+.reference-trade-page .trade-hover-tooltip[hidden] { display:none; }
+.reference-trade-page .trade-hover-tooltip b { color:#53e0b0; font-size:12px; margin-bottom:2px; }
+.reference-trade-page .trade-hover-tooltip span { color:#a9b9ac; }
+.reference-trade-page .trade-book-row { transition:background .18s ease,filter .18s ease; cursor:pointer; }
+.reference-trade-page .trade-book-row:hover { background:#25382d; filter:brightness(1.15); }
+.reference-trade-page .trade-book-row[hidden] { display:none; }
+.reference-trade-page .trade-chart-tools [data-tab] { cursor:pointer; }
+.reference-trade-page .trade-chart-tools [data-tab]:hover,
+.reference-trade-page .book-modes button:hover { border-color:#56ddb0; color:#75edc5; }
+.reference-trade-page .price-tick-up { animation:tradeUpPulse .65s ease; }
+.reference-trade-page .price-tick-down { animation:tradeDownPulse .65s ease; }
+@keyframes tradeUpPulse { 0%{color:#51e2b0;background:#174532} 100%{background:transparent} }
+@keyframes tradeDownPulse { 0%{color:#ff777d;background:#4b2025} 100%{background:transparent} }
+@media(max-width:600px) {
+ .reference-trade-page .trade-hover-tooltip { min-width:145px; font-size:10px; }
+}
