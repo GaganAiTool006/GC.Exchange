@@ -142,7 +142,7 @@ function animateOnLoad(){
 function pulseValue(el,dir){if(!el)return;el.classList.remove('price-tick-up','price-tick-down');void el.offsetWidth;el.classList.add(dir>0?'price-tick-up':'price-tick-down')}
 function startDemoPriceTape(){
  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
- const home=document.body.classList.contains('reference-dashboard-home'),trade=document.body.classList.contains('reference-trade-page');
+ const home=document.body.classList.contains('reference-dashboard-home'),trade=false;
  let btc=67432.21,eth=3248.56,sol=142.67;
  const fmt=(n,d=2)=>n.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
  const ticker=Array.from(document.querySelectorAll('.overview-ticker>span'));
@@ -238,7 +238,7 @@ function initTradeDemo(){
  const priceInput=one('#order-price'), amountInput=one('#order-amount'), total=one('#order-total');
  const form=one('.trade-form-fields'), type=form&&form.querySelector('select'), submit=one('.trade-submit');
  if(!chart||!svg)return;
- let btc=67432.21, previous=btc, candleIndex=0, orderSide='buy';
+ let btc=67432.21, previous=btc, orderSide='buy';
  const fmt=n=>Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
  const candles=all('.trade-candle-chart rect.candle-up, .trade-candle-chart rect.candle-down');
  const wicks=all('.trade-candle-chart line.candle-wick'), volumes=all('.trade-volume-bar');
@@ -248,15 +248,15 @@ function initTradeDemo(){
  tip.innerHTML='<b>BTC / USDT</b><span>Price: —</span><span>Time: —</span><span>Volume: —</span>';
  chart.appendChild(tip);
  function calcTotal(){
-  if(total)total.textContent='$'+fmt((Number(priceInput&&priceInput.value)||0)*(Number(amountInput&&amountInput.value)||0));
+  const p=Number(priceInput&&priceInput.value)||0, a=Number(amountInput&&amountInput.value)||0;
+  if(total)total.textContent='$'+fmt(p*a);
  }
- function setText(selector,value){const el=one(selector);if(el)el.textContent=value;}
  function paintPrice(up){
   [price,mid].forEach(el=>{if(!el)return;el.textContent='$'+fmt(btc);el.classList.remove('price-tick-up','price-tick-down');void el.offsetWidth;el.classList.add(up?'price-tick-up':'price-tick-down')});
   const change=one('.trade-market-price span');
   if(change){change.className=up?'positive':'negative';change.textContent=(up?'↗ +':'↘ ')+(0.1+Math.random()*1.8).toFixed(2)+'% (24h)'}
   const strip=all('.trade-chart-price-strip span');
-  if(strip.length>3){strip[0].innerHTML='O <b>'+fmt(previous)+'</b>';strip[1].innerHTML='H <b>'+fmt(Math.max(previous,btc)+Math.random()*8)+'</b>';strip[2].innerHTML='L <span class="red">'+fmt(Math.min(previous,btc)-Math.random()*8)+'</span>';strip[3].innerHTML='C <b>'+fmt(btc)+'</b>'}
+  if(strip.length>=4){strip[0].innerHTML='O <b>'+fmt(previous)+'</b>';strip[1].innerHTML='H <b>'+fmt(Math.max(previous,btc)+Math.random()*8)+'</b>';strip[2].innerHTML='L <span class="red">'+fmt(Math.min(previous,btc)-Math.random()*8)+'</span>';strip[3].innerHTML='C <b>'+fmt(btc)+'</b>'}
   if(type&&type.value==='Market'&&priceInput&&document.activeElement!==priceInput)priceInput.value=btc.toFixed(2);
   calcTotal();
  }
@@ -268,9 +268,8 @@ function initTradeDemo(){
   paintPrice(up);
   candles.forEach((r,i)=>{
    const y=Math.max(35,Math.min(292,Number(r.getAttribute('y'))+(Math.random()-.49)*34));
-   const height=3+Math.random()*14;
+   const height=3+Math.random()*14, green=Math.random()>.47;
    r.setAttribute('y',y.toFixed(2));r.setAttribute('height',height.toFixed(2));
-   const green=Math.random()>.47;
    r.classList.toggle('candle-up',green);r.classList.toggle('candle-down',!green);
    const wick=wicks[i];
    if(wick){wick.setAttribute('y1',Math.max(18,y-5-Math.random()*13));wick.setAttribute('y2',Math.min(320,y+height+5+Math.random()*12));wick.classList.toggle('candle-up',green);wick.classList.toggle('candle-down',!green)}
@@ -278,8 +277,7 @@ function initTradeDemo(){
   volumes.forEach(v=>{const height=7+Math.random()*39;v.setAttribute('height',height.toFixed(1));v.setAttribute('y',(386-height).toFixed(1));v.classList.toggle('down',Math.random()<.48)});
   rows.forEach((row,i)=>{
    const spans=row.querySelectorAll('span'),sell=row.classList.contains('sell');
-   const p=btc+(sell?1:-1)*(8+i*9+Math.random()*5);
-   const qty=.05+Math.random()*.42;
+   const p=btc+(sell?1:-1)*(8+i*9+Math.random()*5), qty=.05+Math.random()*.42;
    if(spans[0])spans[0].textContent=Math.round(p).toLocaleString('en-US');
    if(spans[1])spans[1].textContent=qty.toFixed(3);
    if(spans[2])spans[2].textContent=Math.round(p*qty).toLocaleString('en-US');
@@ -316,28 +314,28 @@ function initTradeDemo(){
   all('.book-modes button').forEach(b=>b.classList.toggle('active',b===btn));
  }));
  all('.trade-side-tabs [data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
-  orderSide=btn.textContent.trim().toLowerCase()==='sell'?'sell':'buy';
+  orderSide=btn.classList.contains('sell')||btn.textContent.trim().toLowerCase()==='sell'?'sell':'buy';
   if(form)form.dataset.orderSide=orderSide;
   all('.trade-side-tabs [data-tab]').forEach(b=>b.classList.toggle('active',b===btn));
-  if(submit){submit.classList.toggle('sell',orderSide==='sell');submit.innerHTML='Preview '+orderSide+' order <i data-lucide="arrow-up-right"></i>';if(window.lucide)lucide.createIcons()}
+  if(submit){submit.classList.toggle('sell',orderSide==='sell');submit.innerHTML='Preview '+orderSide+' order <i data-lucide="'+(orderSide==='sell'?'arrow-down-right':'arrow-up-right')+'"></i>';if(window.lucide)lucide.createIcons()}
  }));
  if(type)type.addEventListener('change',()=>{if(type.value==='Market'&&priceInput)priceInput.value=btc.toFixed(2);if(priceInput)priceInput.readOnly=type.value==='Market';calcTotal()});
  [priceInput,amountInput].forEach(el=>{if(el)el.addEventListener('input',calcTotal)});
  if(form)form.addEventListener('submit',e=>{
   e.preventDefault();
   const p=Number(priceInput&&priceInput.value)||0,a=Number(amountInput&&amountInput.value)||0;
-  if(p<=0||a<=0){if(window.gcExchangeToast)window.gcExchangeToast('Enter a valid price and amount');else alert('Enter a valid price and amount');return}
+  if(p<=0||a<=0){toast('Enter a valid price and amount.','error');return}
   const panel=one('.trade-recent-card')||one('.trade-left-column');
   if(!panel)return;
   let list=panel.querySelector('.trade-demo-orders');
   if(!list){list=document.createElement('div');list.className='trade-demo-orders';list.style.cssText='padding:12px;display:grid;gap:8px';panel.appendChild(list)}
-  const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';
+  const order={side:orderSide,price:p,amount:a,total:p*a,time:new Date().toISOString()};
+  const row=document.createElement('div');row.className='trade-demo-order';row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';
   const label=document.createElement('b');label.textContent=orderSide.toUpperCase()+' · '+a+' BTC';
   const val=document.createElement('span');val.textContent='$'+fmt(p*a);
   const note=document.createElement('small');note.textContent='Demo preview only — no real trade';
   row.append(label,val,note);list.prepend(row);while(list.children.length>5)list.lastElementChild.remove();
-  const order={side:orderSide,price:p,amount:a,total:p*a,time:new Date().toISOString()};
-  try{const key='gc-exchange-demo-orders';const saved=JSON.parse(localStorage.getItem(key)||'[]');saved.unshift(order);localStorage.setItem(key,JSON.stringify(saved.slice(0,20)));}catch(_){}
+  try{const key='gc-exchange-demo-orders';const saved=JSON.parse(localStorage.getItem(key)||'[]');saved.unshift(order);localStorage.setItem(key,JSON.stringify(saved.slice(0,20)))}catch(_){}
   toast('Demo '+orderSide.toUpperCase()+' order saved in this browser only. No real trade was placed.');
  });
  if(form)form.dataset.orderSide='buy';
@@ -349,13 +347,10 @@ function initTradeDemo(){
     let list=panel.querySelector('.trade-demo-orders');
     if(!list){list=document.createElement('div');list.className='trade-demo-orders';list.style.cssText='padding:12px;display:grid;gap:8px';panel.appendChild(list)}
     saved.slice(0,5).forEach(order=>{
-     const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';
-     const label=document.createElement('b');label.textContent=String(order.side||'buy').toUpperCase()+' · '+Number(order.amount).toLocaleString()+' BTC';
-     const val=document.createElement('span');val.textContent='
- window.gcTradeTimer=setInterval(tick,1500);
-}
-})();+fmt(Number(order.total)||0);
-     const note=document.createElement('small');note.textContent='Saved demo · '+new Date(order.time).toLocaleString();
+     const row=document.createElement('div');row.className='trade-demo-order';row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';
+     const label=document.createElement('b');label.textContent=String(order.side||'buy').toUpperCase()+' · '+Number(order.amount||0).toLocaleString()+' BTC';
+     const val=document.createElement('span');val.textContent='$'+fmt(Number(order.total)||0);
+     const note=document.createElement('small');note.textContent='Saved demo · '+(order.time?new Date(order.time).toLocaleString():'previous session');
      row.append(label,val,note);list.appendChild(row);
     });
    }
@@ -365,4 +360,5 @@ function initTradeDemo(){
  if(window.gcTradeTimer)clearInterval(window.gcTradeTimer);
  window.gcTradeTimer=setInterval(tick,1500);
 }
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTradeDemo,{once:true});else initTradeDemo();
 })();
