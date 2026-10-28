@@ -1537,3 +1537,60 @@ body.reference-trade-page .trade-menu-toggle { display:none !important; }
  body.reference-subpage .subpage-content { padding-left:10px!important;padding-right:10px!important; }
  body.reference-subpage .subpage-content .grid.stats { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
 }
+
+
+/* Final mobile drawer stacking fix: keep the close control above the dimmed backdrop. */
+@media (max-width:900px) {
+ body.reference-dashboard-home .overview-topbar,
+ body.reference-subpage .subpage-topbar,
+ body.reference-trade-page .trade-main>.overview-topbar {
+  position:sticky!important;
+  top:0;
+  z-index:1200!important;
+  isolation:isolate;
+ }
+ body.reference-dashboard-home .home-menu-toggle,
+ body.reference-subpage .subpage-menu-toggle,
+ body.reference-trade-page .overview-brand .home-menu-toggle {
+  position:relative!important;
+  z-index:1202!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+ }
+ body.reference-dashboard-home.home-mobile-menu-open::after,
+ body.reference-subpage.mobile-menu-open::after,
+ body.reference-trade-page.mobile-menu-open::after {
+  z-index:1190!important;
+  pointer-events:auto;
+ }
+ body.reference-dashboard-home.home-mobile-menu-open .home-rail,
+ body.reference-subpage.mobile-menu-open .subpage-rail,
+ body.reference-trade-page.mobile-menu-open .trade-rail {
+  z-index:1201!important;
+ }
+ body.reference-dashboard-home .home-main-column,
+ body.reference-subpage .subpage-main,
+ body.reference-trade-page .trade-main {
+  overflow:visible!important;
+ }
+}
+@media (max-width:560px) {
+ body.reference-dashboard-home .overview-top-actions,
+ body.reference-subpage .subpage-topbar .overview-top-actions,
+ body.reference-trade-page .overview-top-actions {
+  flex-shrink:1;
+ }
+ body.reference-dashboard-home .overview-topbar,
+ body.reference-subpage .subpage-topbar,
+ body.reference-trade-page .trade-main>.overview-topbar {
+  min-height:56px!important;
+  height:auto!important;
+ }
+ body.reference-dashboard-home .overview-content>*,
+ body.reference-subpage .subpage-content>*,
+ body.reference-trade-page .trade-main>* {
+  min-width:0;
+  max-width:100%;
+ }
+}
