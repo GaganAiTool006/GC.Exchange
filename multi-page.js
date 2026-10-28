@@ -68,7 +68,7 @@ document.addEventListener('click',e=>{
  const toastBtn=e.target.closest('[data-toast]');if(toastBtn){toast(toastBtn.dataset.toast);return}
  if(e.target.closest('[data-modal-close]')||e.target.id==='modal-backdrop'){closeModal()}
 });
-document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();if(e.target.matches('.trade-form-fields')){const side=e.target.dataset.orderSide==='sell'?'sell':'buy';const price=Number(document.querySelector('#order-price')?.value)||0;const amount=Number(document.querySelector('#order-amount')?.value)||0;if(price<=0||amount<=0){toast('Enter a valid price and amount for the preview.','error');return}toast('Preview '+side.toUpperCase()+' order: '+amount+' BTC at '+String.fromCharCode(36)+price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+'. No trade was placed.');return}if(!e.target.matches('.mint-exchange-form'))toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
+document.addEventListener('submit',e=>{if(e.target.matches('[data-demo-form]')){e.preventDefault();if(e.target.matches('.trade-form-fields')){return}if(!e.target.matches('.mint-exchange-form'))toast(e.target.dataset.message||'Design preview only — form data was not sent or saved.')}});
 document.addEventListener('input',e=>{
  if(e.target.matches('[data-table-search]')){applyMarketTableFilters(e.target)}
  if(e.target.id==='order-price'||e.target.id==='order-amount'){const p=Number($('#order-price')?.value)||0;const a=Number($('#order-amount')?.value)||0;const out=$('#order-total');if(out)out.textContent='$'+(p*a).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
@@ -317,6 +317,7 @@ function initTradeDemo(){
  }));
  all('.trade-side-tabs [data-tab]').forEach(btn=>btn.addEventListener('click',()=>{
   orderSide=btn.textContent.trim().toLowerCase()==='sell'?'sell':'buy';
+  if(form)form.dataset.orderSide=orderSide;
   all('.trade-side-tabs [data-tab]').forEach(b=>b.classList.toggle('active',b===btn));
   if(submit){submit.classList.toggle('sell',orderSide==='sell');submit.innerHTML='Preview '+orderSide+' order <i data-lucide="arrow-up-right"></i>';if(window.lucide)lucide.createIcons()}
  }));
@@ -335,7 +336,31 @@ function initTradeDemo(){
   const val=document.createElement('span');val.textContent='$'+fmt(p*a);
   const note=document.createElement('small');note.textContent='Demo preview only — no real trade';
   row.append(label,val,note);list.prepend(row);while(list.children.length>5)list.lastElementChild.remove();
+  const order={side:orderSide,price:p,amount:a,total:p*a,time:new Date().toISOString()};
+  try{const key='gc-exchange-demo-orders';const saved=JSON.parse(localStorage.getItem(key)||'[]');saved.unshift(order);localStorage.setItem(key,JSON.stringify(saved.slice(0,20)));}catch(_){}
+  toast('Demo '+orderSide.toUpperCase()+' order saved in this browser only. No real trade was placed.');
  });
+ if(form)form.dataset.orderSide='buy';
+ try{
+  const saved=JSON.parse(localStorage.getItem('gc-exchange-demo-orders')||'[]');
+  if(saved.length){
+   const panel=one('.trade-recent-card')||one('.trade-left-column');
+   if(panel){
+    let list=panel.querySelector('.trade-demo-orders');
+    if(!list){list=document.createElement('div');list.className='trade-demo-orders';list.style.cssText='padding:12px;display:grid;gap:8px';panel.appendChild(list)}
+    saved.slice(0,5).forEach(order=>{
+     const row=document.createElement('div');row.style.cssText='display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px;border:1px solid var(--line);border-radius:8px';
+     const label=document.createElement('b');label.textContent=String(order.side||'buy').toUpperCase()+' · '+Number(order.amount).toLocaleString()+' BTC';
+     const val=document.createElement('span');val.textContent='
+ window.gcTradeTimer=setInterval(tick,1500);
+}
+})();+fmt(Number(order.total)||0);
+     const note=document.createElement('small');note.textContent='Saved demo · '+new Date(order.time).toLocaleString();
+     row.append(label,val,note);list.appendChild(row);
+    });
+   }
+  }
+ }catch(_){}
  calcTotal();tick();
  if(window.gcTradeTimer)clearInterval(window.gcTradeTimer);
  window.gcTradeTimer=setInterval(tick,1500);
