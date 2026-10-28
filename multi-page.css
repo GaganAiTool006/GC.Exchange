@@ -1449,3 +1449,91 @@ body.reference-trade-page .trade-menu-toggle { display:none !important; }
  body.reference-subpage .subpage-rail,
  body.reference-trade-page .trade-rail { width:68px;min-width:68px; }
 }
+
+
+/* Mobile repair pass: predictable single-column content and a dismissible nav drawer. */
+@media (max-width:900px) {
+ html,body { width:100%;min-width:0;max-width:100%;overflow-x:hidden; }
+ body.reference-dashboard-home .home-stage,
+ body.reference-dashboard-home .home-shell,
+ body.reference-subpage .subpage-shell,
+ body.reference-trade-page .trade-shell { width:100%;max-width:100%;min-width:0; }
+ body.reference-dashboard-home .home-main-column,
+ body.reference-subpage .subpage-main,
+ body.reference-trade-page .trade-main { min-width:0;width:100%;max-width:100%; }
+ body.reference-dashboard-home .overview-topbar,
+ body.reference-subpage .subpage-topbar,
+ body.reference-trade-page .trade-main>.overview-topbar {
+  position:sticky;top:0;z-index:100;min-width:0;max-width:100%;
+  box-sizing:border-box;gap:6px;padding:8px 10px!important;
+ }
+ body.reference-dashboard-home .overview-brand,
+ body.reference-subpage .subpage-topbar .overview-brand,
+ body.reference-trade-page .overview-brand { flex:1 1 auto;min-width:0;gap:6px; }
+ body.reference-dashboard-home .overview-brand>b,
+ body.reference-subpage .overview-brand>b,
+ body.reference-trade-page .overview-brand>b { font-size:12px;white-space:nowrap; }
+ body.reference-dashboard-home .overview-top-actions,
+ body.reference-subpage .subpage-topbar .overview-top-actions,
+ body.reference-trade-page .overview-top-actions {
+  flex:0 1 auto;min-width:0;max-width:58%;gap:4px;overflow:hidden;
+ }
+ body.reference-dashboard-home .overview-top-actions .profile-chip,
+ body.reference-subpage .overview-top-actions .profile-chip,
+ body.reference-trade-page .overview-top-actions .profile-chip { display:none!important; }
+ body.reference-dashboard-home .home-menu-toggle,
+ body.reference-subpage .subpage-menu-toggle,
+ body.reference-trade-page .overview-brand .home-menu-toggle {
+  display:inline-grid!important;flex:0 0 32px;width:32px;height:32px;
+  align-items:center;justify-content:center;position:relative;z-index:110;
+ }
+ body.reference-subpage .subpage-content,
+ body.reference-trade-page .reference-trade-content,
+ body.reference-dashboard-home .overview-content {
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+ }
+ body.reference-dashboard-home .overview-content { padding:14px 10px calc(24px + env(safe-area-inset-bottom)); }
+ body.reference-dashboard-home .overview-primary-grid,
+ body.reference-dashboard-home .overview-lower-grid,
+ body.reference-dashboard-home .overview-portfolio-grid,
+ body.reference-dashboard-home .overview-secondary-grid { display:grid;grid-template-columns:minmax(0,1fr)!important;height:auto!important; }
+ body.reference-dashboard-home .overview-card,
+ body.reference-dashboard-home .mint-exchange,
+ body.reference-dashboard-home .overview-ticker { min-width:0;max-width:100%; }
+ body.reference-dashboard-home .overview-ticker { overflow-x:auto; }
+ body.reference-dashboard-home .home-rail,
+ body.reference-subpage .subpage-rail,
+ body.reference-trade-page .trade-rail {
+  box-sizing:border-box;max-width:84vw;overscroll-behavior:contain;
+ }
+ body.reference-dashboard-home.home-mobile-menu-open,
+ body.reference-subpage.mobile-menu-open,
+ body.reference-trade-page.mobile-menu-open { overflow:hidden; }
+ body.reference-dashboard-home .overview-topbar .overview-label,
+ body.reference-dashboard-home .overview-topbar .brand-divider,
+ body.reference-trade-page .overview-topbar .overview-label,
+ body.reference-trade-page .overview-topbar .brand-divider { display:none!important; }
+ body.reference-subpage .subpage-content .grid:not(.stats),
+ body.reference-subpage .subpage-content .grid.two,
+ body.reference-subpage .subpage-content .grid.equal,
+ body.reference-subpage .subpage-content .settings-layout,
+ body.reference-subpage .subpage-content .profile-layout,
+ body.reference-subpage .subpage-content .security-layout { grid-template-columns:minmax(0,1fr)!important; }
+ body.reference-subpage .subpage-content .table-wrap { max-width:100%;overflow-x:auto!important; }
+ body.reference-trade-page .trade-content-grid,
+ body.reference-trade-page .trade-left-column,
+ body.reference-trade-page .trade-right-column { display:grid;grid-template-columns:minmax(0,1fr)!important;min-width:0;width:100%; }
+ body.reference-trade-page .trade-chart-tools { max-width:100%;overflow-x:auto; }
+}
+@media (max-width:560px) {
+ body.reference-dashboard-home .overview-top-actions .round-tool,
+ body.reference-subpage .overview-top-actions .round-tool,
+ body.reference-trade-page .overview-top-actions .round-tool { width:30px;height:30px;flex:0 0 30px; }
+ body.reference-dashboard-home .overview-top-actions .wallet-chip,
+ body.reference-trade-page .overview-top-actions .wallet-chip { max-width:108px;overflow:hidden; }
+ body.reference-dashboard-home .overview-top-actions .wallet-chip small,
+ body.reference-trade-page .overview-top-actions .wallet-chip small { display:none; }
+ body.reference-dashboard-home .overview-content,
+ body.reference-subpage .subpage-content { padding-left:10px!important;padding-right:10px!important; }
+ body.reference-subpage .subpage-content .grid.stats { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+}
