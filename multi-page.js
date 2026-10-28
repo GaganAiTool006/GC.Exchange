@@ -360,5 +360,36 @@ function initTradeDemo(){
  if(window.gcTradeTimer)clearInterval(window.gcTradeTimer);
  window.gcTradeTimer=setInterval(tick,1500);
 }
+
+// Mobile drawer dismissal: close with backdrop tap, Escape, or a navigation link.
+function closeMobileNavigation(){
+ const body=document.body;
+ const home=body.classList.contains('reference-home');
+ const openClass=home?'home-mobile-menu-open':'mobile-menu-open';
+ if(!body.classList.contains(openClass))return;
+ body.classList.remove(openClass);
+ const toggle=document.querySelector('[data-menu-toggle]');
+ if(toggle){
+  toggle.setAttribute('aria-expanded','false');
+  toggle.setAttribute('aria-label','Open navigation');
+  toggle.title='Open navigation';
+  toggle.innerHTML='<i data-lucide="menu"></i>';
+  if(window.lucide)lucide.createIcons();
+ }
+}
+document.addEventListener('click',e=>{
+ if(!window.matchMedia('(max-width: 900px)').matches)return;
+ const body=document.body;
+ const home=body.classList.contains('reference-home');
+ const openClass=home?'home-mobile-menu-open':'mobile-menu-open';
+ if(!body.classList.contains(openClass))return;
+ if(e.target.closest('[data-menu-toggle]'))return;
+ const rail=body.querySelector(home?'.home-rail':body.classList.contains('reference-trade-page')?'.trade-rail':'.subpage-rail');
+ if(rail&&rail.contains(e.target))return;
+ closeMobileNavigation();
+});
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape')closeMobileNavigation();
+});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTradeDemo,{once:true});else initTradeDemo();
 })();
