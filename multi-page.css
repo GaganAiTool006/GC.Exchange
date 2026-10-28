@@ -1409,3 +1409,43 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
 @media(max-width:600px) {
  .reference-trade-page .trade-hover-tooltip { min-width:145px; font-size:10px; }
 }
+
+
+/* Shared workspace navigation: keep every app page aligned with the Overview rail/topbar. */
+body.reference-subpage .subpage-shell,
+body.reference-trade-page .trade-shell { grid-template-columns:68px minmax(0,1fr); }
+body.reference-subpage .subpage-rail,
+body.reference-trade-page .trade-rail {
+ width:68px;min-width:68px;padding:16px 8px 12px;gap:7px;align-items:center;
+ background:#080a09;border-right:1px solid #242925;
+}
+body.reference-subpage .subpage-home-mark,
+body.reference-trade-page .trade-rail .home-symbol { width:43px;height:44px;margin:0 0 15px; }
+body.reference-subpage .subpage-rail-nav,
+body.reference-trade-page .trade-rail .rail-nav { display:grid;gap:9px;width:100%;justify-items:center; }
+body.reference-subpage .subpage-rail-link,
+body.reference-trade-page .trade-rail .rail-link {
+ width:38px;height:38px;min-width:38px;border-radius:50%;display:grid;place-items:center;
+ color:#b1b9ae;background:transparent;border:1px solid transparent;
+}
+body.reference-subpage .subpage-rail-link svg,
+body.reference-trade-page .trade-rail .rail-link svg { width:17px;height:17px; }
+body.reference-subpage .subpage-rail-link:hover,
+body.reference-trade-page .trade-rail .rail-link:hover { background:#202820;border-color:#3a443b;color:#f3f5ef; }
+body.reference-subpage .subpage-rail-link.active,
+body.reference-trade-page .trade-rail .rail-link.active {
+ background:linear-gradient(145deg,#5ae5bc,#4edb95);color:#102018;box-shadow:0 0 24px #48dc9b22;
+}
+body.reference-subpage .subpage-topbar,
+body.reference-trade-page .trade-main > .overview-topbar {
+ min-height:63px;height:63px;padding:0 clamp(15px,2.3vw,32px);
+ border-bottom:1px solid #242925;background:#0b0d0c;
+}
+body.reference-trade-page .overview-brand .home-menu-toggle { display:grid; }
+body.reference-trade-page .trade-menu-toggle { display:none !important; }
+@media (max-width:900px) {
+ body.reference-subpage .subpage-shell,
+ body.reference-trade-page .trade-shell { grid-template-columns:68px minmax(0,1fr); }
+ body.reference-subpage .subpage-rail,
+ body.reference-trade-page .trade-rail { width:68px;min-width:68px; }
+}
