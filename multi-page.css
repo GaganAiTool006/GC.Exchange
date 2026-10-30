@@ -1726,7 +1726,7 @@ body.reference-trade-page .trade-menu-toggle { display:none !important; }
   display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
   gap:4px!important;min-width:0!important;padding:4px 1px!important;border:0!important;border-radius:12px!important;
   background:transparent!important;color:#8d9a91!important;text-decoration:none!important;
-  font:500 10px/1.1 inherit!important;cursor:pointer!important;
+  font-family:inherit!important;font-size:10px!important;font-weight:600!important;line-height:1.1!important;cursor:pointer!important;
  }
  .gc-mobile-nav-item svg {width:19px!important;height:19px!important;stroke-width:1.8!important;}
  .gc-mobile-nav-item.active {color:#64e5b6!important;background:rgba(83,225,177,.11)!important;}
@@ -1763,4 +1763,66 @@ body.reference-trade-page .trade-menu-toggle { display:none !important; }
  body.reference-dashboard-home .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
  body.reference-subpage .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
  body.reference-trade-page .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
+}
+
+
+/* Premium home dashboard mobile polish: stronger hierarchy, breathing room and touch targets. */
+@media (max-width:900px) {
+ body.reference-dashboard-home .overview-content {padding-top:18px!important;}
+ body.reference-dashboard-home .overview-title-row {
+  display:flex!important;align-items:flex-start!important;justify-content:space-between!important;
+  gap:12px!important;flex-wrap:wrap!important;margin:2px 0 16px!important;
+ }
+ body.reference-dashboard-home .overview-title-left {min-width:0!important;flex:1 1 180px!important;}
+ body.reference-dashboard-home .overview-title-row h1 {
+  margin:0!important;font-size:clamp(24px,6.4vw,30px)!important;letter-spacing:-.7px!important;
+ }
+ body.reference-dashboard-home .overview-title-row p {font-size:12px!important;line-height:1.5!important;color:#8e9b92!important;}
+ body.reference-dashboard-home .overview-ticker {
+  gap:8px!important;padding:2px 1px 10px!important;margin:0 0 12px!important;
+  scrollbar-width:none!important;
+ }
+ body.reference-dashboard-home .overview-ticker::-webkit-scrollbar {display:none!important;}
+ body.reference-dashboard-home .overview-ticker>span {
+  min-width:138px!important;padding:10px 12px!important;border:1px solid #29342d!important;
+  border-radius:13px!important;background:linear-gradient(145deg,#151d18,#101511)!important;
+ }
+ body.reference-dashboard-home .overview-primary-grid,
+ body.reference-dashboard-home .overview-lower-grid {gap:12px!important;}
+ body.reference-dashboard-home .usage-card,
+ body.reference-dashboard-home .mint-exchange,
+ body.reference-dashboard-home .sectors-card,
+ body.reference-dashboard-home .round-card {
+  border:1px solid #29352e!important;border-radius:18px!important;
+  background:linear-gradient(150deg,#151c17 0%,#101511 75%)!important;
+  box-shadow:0 8px 26px rgba(0,0,0,.16)!important;
+ }
+ body.reference-dashboard-home .usage-card {padding:17px 15px 14px!important;}
+ body.reference-dashboard-home .usage-card-head {align-items:flex-start!important;justify-content:space-between!important;}
+ body.reference-dashboard-home .usage-card-head h2 {font-size:13px!important;color:#a9b6ad!important;}
+ body.reference-dashboard-home .usage-big-number {font-size:clamp(27px,7.5vw,36px)!important;font-weight:750!important;letter-spacing:-1.1px!important;}
+ body.reference-dashboard-home .usage-change-pill {font-size:11px!important;padding:5px 8px!important;border-radius:999px!important;}
+ body.reference-dashboard-home .chart-range-tabs {display:flex!important;gap:4px!important;padding:3px!important;border-radius:10px!important;background:#0c120e!important;}
+ body.reference-dashboard-home .chart-range-tabs button {min-height:30px!important;padding:0 10px!important;border-radius:8px!important;font-size:10px!important;}
+ body.reference-dashboard-home .usage-chart {margin-top:10px!important;}
+ body.reference-dashboard-home .usage-chart svg {min-height:165px!important;max-height:190px!important;}
+ body.reference-dashboard-home .mint-exchange {padding:16px!important;}
+ body.reference-dashboard-home .mint-exchange-head {margin-bottom:13px!important;}
+ body.reference-dashboard-home .mint-exchange-head h2 {font-size:16px!important;}
+ body.reference-dashboard-home .mint-asset-box {padding:12px!important;border-radius:13px!important;background:#0d130f!important;border:1px solid #2a362e!important;}
+ body.reference-dashboard-home .mint-swap-button {width:36px!important;height:36px!important;border:3px solid #111713!important;background:#25352b!important;}
+ body.reference-dashboard-home .mint-submit {min-height:46px!important;border-radius:12px!important;font-weight:700!important;}
+ body.reference-dashboard-home .overview-lower-grid {margin-top:12px!important;}
+ body.reference-dashboard-home .overview-panel-head {display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;}
+ body.reference-dashboard-home .overview-panel-head h2 {font-size:14px!important;}
+ body.reference-dashboard-home .mint-donut {max-width:190px!important;margin-inline:auto!important;}
+ body.reference-dashboard-home .overview-bottom-note {margin-top:12px!important;padding:13px!important;border-radius:13px!important;}
+ body.reference-dashboard-home .gc-mobile-nav {padding-top:8px!important;}
+}
+@media (max-width:560px) {
+ body.reference-dashboard-home .usage-card-head {gap:8px!important;}
+ body.reference-dashboard-home .usage-chart svg {min-height:150px!important;}
+ body.reference-dashboard-home .mint-exchange {padding:14px!important;}
+ body.reference-dashboard-home .mint-asset-row {gap:7px!important;flex-wrap:wrap!important;}
+ body.reference-dashboard-home .mint-asset-select {max-width:100%!important;}
 }
