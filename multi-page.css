@@ -1594,3 +1594,173 @@ body.reference-trade-page .trade-menu-toggle { display:none !important; }
   max-width:100%;
  }
 }
+
+
+/* Mobile-first redesign v2: bottom tab bar, clean single-column pages, no sideways page drift. */
+@media (max-width:900px) {
+ html,body { width:100%!important;min-width:0!important;max-width:100%!important;overflow-x:clip!important; }
+ body.reference-dashboard-home,body.reference-subpage,body.reference-trade-page {
+  display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  overflow-x:clip!important;padding-bottom:calc(78px + env(safe-area-inset-bottom))!important;
+ }
+ body.reference-dashboard-home .home-stage,
+ body.reference-dashboard-home .home-shell,
+ body.reference-subpage .subpage-shell,
+ body.reference-trade-page .trade-shell {
+  display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  margin:0!important;overflow:visible!important;
+ }
+ body.reference-dashboard-home .home-rail,
+ body.reference-subpage .subpage-rail,
+ body.reference-trade-page .trade-rail { display:none!important; }
+ body.reference-dashboard-home .home-main-column,
+ body.reference-subpage .subpage-main,
+ body.reference-trade-page .trade-main {
+  display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;
+  margin:0!important;overflow:visible!important;
+ }
+ body.reference-dashboard-home .overview-topbar,
+ body.reference-subpage .subpage-topbar,
+ body.reference-trade-page .trade-main>.overview-topbar {
+  display:flex!important;position:sticky!important;top:0!important;z-index:90!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;height:58px!important;min-height:58px!important;
+  box-sizing:border-box!important;padding:0 13px!important;gap:8px!important;
+  background:rgba(10,13,12,.96)!important;backdrop-filter:blur(18px);
+ }
+ body.reference-dashboard-home .overview-brand,
+ body.reference-subpage .subpage-topbar .overview-brand,
+ body.reference-trade-page .overview-brand { flex:1 1 auto!important;min-width:0!important;gap:7px!important; }
+ body.reference-dashboard-home .overview-brand>b,
+ body.reference-subpage .overview-brand>b,
+ body.reference-trade-page .overview-brand>b { display:block!important;font-size:13px!important;white-space:nowrap!important; }
+ body.reference-dashboard-home .overview-label,
+ body.reference-subpage .overview-label,
+ body.reference-trade-page .overview-label,
+ body.reference-dashboard-home .brand-divider,
+ body.reference-subpage .brand-divider,
+ body.reference-trade-page .brand-divider { display:none!important; }
+ body.reference-dashboard-home .home-menu-toggle,
+ body.reference-subpage .subpage-menu-toggle,
+ body.reference-trade-page .overview-brand .home-menu-toggle { display:none!important; }
+ body.reference-dashboard-home .overview-top-actions,
+ body.reference-subpage .subpage-topbar .overview-top-actions,
+ body.reference-trade-page .overview-top-actions {
+  display:flex!important;flex:0 0 auto!important;max-width:48%!important;min-width:0!important;
+  gap:5px!important;overflow:visible!important;
+ }
+ body.reference-dashboard-home .overview-top-actions .profile-chip,
+ body.reference-subpage .overview-top-actions .profile-chip,
+ body.reference-trade-page .overview-top-actions .profile-chip,
+ body.reference-dashboard-home .overview-top-actions .wallet-chip,
+ body.reference-subpage .overview-top-actions .wallet-chip,
+ body.reference-trade-page .overview-top-actions .wallet-chip,
+ body.reference-dashboard-home .overview-top-actions .topbar-fill,
+ body.reference-subpage .overview-top-actions .topbar-fill,
+ body.reference-trade-page .overview-top-actions .topbar-fill { display:none!important; }
+ body.reference-dashboard-home .overview-top-actions .round-tool,
+ body.reference-subpage .overview-top-actions .round-tool,
+ body.reference-trade-page .overview-top-actions .round-tool {
+  display:grid!important;width:32px!important;height:32px!important;min-width:32px!important;flex:0 0 32px!important;
+ }
+ body.reference-dashboard-home .overview-content,
+ body.reference-subpage .subpage-content,
+ body.reference-trade-page .reference-trade-content {
+  display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  box-sizing:border-box!important;margin:0!important;padding:16px 13px 28px!important;
+ }
+ body.reference-dashboard-home .overview-content>*,
+ body.reference-subpage .subpage-content>*,
+ body.reference-trade-page .reference-trade-content>* {
+  min-width:0!important;max-width:100%!important;box-sizing:border-box!important;
+ }
+ body.reference-dashboard-home .overview-title-row h1 {font-size:25px!important;line-height:1.2!important;}
+ body.reference-dashboard-home .overview-ticker {display:flex!important;max-width:100%!important;overflow-x:auto!important;overscroll-behavior-x:contain;}
+ body.reference-dashboard-home .overview-primary-grid,
+ body.reference-dashboard-home .overview-lower-grid,
+ body.reference-dashboard-home .overview-portfolio-grid,
+ body.reference-dashboard-home .overview-secondary-grid {
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-auto-flow:row!important;
+  width:100%!important;height:auto!important;min-width:0!important;gap:13px!important;
+ }
+ body.reference-dashboard-home .overview-card,
+ body.reference-dashboard-home .mint-exchange,
+ body.reference-dashboard-home .overview-ticker,
+ body.reference-dashboard-home .usage-card,
+ body.reference-dashboard-home .mint-exchange-form {width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;}
+ body.reference-dashboard-home .usage-card {padding:15px!important;}
+ body.reference-dashboard-home .usage-card-head {display:flex!important;flex-wrap:wrap!important;gap:12px!important;}
+ body.reference-dashboard-home .usage-big-number {font-size:clamp(22px,6vw,32px)!important;overflow-wrap:anywhere;}
+ body.reference-dashboard-home .chart-range-tabs {max-width:100%;overflow-x:auto;}
+ body.reference-dashboard-home .usage-chart {width:100%!important;min-width:0!important;overflow:hidden!important;}
+ body.reference-dashboard-home .usage-chart svg {display:block;width:100%!important;max-width:100%!important;height:auto!important;min-height:150px;}
+ body.reference-dashboard-home .overview-content .grid,
+ body.reference-subpage .subpage-content .grid,
+ body.reference-trade-page .trade-content-grid {grid-template-columns:minmax(0,1fr)!important;width:100%!important;min-width:0!important;}
+ body.reference-subpage .subpage-content .stats,
+ body.reference-subpage .subpage-content .stats-grid {grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+ body.reference-subpage .subpage-content .table-wrap,
+ body.reference-subpage .subpage-content table,
+ body.reference-trade-page .trade-order-book {max-width:100%!important;}
+ body.reference-subpage .subpage-content .table-wrap,
+ body.reference-subpage .subpage-content .table-responsive {overflow-x:auto!important;overscroll-behavior-x:contain;}
+ body.reference-subpage .subpage-content input,
+ body.reference-subpage .subpage-content select,
+ body.reference-subpage .subpage-content textarea,
+ body.reference-trade-page input,
+ body.reference-trade-page select {max-width:100%!important;min-width:0!important;box-sizing:border-box!important;}
+ body.reference-trade-page .trade-content-grid,
+ body.reference-trade-page .trade-left-column,
+ body.reference-trade-page .trade-right-column {display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;min-width:0!important;gap:12px!important;}
+ body.reference-trade-page .trade-candle-chart,
+ body.reference-trade-page .trade-chart-tools,
+ body.reference-trade-page .trade-market-header {max-width:100%!important;min-width:0!important;overflow:hidden;}
+ .gc-mobile-nav {
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:1400!important;
+  display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important;
+  width:100%!important;min-height:66px!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;
+  box-sizing:border-box!important;background:rgba(12,16,14,.97)!important;
+  border-top:1px solid #29332d!important;backdrop-filter:blur(22px)!important;
+  box-shadow:0 -10px 32px rgba(0,0,0,.28)!important;
+ }
+ .gc-mobile-nav-item {
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+  gap:4px!important;min-width:0!important;padding:4px 1px!important;border:0!important;border-radius:12px!important;
+  background:transparent!important;color:#8d9a91!important;text-decoration:none!important;
+  font:500 10px/1.1 inherit!important;cursor:pointer!important;
+ }
+ .gc-mobile-nav-item svg {width:19px!important;height:19px!important;stroke-width:1.8!important;}
+ .gc-mobile-nav-item.active {color:#64e5b6!important;background:rgba(83,225,177,.11)!important;}
+ .gc-mobile-nav-item.active svg {stroke-width:2.3!important;}
+ .gc-mobile-more-sheet {
+  position:fixed!important;left:10px!important;right:10px!important;bottom:calc(76px + env(safe-area-inset-bottom))!important;
+  z-index:1399!important;padding:14px!important;border:1px solid #303b34!important;border-radius:18px!important;
+  background:#111714!important;box-shadow:0 18px 60px rgba(0,0,0,.5)!important;
+ }
+ .gc-mobile-more-sheet[hidden] {display:none!important;}
+ .gc-mobile-more-head {display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;color:#f1f5f2;}
+ .gc-mobile-more-head button {width:32px;height:32px;border:0;border-radius:9px;background:#222d26;color:#fff;}
+ .gc-mobile-more-links {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+ .gc-mobile-more-links a {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;min-height:66px;border-radius:12px;background:#19211c;color:#c7d2ca;text-decoration:none;font-size:11px;}
+ .gc-mobile-more-links svg {width:19px;height:19px;color:#6be4b7;}
+ body.gc-mobile-more-open::after {content:"";position:fixed;inset:0;z-index:1398;background:rgba(0,0,0,.42);}
+}
+@media (max-width:560px) {
+ body.reference-dashboard-home .overview-content,
+ body.reference-subpage .subpage-content,
+ body.reference-trade-page .reference-trade-content {padding-left:11px!important;padding-right:11px!important;}
+ body.reference-dashboard-home .overview-topbar,
+ body.reference-subpage .subpage-topbar,
+ body.reference-trade-page .trade-main>.overview-topbar {padding-left:10px!important;padding-right:10px!important;}
+ body.reference-dashboard-home .overview-title-row {margin-bottom:12px!important;}
+ body.reference-dashboard-home .overview-ticker>span {flex:0 0 auto;min-width:125px;}
+ body.reference-subpage .subpage-content .stats,
+ body.reference-subpage .subpage-content .stats-grid {gap:8px!important;}
+ .gc-mobile-more-links {grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+}
+@media (max-width:360px) {
+ .gc-mobile-nav-item {font-size:9px!important;}
+ .gc-mobile-nav-item svg {width:17px!important;height:17px!important;}
+ body.reference-dashboard-home .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
+ body.reference-subpage .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
+ body.reference-trade-page .overview-top-actions .round-tool:nth-child(n+3) {display:none!important;}
+}
