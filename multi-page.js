@@ -231,7 +231,7 @@ animateOnLoad();
 startDemoPriceTape();
 
 function initTradeDemo(){
- if(!document.body.classList.contains('reference-trade-page'))return;
+ if(!document.body.classList.contains('reference-trade-page')||window.LightweightCharts)return;
  const one=s=>document.querySelector(s), all=s=>Array.from(document.querySelectorAll(s));
  const chart=one('.trade-candle-chart'), svg=chart&&chart.querySelector('svg');
  const price=one('.trade-market-price strong'), mid=one('.trade-mid-price strong');
