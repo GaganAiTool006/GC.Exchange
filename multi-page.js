@@ -362,3 +362,110 @@ function initTradeDemo(){
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initTradeDemo,{once:true});else initTradeDemo();
 })();
+
+/* Shared mobile navigation and live public market feed */
+(function(){
+ 'use strict';
+ const navItems=[
+  {href:'index.html',label:'Home',icon:'house',match:['index.html','']},
+  {href:'markets.html',label:'Markets',icon:'chart-no-axes-combined',match:['markets.html']},
+  {href:'trade.html',label:'Trade',icon:'candlestick-chart',match:['trade.html']},
+  {href:'wallet.html',label:'Wallet',icon:'wallet',match:['wallet.html']},
+  {href:'profile.html',label:'Profile',icon:'user-round',match:['profile.html']}
+ ];
+ function mountMobileNav(){
+  if(document.querySelector('.gc-mobile-bottom-nav'))return;
+  const file=location.pathname.split('/').pop()||'index.html';
+  const active=navItems.find(x=>x.match.includes(file))||navItems[0];
+  const nav=document.createElement('nav');nav.className='gc-mobile-bottom-nav';nav.setAttribute('aria-label','Mobile main navigation');
+  nav.innerHTML=navItems.map(item=>'<a href="'+item.href+'"'+(item===active?' class="active" aria-current="page"':'')+'><i data-lucide="'+item.icon+'"></i><span>'+item.label+'</span></a>').join('');
+  document.body.appendChild(nav);if(window.lucide)window.lucide.createIcons();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mountMobileNav,{once:true});else mountMobileNav();
+})();
+(function(){
+ 'use strict';
+ if(!document.body.classList.contains('reference-trade-page'))return;
+ const host=document.querySelector('.trade-candle-chart');
+ if(!host||!window.LightweightCharts)return;
+ document.body.classList.add('gc-live-chart');
+ const wrap=document.createElement('div');wrap.className='gc-live-chart';wrap.id='gc-live-btc-chart';
+ const status=document.createElement('div');status.className='gc-live-chart-status';status.innerHTML='<i></i><span>Connecting to Binance public market data…</span>';
+ wrap.appendChild(status);host.insertBefore(wrap,host.firstChild);
+ const chart=window.LightweightCharts.createChart(wrap,{
+  width:host.clientWidth,height:360,
+  layout:{background:{color:'transparent'},textColor:'#91a7c6',fontFamily:'Inter, sans-serif'},
+  grid:{vertLines:{color:'rgba(105,139,177,.10)'},horzLines:{color:'rgba(105,139,177,.10)'}},
+  rightPriceScale:{borderColor:'rgba(105,139,177,.22)'},
+  timeScale:{borderColor:'rgba(105,139,177,.22)',timeVisible:true,secondsVisible:false},
+  crosshair:{mode:0},handleScroll:true,handleScale:true
+ });
+ const candles=chart.addCandlestickSeries({upColor:'#22c997',downColor:'#f06479',borderUpColor:'#22c997',borderDownColor:'#f06479',wickUpColor:'#22c997',wickDownColor:'#f06479',priceLineVisible:true});
+ const volume=chart.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:'volume',scaleMargins:{top:.82,bottom:0}});
+ chart.priceScale('volume').applyOptions({scaleMargins:{top:.82,bottom:0}});
+ let socket=null,interval='15m',lastPrice=0,closed=false;
+ const pair='BTCUSDT';
+ const fmt=n=>Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+ function setStatus(message,state){status.className='gc-live-chart-status '+(state||'');status.querySelector('span').textContent=message}
+ function renderPrice(price,change){
+  lastPrice=price;
+  const strong=document.querySelector('.trade-market-price strong');if(strong)strong.textContent='$'+fmt(price);
+  const mid=document.querySelector('.trade-mid-price strong');if(mid)mid.textContent='$'+fmt(price);
+  const changeEl=document.querySelector('.trade-market-price span');
+  if(changeEl&&typeof change==='number'){changeEl.className=change>=0?'positive':'negative';changeEl.textContent=(change>=0?'↗ +':'↘ ')+Math.abs(change).toFixed(2)+'% (24h)'}
+  const input=document.querySelector('#order-price'),type=document.querySelector('.trade-form-fields select');
+  if(input&&type&&type.value==='Market'&&document.activeElement!==input)input.value=price.toFixed(2);
+  const total=document.querySelector('#order-total'),amount=Number(document.querySelector('#order-amount')?.value||0);
+  if(total)total.textContent='$'+fmt(price*amount);
+ }
+ async function loadTicker(){
+  try{const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol='+pair);if(!r.ok)throw new Error('Ticker request failed');const d=await r.json();renderPrice(Number(d.lastPrice),Number(d.priceChangePercent));
+   const stats=document.querySelectorAll('.trade-market-stats span b');
+   if(stats[0])stats[0].textContent='$'+fmt(Number(d.highPrice));
+   if(stats[1])stats[1].textContent='$'+fmt(Number(d.lowPrice));
+   if(stats[2])stats[2].textContent=Number(d.volume).toLocaleString('en-US',{maximumFractionDigits:2});
+   if(stats[3])stats[3].textContent='$'+Number(d.quoteVolume).toLocaleString('en-US',{maximumFractionDigits:0});
+  }catch(e){setStatus('Live ticker unavailable — retrying','error')}
+ }
+ async function loadHistory(){
+  setStatus('Loading BTC/USDT candles…');
+  try{
+   const r=await fetch('https://api.binance.com/api/v3/klines?symbol='+pair+'&interval='+interval+'&limit=500');
+   if(!r.ok)throw new Error('Binance returned HTTP '+r.status);
+   const data=await r.json();
+   const candleData=data.map(k=>({time:Math.floor(k[0]/1000),open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));
+   const volumeData=data.map(k=>({time:Math.floor(k[0]/1000),value:+k[5],color:+k[4]>=+k[1]?'rgba(34,201,151,.38)':'rgba(240,100,121,.38)'}));
+   candles.setData(candleData);volume.setData(volumeData);chart.timeScale().fitContent();
+   const last=candleData[candleData.length-1];if(last)renderPrice(last.close);
+   setStatus('LIVE · Binance public data','live');connectSocket();
+  }catch(e){setStatus('Could not load live candles','error');const msg=document.createElement('div');msg.className='gc-live-chart-error';msg.textContent='Binance market data could not be reached from this connection. Please retry or check network access.';wrap.appendChild(msg)}
+ }
+ function connectSocket(){
+  if(socket){socket.onclose=null;socket.close()}
+  const stream=pair.toLowerCase()+'@kline_'+interval;
+  socket=new WebSocket('wss://stream.binance.com:9443/ws/'+stream);
+  socket.onopen=()=>setStatus('LIVE · BTC/USDT · Binance','live');
+  socket.onmessage=e=>{
+   try{
+    const k=JSON.parse(e.data).k;if(!k)return;
+    const bar={time:Math.floor(k.t/1000),open:+k.o,high:+k.h,low:+k.l,close:+k.c};
+    candles.update(bar);volume.update({time:bar.time,value:+k.v,color:bar.close>=bar.open?'rgba(34,201,151,.38)':'rgba(240,100,121,.38)'});
+    renderPrice(bar.close);
+   }catch(_){}
+  };
+  socket.onerror=()=>setStatus('Reconnecting live feed…','error');
+  socket.onclose=()=>{if(!closed){setStatus('Live feed disconnected — retrying','error');setTimeout(()=>{if(!closed)connectSocket()},3000)}};
+ }
+ document.querySelectorAll('.trade-chart-tools [data-tab]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+   const value=btn.textContent.trim();if(!['1m','15m','1H','4H','1D','1W'].includes(value))return;
+   interval=({'1H':'1h','4H':'4h','1D':'1d','1W':'1w'})[value]||value;
+   if(socket){socket.onclose=null;socket.close();socket=null}
+   wrap.querySelector('.gc-live-chart-error')?.remove();loadHistory();
+  });
+ });
+ const resize=()=>chart.applyOptions({width:host.clientWidth,height:wrap.clientHeight||360});
+ if(window.ResizeObserver){new ResizeObserver(resize).observe(host)}else window.addEventListener('resize',resize);
+ loadHistory();loadTicker();const tickerTimer=setInterval(loadTicker,15000);
+ window.addEventListener('pagehide',()=>{closed=true;clearInterval(tickerTimer);if(socket){socket.onclose=null;socket.close()}chart.remove()},{once:true});
+})();
