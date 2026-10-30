@@ -107,7 +107,6 @@
 <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
 <script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
 <script src="multi-page.js"></script>
-<script src="live-market.js"></script>
 <script>
 document.addEventListener('click',function(e){const tab=e.target.closest('.trade-side-tabs [data-tab]');if(!tab)return;const sell=tab.textContent.trim().toLowerCase()==='sell';const submit=document.querySelector('.trade-submit');if(submit){submit.classList.toggle('sell',sell);submit.innerHTML=(sell?'Preview sell order':'Preview buy order')+' <i data-lucide="arrow-up-right"></i>';if(window.lucide)lucide.createIcons();}});
 </script>
