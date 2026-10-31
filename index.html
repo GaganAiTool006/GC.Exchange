@@ -58,24 +58,13 @@
      <a href="markets.html">All 240+ coins <i data-lucide="chevron-right"></i></a>
     </div>
     <section class="overview-primary-grid">
-     <article class="overview-card usage-card">
-      <div class="usage-card-head">
-       <div><div class="card-eyebrow">Estimated Usage</div><div class="usage-big-number">1,343,453 <span class="usage-change-pill">⌁ −2.32%</span></div></div>
-       <div class="chart-range-tabs" data-tabs><button class="active" data-tab>Today</button><button data-tab>Last Week</button><button data-tab>Last Month</button></div>
+     <article class="overview-card usage-card gc-home-market-card">
+      <div class="usage-card-head gc-home-market-head">
+       <div><div class="card-eyebrow">LIVE MARKET · BINANCE</div><h2>Bitcoin / Tether <span class="gc-live-pair">BTC / USDT</span></h2><div class="gc-home-live-price"><strong data-home-btc-price>Loading…</strong><span data-home-btc-change>Connecting to free market data</span></div></div>
+       <div class="chart-range-tabs gc-home-chart-ranges" data-home-timeframes><button data-interval="1m">1m</button><button class="active" data-interval="15m">15m</button><button data-interval="1h">1H</button><button data-interval="4h">4H</button><button data-interval="1d">1D</button></div>
       </div>
-      <div class="usage-chart">
-       <svg viewBox="0 0 750 300" preserveAspectRatio="none" role="img" aria-label="Decorative mint green usage trend line chart">
-        <defs><linearGradient id="mint-area" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#50e3b3" stop-opacity=".13"/><stop offset="100%" stop-color="#50e3b3" stop-opacity="0"/></linearGradient><linearGradient id="greenLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#c6d95f"/><stop offset="48%" stop-color="#45dfb4"/><stop offset="100%" stop-color="#9ce778"/></linearGradient></defs>
-        <g class="usage-grid-lines"><line x1="5" y1="30" x2="705" y2="30"/><line x1="5" y1="93" x2="705" y2="93"/><line x1="5" y1="156" x2="705" y2="156"/><line x1="5" y1="219" x2="705" y2="219"/><line x1="5" y1="275" x2="705" y2="275"/><line x1="90" y1="10" x2="90" y2="275"/><line x1="225" y1="10" x2="225" y2="275"/><line x1="360" y1="10" x2="360" y2="275"/><line x1="495" y1="10" x2="495" y2="275"/><line x1="630" y1="10" x2="630" y2="275"/></g>
-        <path class="usage-shadow-line" d="M5 71 C22 80 21 111 42 119 S64 151 81 145 S103 188 121 179 S146 211 163 192 S191 155 209 168 S239 194 255 161 S279 143 298 134 S326 161 345 131 S365 95 384 117 S410 149 428 123 S451 91 470 109 S498 149 515 129 S541 110 560 84 S591 121 609 102 S640 128 660 98 S690 82 705 92"/>
-        <path class="usage-main-fill" d="M5 120 C22 145 28 184 46 180 S70 216 89 209 S116 251 133 231 S156 194 176 207 S205 231 223 195 S248 181 265 161 S291 193 309 163 S332 147 350 119 S372 104 389 77 S414 89 432 63 S457 51 476 71 S503 119 521 110 S547 96 564 75 S590 55 610 77 S632 106 650 75 S682 82 705 69 L705 282 L5 282 Z"/>
-        <path class="usage-main-line" d="M5 120 C22 145 28 184 46 180 S70 216 89 209 S116 251 133 231 S156 194 176 207 S205 231 223 195 S248 181 265 161 S291 193 309 163 S332 147 350 119 S372 104 389 77 S414 89 432 63 S457 51 476 71 S503 119 521 110 S547 96 564 75 S590 55 610 77 S632 106 650 75 S682 82 705 69"/>
-        <circle class="usage-end-dot" cx="705" cy="69" r="4"/>
-        <g class="usage-axis"><text x="716" y="33">5M</text><text x="716" y="97">3M</text><text x="716" y="160">2M</text><text x="716" y="223">1M</text><text x="716" y="279">0M</text><text x="8" y="295">Feb 22</text><text x="135" y="295">Mar 23</text><text x="265" y="295">Apr 24</text><text x="395" y="295">May 25</text><text x="525" y="295">Jun 25</text><text x="645" y="295">Jul 27</text></g>
-       </svg>
-       <div class="usage-chart-marker"><span>+0.25%</span><i></i></div>
-      </div>
-      <div class="usage-chart-foot"><span><i></i> Estimated asset activity</span><span>Illustrative figures · not live</span></div>
+      <div class="gc-home-chart-wrap"><div id="gc-home-btc-chart" aria-label="Live BTC USDT candlestick chart"></div><div class="gc-home-chart-status" data-home-chart-status><i></i><span>Connecting to Binance public API…</span></div></div>
+      <div class="usage-chart-foot gc-home-chart-foot"><span><i></i> Live BTC/USDT · Binance public API</span><span>Market data only · no API key required</span></div>
      </article>
      <article class="mint-exchange">
       <div class="mint-exchange-head"><div><div class="card-eyebrow">INSTANT CONVERT</div><h2>Exchange</h2></div><button class="mint-more" data-toast="More exchange options are demo-only." aria-label="More options"><i data-lucide="more-vertical"></i></button></div>
@@ -114,5 +103,6 @@
 </div>
 <div class="modal-backdrop" id="modal-backdrop" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="icon-button modal-close" data-modal-close aria-label="Close"><i data-lucide="x"></i></button><div id="modal-content"></div></section></div>
 <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+<script src="https://unpkg.com/lightweight-charts@4.2.2/dist/lightweight-charts.standalone.production.js"></script>
 <script src="multi-page.js"></script>
 </body></html>
