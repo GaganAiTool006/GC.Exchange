@@ -469,3 +469,60 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  loadHistory();loadTicker();const tickerTimer=setInterval(loadTicker,15000);
  window.addEventListener('pagehide',()=>{closed=true;clearInterval(tickerTimer);if(socket){socket.onclose=null;socket.close()}chart.remove()},{once:true});
 })();
+
+/* Homepage BTC/USDT chart: free Binance public REST + WebSocket market data */
+(function(){
+ 'use strict';
+ const root=document.getElementById('gc-home-btc-chart');
+ if(!root||!window.LightweightCharts)return;
+ const wrap=root.parentElement,status=document.querySelector('[data-home-chart-status]');
+ const priceNode=document.querySelector('[data-home-btc-price]'),changeNode=document.querySelector('[data-home-btc-change]');
+ const chart=window.LightweightCharts.createChart(root,{
+  width:root.clientWidth,height:root.clientHeight,
+  layout:{background:{color:'transparent'},textColor:'#91a7c6',fontFamily:'Inter, sans-serif'},
+  grid:{vertLines:{color:'rgba(105,139,177,.10)'},horzLines:{color:'rgba(105,139,177,.10)'}},
+  rightPriceScale:{borderColor:'rgba(105,139,177,.2)'},
+  timeScale:{borderColor:'rgba(105,139,177,.2)',timeVisible:true,secondsVisible:false},
+  crosshair:{mode:0},handleScroll:true,handleScale:true
+ });
+ const candle=chart.addCandlestickSeries({upColor:'#22c997',downColor:'#f06479',borderUpColor:'#22c997',borderDownColor:'#f06479',wickUpColor:'#22c997',wickDownColor:'#f06479',priceLineVisible:true});
+ let socket=null,interval='15m',closed=false;
+ const fmt=n=>Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+ function setStatus(msg,state){if(!status)return;status.className='gc-home-chart-status '+(state||'');status.querySelector('span').textContent=msg}
+ function renderPrice(pctPrice,pctChange){
+  if(priceNode)priceNode.textContent='$'+fmt(pctPrice);
+  if(changeNode&&typeof pctChange==='number'){changeNode.style.color=pctChange>=0?'#22c997':'#f06479';changeNode.textContent=(pctChange>=0?'+':'')+pctChange.toFixed(2)+'% (24h)'}
+ }
+ async function ticker(){
+  try{const res=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');if(!res.ok)throw new Error('ticker unavailable');const d=await res.json();renderPrice(+d.lastPrice,+d.priceChangePercent)}
+  catch(_){setStatus('Ticker temporarily unavailable','error')}
+ }
+ async function history(){
+  setStatus('Loading live BTC/USDT candles…');
+  try{
+   const res=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval='+interval+'&limit=300');
+   if(!res.ok)throw new Error('Binance HTTP '+res.status);
+   const rows=await res.json(),data=rows.map(k=>({time:Math.floor(k[0]/1000),open:+k[1],high:+k[2],low:+k[3],close:+k[4]}));
+   candle.setData(data);chart.timeScale().fitContent();
+   const last=data[data.length-1];if(last)renderPrice(last.close);
+   setStatus('LIVE · Binance public market data','live');stream();
+  }catch(_){setStatus('Live chart unavailable — check connection','error')}
+ }
+ function stream(){
+  if(socket){socket.onclose=null;socket.close()}
+  socket=new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_'+interval);
+  socket.onopen=()=>setStatus('LIVE · BTC/USDT streaming','live');
+  socket.onmessage=e=>{try{const k=JSON.parse(e.data).k;if(!k)return;const b={time:Math.floor(k.t/1000),open:+k.o,high:+k.h,low:+k.l,close:+k.c};candle.update(b);renderPrice(b.close)}catch(_){}};
+  socket.onerror=()=>setStatus('Reconnecting live stream…','error');
+  socket.onclose=()=>{if(!closed){setStatus('Stream disconnected — reconnecting','error');setTimeout(()=>{if(!closed)stream()},3000)}};
+ }
+ document.querySelectorAll('[data-home-timeframes] [data-interval]').forEach(btn=>btn.addEventListener('click',()=>{
+  interval=btn.dataset.interval;
+  document.querySelectorAll('[data-home-timeframes] [data-interval]').forEach(b=>b.classList.toggle('active',b===btn));
+  if(socket){socket.onclose=null;socket.close();socket=null}history();
+ }));
+ const resize=()=>chart.applyOptions({width:root.clientWidth,height:root.clientHeight});
+ if(window.ResizeObserver)new ResizeObserver(resize).observe(wrap);else window.addEventListener('resize',resize);
+ history();ticker();const timer=setInterval(ticker,15000);
+ window.addEventListener('pagehide',()=>{closed=true;clearInterval(timer);if(socket){socket.onclose=null;socket.close()}chart.remove()},{once:true});
+})();
