@@ -1409,3 +1409,66 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
 @media(max-width:600px) {
  .reference-trade-page .trade-hover-tooltip { min-width:145px; font-size:10px; }
 }
+
+
+/* Mobile bottom navigation — shared across every exchange page */
+.gc-mobile-bottom-nav{display:none}
+@media(max-width:760px){
+ body{padding-bottom:calc(76px + env(safe-area-inset-bottom))!important}
+ .gc-mobile-bottom-nav{
+  position:fixed;left:0;right:0;bottom:0;z-index:1200;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:2px;padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(7,17,31,.96);border-top:1px solid #24405f;
+  box-shadow:0 -12px 32px #0005;backdrop-filter:blur(18px);
+ }
+ .gc-mobile-bottom-nav a{
+  min-width:0;min-height:49px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:4px;border-radius:10px;
+  color:#8ea6c5;font-size:10px;font-weight:650;letter-spacing:.01em;
+  -webkit-tap-highlight-color:transparent
+ }
+ .gc-mobile-bottom-nav a svg{width:19px;height:19px;stroke-width:1.9}
+ .gc-mobile-bottom-nav a.active{color:#57e2b4;background:#103329}
+ .gc-mobile-bottom-nav a:focus-visible{outline:2px solid #57e2b4;outline-offset:-2px}
+ body.light-theme .gc-mobile-bottom-nav{background:rgba(248,251,255,.97);border-color:#d5e0ed;box-shadow:0 -10px 28px #18304a1c}
+ body.light-theme .gc-mobile-bottom-nav a{color:#657b96}
+ body.light-theme .gc-mobile-bottom-nav a.active{color:#087d5c;background:#e0f6ee}
+ body.reference-trade-page .trade-preview-banner{margin-bottom:12px}
+}
+@media(min-width:761px){.gc-mobile-bottom-nav{display:none!important}}
+/* Live BTC chart container */
+.gc-live-chart{width:100%;height:360px;min-height:300px;position:relative}
+.gc-live-chart-status{position:absolute;z-index:5;left:12px;top:10px;display:flex;align-items:center;gap:7px;padding:5px 8px;border:1px solid #29445f;border-radius:7px;background:#09182bd9;color:#a9bfd9;font-size:10px;pointer-events:none}
+.gc-live-chart-status i{width:6px;height:6px;border-radius:50%;background:#f1b84d}
+.gc-live-chart-status.live i{background:#36dba5;box-shadow:0 0 9px #36dba5}
+.gc-live-chart-status.error i{background:#ff647d}
+.gc-live-chart-error{position:absolute;inset:45px 12px 12px;display:grid;place-items:center;text-align:center;color:#9bb0ca;font-size:12px;pointer-events:none}
+.reference-trade-page.gc-live-chart .trade-candle-chart>svg{display:none}
+.reference-trade-page.gc-live-chart .trade-candle-chart{height:380px;min-height:330px;overflow:hidden}
+@media(max-width:600px){.gc-live-chart{height:310px;min-height:270px}.reference-trade-page.gc-live-chart .trade-candle-chart{height:330px;min-height:290px}}
+
+/* Homepage live BTC/USDT market chart */
+.gc-home-market-card{min-width:0}
+.gc-home-market-head{align-items:flex-start;gap:16px}
+.gc-home-market-head h2{margin:2px 0 8px;font:700 19px var(--display);letter-spacing:-.4px}
+.gc-live-pair{display:inline-block;margin-left:7px;color:var(--muted);font:600 10px var(--font);letter-spacing:.5px}
+.gc-home-live-price{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.gc-home-live-price strong{font:800 25px var(--display);letter-spacing:-.8px;color:var(--text);font-variant-numeric:tabular-nums}
+.gc-home-live-price span{font-size:11px;font-weight:700;color:var(--green)}
+.gc-home-chart-ranges{flex-shrink:0;gap:3px}
+.gc-home-chart-ranges button{min-width:36px;padding:7px 8px}
+.gc-home-chart-wrap{height:250px;position:relative;min-width:0;margin-top:8px}
+#gc-home-btc-chart{height:100%;width:100%}
+.gc-home-chart-status{position:absolute;top:7px;left:7px;display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 90%,transparent);font-size:10px;color:var(--muted);pointer-events:none}
+.gc-home-chart-status i{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.gc-home-chart-status.live i{background:var(--green);box-shadow:0 0 8px var(--green)}
+.gc-home-chart-status.error i{background:var(--red)}
+.gc-home-chart-foot{margin-top:8px}
+.gc-home-chart-foot>span:first-child i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin-right:5px}
+@media(max-width:760px){
+ .gc-home-market-head{display:flex;flex-direction:column;align-items:stretch}
+ .gc-home-chart-ranges{align-self:flex-start}
+ .gc-home-chart-wrap{height:235px}
+ .gc-home-live-price strong{font-size:23px}
+}
