@@ -536,3 +536,23 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  history();
  window.addEventListener('pagehide',()=>{closed=true;clearTimeout(retryTimer);if(socket){socket.onclose=null;socket.close()}if(chart)chart.remove()},{once:true});
 })();
+
+
+/* Accessible off-canvas navigation: backdrop click and Escape close the drawer. */
+document.addEventListener('click',function(event){
+ const mobile=window.matchMedia('(max-width: 900px)').matches;
+ if(!mobile)return;
+ if(event.target===document.body && (document.body.classList.contains('mobile-menu-open')||document.body.classList.contains('home-mobile-menu-open'))){
+  document.body.classList.remove('mobile-menu-open','home-mobile-menu-open');
+  const btn=document.querySelector('[data-menu-toggle]');
+  if(btn){btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open navigation');btn.title='Open navigation'}
+ }
+ const link=event.target.closest('.subpage-rail a,.trade-rail a');
+ if(link){document.body.classList.remove('mobile-menu-open');}
+});
+document.addEventListener('keydown',function(event){
+ if(event.key!=='Escape')return;
+ document.body.classList.remove('mobile-menu-open','home-mobile-menu-open');
+ const btn=document.querySelector('[data-menu-toggle]');
+ if(btn){btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open navigation');btn.title='Open navigation'}
+});
