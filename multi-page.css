@@ -1716,3 +1716,57 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
     min-height:fit-content;
   }
 }
+
+
+/* Icon fallback: keep navigation understandable when the Lucide CDN is blocked. */
+i[data-lucide]:not(svg) {
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  min-width:1em;
+  min-height:1em;
+  font-style:normal !important;
+  font-size:0 !important;
+  line-height:1 !important;
+  vertical-align:middle;
+}
+i[data-lucide]:not(svg)::before {
+  font-family:Arial,sans-serif;
+  font-size:18px;
+  font-weight:600;
+  line-height:1;
+  color:currentColor;
+}
+i[data-lucide="house"]:not(svg)::before{content:"⌂"}
+i[data-lucide="layout-dashboard"]:not(svg)::before{content:"▦"}
+i[data-lucide="chart-no-axes-column"]:not(svg)::before,
+i[data-lucide="chart-column"]:not(svg)::before,
+i[data-lucide="bar-chart-3"]:not(svg)::before{content:"▥"}
+i[data-lucide="candlestick-chart"]:not(svg)::before{content:"♜"}
+i[data-lucide="repeat-2"]:not(svg)::before{content:"⇄"}
+i[data-lucide="wallet"]:not(svg)::before{content:"▣"}
+i[data-lucide="history"]:not(svg)::before{content:"◷"}
+i[data-lucide="user-round"]:not(svg)::before,
+i[data-lucide="user"]:not(svg)::before{content:"●"}
+i[data-lucide="badge-check"]:not(svg)::before{content:"✓"}
+i[data-lucide="shield-check"]:not(svg)::before{content:"⬟"}
+i[data-lucide="smartphone"]:not(svg)::before{content:"▯"}
+i[data-lucide="settings"]:not(svg)::before{content:"⚙"}
+i[data-lucide="user-plus"]:not(svg)::before{content:"+"}
+i[data-lucide="log-in"]:not(svg)::before{content:"↪"}
+i[data-lucide="search"]:not(svg)::before{content:"⌕"}
+i[data-lucide="arrow-up-right"]:not(svg)::before{content:"↗"}
+i[data-lucide="bell"]:not(svg)::before{content:"♢"}
+i[data-lucide="moon"]:not(svg)::before{content:"◐"}
+i[data-lucide="panel-left-close"]:not(svg)::before,
+i[data-lucide="panel-left-open"]:not(svg)::before{content:"☰"}
+i[data-lucide="x"]:not(svg)::before{content:"×"}
+i[data-lucide="menu"]:not(svg)::before{content:"☰"}
+/* Fallback is intentionally scoped to the main site navigation and toolbar. */
+.subpage-rail-link i[data-lucide]:not(svg),
+.subpage-topbar i[data-lucide]:not(svg),
+.trade-rail .rail-link i[data-lucide]:not(svg) {
+  width:20px;
+  height:20px;
+  flex:0 0 20px;
+}
