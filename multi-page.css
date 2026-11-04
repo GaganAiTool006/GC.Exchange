@@ -1638,3 +1638,81 @@ body.reference-subpage.light-theme .subpage-footer{border-color:#d8e1d4;color:#6
   body.reference-dashboard-home .gc-home-market-head {gap:8px !important}
   body.reference-dashboard-home .gc-home-chart-wrap {height:215px !important}
 }
+
+
+/* ===== Global mobile scrolling fix for every workspace route ===== */
+@media (max-width: 900px) {
+  html:has(body.reference-subpage),
+  html:has(body.reference-trade-page) {
+    width:100% !important;
+    height:100% !important;
+    min-height:100% !important;
+    overflow:hidden !important;
+    overscroll-behavior:none;
+  }
+
+  body.reference-subpage,
+  body.reference-trade-page {
+    width:100% !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    max-height:100dvh !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    overscroll-behavior:none;
+  }
+
+  body.reference-subpage .subpage-shell,
+  body.reference-trade-page .trade-shell {
+    display:block !important;
+    width:100% !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    max-height:100dvh !important;
+    overflow:hidden !important;
+  }
+
+  body.reference-subpage .subpage-main,
+  body.reference-trade-page .trade-main {
+    display:flex !important;
+    flex-direction:column !important;
+    width:100% !important;
+    height:100dvh !important;
+    min-height:0 !important;
+    max-height:100dvh !important;
+    overflow-x:hidden !important;
+    overflow-y:auto !important;
+    -webkit-overflow-scrolling:touch !important;
+    overscroll-behavior-y:contain;
+    touch-action:pan-y;
+  }
+
+  body.reference-subpage .subpage-content,
+  body.reference-trade-page .reference-trade-content {
+    flex:0 0 auto !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+    padding-bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+  }
+
+  body.reference-subpage .subpage-footer {
+    flex:0 0 auto !important;
+    margin-bottom:env(safe-area-inset-bottom);
+  }
+
+  body.reference-trade-page .trade-main > .overview-topbar,
+  body.reference-subpage .subpage-topbar {
+    flex:0 0 auto !important;
+  }
+
+  /* Prevent cards and nested grids from shrinking the page's scroll height. */
+  body.reference-subpage .subpage-content > *,
+  body.reference-trade-page .reference-trade-content > * {
+    min-height:fit-content;
+  }
+}
