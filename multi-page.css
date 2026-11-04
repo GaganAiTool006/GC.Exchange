@@ -1770,3 +1770,84 @@ i[data-lucide="menu"]:not(svg)::before{content:"☰"}
   height:20px;
   flex:0 0 20px;
 }
+
+
+/* ===== Unified full-screen workspace navigation and resilient assets ===== */
+html:has(body.reference-subpage),html:has(body.reference-trade-page){width:100%;height:100%;min-height:100%;background:#090d0b}
+body.reference-subpage,body.reference-trade-page{width:100%;height:100dvh;min-height:100dvh;max-height:100dvh;margin:0;padding:0;overflow:hidden;background:#090d0b}
+body.reference-subpage .subpage-shell,body.reference-trade-page .trade-shell{width:100%;height:100dvh;min-height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0;box-shadow:none;grid-template-columns:252px minmax(0,1fr);overflow:hidden}
+body.reference-subpage .subpage-rail,body.reference-trade-page .trade-rail{position:relative;top:0;left:auto;width:auto;height:100dvh;min-height:0;max-height:100dvh;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;align-items:stretch;padding:18px 14px max(18px,env(safe-area-inset-bottom));gap:9px;background-color:#080d0b;background-image:linear-gradient(180deg,rgba(7,13,10,.96),rgba(7,13,10,.985)),url("assets/reference-sidebar-art.webp");background-position:center,bottom center;background-size:cover,100% auto;background-repeat:no-repeat;border-right:1px solid #26332b}
+body.reference-subpage .subpage-home-mark,body.reference-trade-page .trade-rail .home-symbol{width:100%;height:48px;min-height:48px;display:flex;align-items:center;justify-content:flex-start;padding-left:12px;margin:0 0 14px}
+body.reference-subpage .subpage-rail-nav,body.reference-trade-page .trade-rail .rail-nav{display:flex;flex-direction:column;align-items:stretch;gap:6px;width:100%}
+body.reference-subpage .subpage-rail-link,body.reference-trade-page .trade-rail .rail-link{width:100%;height:42px;min-height:42px;display:flex;align-items:center;justify-content:flex-start;gap:12px;padding:0 12px;border-radius:10px;font-size:12px;white-space:nowrap;text-decoration:none;color:#b7c3b8;flex:0 0 auto}
+body.reference-subpage .subpage-rail-link::after,body.reference-trade-page .trade-rail .rail-link::after{content:attr(aria-label);display:block;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:550;letter-spacing:0}
+body.reference-subpage .subpage-rail-link svg,body.reference-trade-page .trade-rail .rail-link svg{width:18px;height:18px;flex:0 0 18px}
+body.reference-subpage .subpage-rail-link.active,body.reference-trade-page .trade-rail .rail-link.active{background:#1a2c22;color:#8de7b9;border:1px solid #365441;box-shadow:inset 3px 0 #54e4b5}
+body.reference-subpage .subpage-rail-spacer,body.reference-trade-page .trade-rail .rail-spacer{flex:1 0 18px}
+body.reference-subpage .subpage-main,body.reference-trade-page .trade-main{width:100%;height:100dvh;min-width:0;min-height:0;max-height:100dvh;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+body.reference-subpage .subpage-topbar,body.reference-trade-page .trade-main>.overview-topbar{position:sticky;top:0;z-index:30;min-height:64px;flex:0 0 64px}
+body.reference-subpage .subpage-content{width:100%;max-width:none;padding:0 clamp(18px,2.5vw,40px) max(28px,env(safe-area-inset-bottom))}
+body.reference-subpage .subpage-menu-toggle,body.reference-trade-page .trade-mobile-menu{display:inline-grid;place-items:center;width:38px;height:38px;min-width:38px;flex:0 0 38px;border:1px solid #344138;border-radius:10px;background:#151d18;color:#dbe9dd;cursor:pointer}
+body.reference-subpage.menu-collapsed .subpage-shell,body.reference-trade-page.menu-collapsed .trade-shell{grid-template-columns:72px minmax(0,1fr)}
+body.reference-subpage.menu-collapsed .subpage-rail,body.reference-trade-page.menu-collapsed .trade-rail{align-items:center;padding-left:8px;padding-right:8px}
+body.reference-subpage.menu-collapsed .subpage-home-mark,body.reference-trade-page.menu-collapsed .trade-rail .home-symbol{justify-content:center;padding:0}
+body.reference-subpage.menu-collapsed .subpage-rail-nav,body.reference-trade-page.menu-collapsed .trade-rail .rail-nav{align-items:center}
+body.reference-subpage.menu-collapsed .subpage-rail-link,body.reference-trade-page.menu-collapsed .trade-rail .rail-link{width:44px;min-width:44px;padding:0;justify-content:center;gap:0}
+body.reference-subpage.menu-collapsed .subpage-rail-link::after,body.reference-trade-page.menu-collapsed .trade-rail .rail-link::after{display:none}
+body.reference-subpage .subpage-rail::-webkit-scrollbar,body.reference-trade-page .trade-rail::-webkit-scrollbar{width:5px}
+body.reference-subpage .subpage-rail::-webkit-scrollbar-thumb,body.reference-trade-page .trade-rail::-webkit-scrollbar-thumb{background:#34443a;border-radius:8px}
+
+/* Fallback glyphs appear only while a Lucide icon has not been converted to SVG. */
+i[data-lucide]:not(svg){display:inline-flex!important;align-items:center;justify-content:center;flex:0 0 18px;width:18px;height:18px;min-width:18px;min-height:18px;font-size:0!important;font-style:normal!important;line-height:1!important;vertical-align:middle;color:currentColor}
+i[data-lucide]:not(svg)::before{font-family:Arial,sans-serif;font-size:17px;font-weight:600;line-height:1;color:currentColor}
+i[data-lucide="house"]:not(svg)::before{content:"⌂"} i[data-lucide="layout-dashboard"]:not(svg)::before{content:"▦"}
+i[data-lucide="chart-no-axes-column"]:not(svg)::before,i[data-lucide="chart-no-axes-combined"]:not(svg)::before,i[data-lucide="bar-chart-3"]:not(svg)::before{content:"▥"}
+i[data-lucide="candlestick-chart"]:not(svg)::before{content:"♜"} i[data-lucide="repeat-2"]:not(svg)::before{content:"⇄"}
+i[data-lucide="wallet"]:not(svg)::before{content:"▣"} i[data-lucide="history"]:not(svg)::before{content:"◷"}
+i[data-lucide="user-round"]:not(svg)::before,i[data-lucide="users-round"]:not(svg)::before{content:"●"}
+i[data-lucide="badge-check"]:not(svg)::before,i[data-lucide="check-circle-2"]:not(svg)::before{content:"✓"}
+i[data-lucide="shield-check"]:not(svg)::before{content:"⬟"} i[data-lucide="smartphone"]:not(svg)::before{content:"▯"}
+i[data-lucide="settings"]:not(svg)::before,i[data-lucide="settings-2"]:not(svg)::before{content:"⚙"}
+i[data-lucide="user-plus"]:not(svg)::before{content:"+"} i[data-lucide="log-in"]:not(svg)::before{content:"↪"} i[data-lucide="log-out"]:not(svg)::before{content:"⇥"}
+i[data-lucide="search"]:not(svg)::before{content:"⌕"} i[data-lucide="arrow-up-right"]:not(svg)::before{content:"↗"}
+i[data-lucide="bell"]:not(svg)::before{content:"♢"} i[data-lucide="moon"]:not(svg)::before{content:"◐"}
+i[data-lucide="panel-left-close"]:not(svg)::before,i[data-lucide="panel-left-open"]:not(svg)::before,i[data-lucide="menu"]:not(svg)::before{content:"☰"}
+i[data-lucide="x"]:not(svg)::before{content:"×"} i[data-lucide="chevron-down"]:not(svg)::before{content:"⌄"}
+i[data-lucide="chevron-right"]:not(svg)::before{content:"›"} i[data-lucide="arrow-left"]:not(svg)::before{content:"←"}
+i[data-lucide="arrow-down-up"]:not(svg)::before{content:"↕"} i[data-lucide="arrow-down-to-line"]:not(svg)::before{content:"↓"}
+i[data-lucide="arrow-up-from-line"]:not(svg)::before{content:"↑"} i[data-lucide="circle-dollar-sign"]:not(svg)::before{content:"$"}
+i[data-lucide="coins"]:not(svg)::before{content:"◉"} i[data-lucide="landmark"]:not(svg)::before{content:"▤"}
+i[data-lucide="trending-up"]:not(svg)::before{content:"↗"} i[data-lucide="info"]:not(svg)::before{content:"ⓘ"}
+i[data-lucide="copy"]:not(svg)::before{content:"▢"} i[data-lucide="download"]:not(svg)::before{content:"↓"}
+i[data-lucide="refresh-cw"]:not(svg)::before{content:"↻"} i[data-lucide="plus"]:not(svg)::before{content:"+"}
+i[data-lucide="qr-code"]:not(svg)::before{content:"▦"} i[data-lucide="lock-keyhole"]:not(svg)::before{content:"▣"}
+i[data-lucide="scale"]:not(svg)::before{content:"⚖"} i[data-lucide="layers"]:not(svg)::before{content:"▱"}
+i[data-lucide="list-filter"]:not(svg)::before,i[data-lucide="sliders-horizontal"]:not(svg)::before{content:"☷"}
+i[data-lucide="more-vertical"]:not(svg)::before{content:"⋮"} i[data-lucide="circle-help"]:not(svg)::before{content:"?"}
+i[data-lucide="clipboard-list"]:not(svg)::before{content:"☷"} i[data-lucide="arrow-down-up"]:not(svg)::before{content:"↕"}
+
+/* Mobile: the full label rail becomes a touch-friendly off-canvas drawer. */
+@media(max-width:900px){
+ body.reference-subpage .subpage-shell,body.reference-trade-page .trade-shell{display:block;width:100%;height:100dvh;min-height:100dvh;max-height:100dvh;overflow:hidden}
+ body.reference-subpage .subpage-rail,body.reference-trade-page .trade-rail{position:fixed;left:0;top:0;bottom:0;z-index:100;width:min(292px,86vw);height:100dvh;max-height:100dvh;min-height:0;padding:16px 14px max(18px,env(safe-area-inset-bottom));overflow-y:auto;box-shadow:18px 0 55px #0009;transform:translateX(-110%);transition:transform .24s ease;align-items:stretch}
+ body.reference-subpage.mobile-menu-open .subpage-rail,body.reference-trade-page.mobile-menu-open .trade-rail{transform:translateX(0)}
+ body.reference-subpage.menu-collapsed .subpage-rail,body.reference-trade-page.menu-collapsed .trade-rail{transform:translateX(-110%)}
+ body.reference-subpage.mobile-menu-open::before,body.reference-trade-page.mobile-menu-open::before{content:"";position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.58);backdrop-filter:blur(2px)}
+ body.reference-subpage .subpage-main,body.reference-trade-page .trade-main{width:100%;height:100dvh;max-height:100dvh;overflow-x:hidden;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)}
+ body.reference-subpage .subpage-rail-link,body.reference-trade-page .trade-rail .rail-link{height:44px;min-height:44px;font-size:13px}
+ body.reference-subpage .subpage-rail-link::after,body.reference-trade-page .trade-rail .rail-link::after{font-size:13px}
+ body.reference-subpage .subpage-menu-toggle,body.reference-trade-page .trade-mobile-menu{display:inline-grid;position:relative;z-index:101}
+ body.reference-subpage.menu-collapsed .subpage-shell,body.reference-trade-page.menu-collapsed .trade-shell{grid-template-columns:0 minmax(0,1fr)}
+}
+@media(max-width:600px){
+ body.reference-subpage .subpage-topbar,body.reference-trade-page .overview-topbar{min-height:58px;flex-basis:58px;padding-left:10px;padding-right:10px}
+ body.reference-subpage .subpage-content{padding:0 10px max(26px,env(safe-area-inset-bottom))}
+ body.reference-subpage .subpage-content .page-heading{padding-top:13px}
+ body.reference-subpage .subpage-topbar .overview-label,body.reference-subpage .subpage-topbar .brand-divider{display:none}
+ body.reference-subpage .subpage-topbar .profile-chip{display:none}
+ body.reference-subpage .subpage-topbar .overview-top-actions{gap:6px}
+ body.reference-subpage .subpage-topbar .subpage-search-box{width:36px;min-width:36px}
+ body.reference-subpage .subpage-topbar .subpage-search-box input{width:0;min-width:0}
+ body.reference-subpage .subpage-menu-toggle,body.reference-trade-page .trade-mobile-menu{width:36px;height:36px;min-width:36px;flex-basis:36px}
+}
+@media(prefers-reduced-motion:reduce){body.reference-subpage .subpage-rail,body.reference-trade-page .trade-rail{transition:none}}
