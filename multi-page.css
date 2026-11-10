@@ -2040,3 +2040,123 @@ i[data-lucide="clipboard-list"]:not(svg)::before{content:"☷"} i[data-lucide="a
   }
   body.reference-home .home-menu-collapsed .home-shell {grid-template-columns:1fr}
 }
+
+
+/* Final navigation sizing fix:
+   Desktop gets the expanded text rail; mobile keeps a true off-canvas drawer.
+   Keep these rules last so earlier global rail styles cannot leak into mobile. */
+@media (min-width: 901px) {
+  body.reference-home .home-shell {grid-template-columns:206px minmax(0,1fr)}
+  body.reference-home .home-rail {
+    width:206px;
+    min-width:206px;
+    box-sizing:border-box;
+    align-items:stretch;
+    padding:18px 14px 14px;
+  }
+  body.reference-home .home-rail .rail-nav {display:grid;justify-items:stretch}
+  body.reference-home .home-rail .rail-link {
+    display:flex;
+    width:100%;
+    min-width:0;
+    justify-content:flex-start;
+    gap:12px;
+    padding:0 12px;
+    box-sizing:border-box;
+  }
+  body.reference-home .home-rail .rail-link:after {
+    content:attr(aria-label);
+    display:block;
+    font:600 12px var(--font);
+    white-space:nowrap;
+  }
+}
+@media (max-width: 900px) {
+  body.reference-home .home-shell {
+    display:block !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    min-height:100dvh !important;
+    overflow:visible !important;
+  }
+  body.reference-home .home-rail {
+    position:fixed !important;
+    z-index:1001 !important;
+    top:0 !important;
+    bottom:0 !important;
+    left:0 !important;
+    right:auto !important;
+    width:min(280px,84vw) !important;
+    min-width:0 !important;
+    height:100dvh !important;
+    min-height:100dvh !important;
+    transform:translateX(-110%) !important;
+    visibility:hidden !important;
+    pointer-events:none !important;
+    overflow-y:auto !important;
+    align-items:stretch !important;
+    padding:18px 14px 16px !important;
+    box-sizing:border-box !important;
+    border-radius:0 18px 18px 0 !important;
+  }
+  body.reference-home.home-mobile-menu-open .home-rail {
+    transform:translateX(0) !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
+  }
+  body.reference-home .home-rail .home-symbol.gc-sidebar-brand {
+    display:flex !important;
+    width:100% !important;
+    height:54px !important;
+    justify-content:flex-start !important;
+    margin:0 0 12px !important;
+  }
+  body.reference-home .home-rail .gc-sidebar-wordmark {display:flex !important}
+  body.reference-home .home-rail .rail-nav {
+    display:grid !important;
+    width:100% !important;
+    justify-items:stretch !important;
+  }
+  body.reference-home .home-rail .rail-link {
+    display:flex !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:42px !important;
+    justify-content:flex-start !important;
+    padding:0 12px !important;
+    box-sizing:border-box !important;
+  }
+  body.reference-home .home-rail .rail-link:after {
+    content:attr(aria-label) !important;
+    display:block !important;
+    font:600 12px var(--font) !important;
+    white-space:nowrap !important;
+  }
+  body.reference-home .home-main-column {
+    display:flex !important;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:100dvh !important;
+    height:auto !important;
+    overflow:visible !important;
+  }
+  body.reference-home .overview-content {
+    display:flex !important;
+    flex-direction:column !important;
+    width:100% !important;
+    min-width:0 !important;
+    height:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+    box-sizing:border-box !important;
+  }
+  body.reference-home .overview-primary-grid,
+  body.reference-home .overview-lower-grid {
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr) !important;
+    min-width:0 !important;
+  }
+  body.reference-home .overview-card,
+  body.reference-home .mint-exchange {min-width:0 !important;max-width:100% !important}
+}
