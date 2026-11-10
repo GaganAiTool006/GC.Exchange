@@ -1904,3 +1904,139 @@ i[data-lucide="clipboard-list"]:not(svg)::before{content:"☷"} i[data-lucide="a
  .reference-subpage .subpage-rail-link{width:38px;justify-content:center;padding:0}
  .reference-subpage .subpage-rail-link:after{display:none}
 }
+
+
+/* Responsive home dashboard repair: prevent the fixed mobile drawer being
+   clipped by the desktop shell and keep dashboard panels inside the viewport. */
+@media (max-width: 900px) {
+  body.reference-home {
+    width:100%;
+    min-width:0;
+    min-height:100dvh;
+    overflow-x:hidden;
+  }
+  body.reference-home .home-stage {
+    width:100%;
+    min-width:0;
+    min-height:100dvh;
+    padding:0;
+    overflow-x:hidden;
+  }
+  body.reference-home .home-shell {
+    display:block;
+    position:relative;
+    width:100%;
+    min-width:0;
+    min-height:100dvh;
+    height:auto;
+    max-width:none;
+    overflow:visible;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+  }
+  body.reference-home .home-main-column {
+    display:flex;
+    width:100%;
+    min-width:0;
+    min-height:100dvh;
+    overflow-x:hidden;
+  }
+  body.reference-home .home-rail {
+    position:fixed;
+    z-index:1000;
+    inset:0 auto 0 0;
+    width:min(280px,84vw);
+    height:100dvh;
+    min-height:100dvh;
+    box-sizing:border-box;
+    padding:18px 14px 16px;
+    align-items:stretch;
+    overflow-x:hidden;
+    overflow-y:auto;
+    transform:translateX(-110%);
+    border:1px solid #29342c;
+    border-radius:0 18px 18px 0;
+    background:#080d0a;
+    box-shadow:none;
+  }
+  body.reference-home.home-mobile-menu-open .home-rail {
+    transform:translateX(0);
+    box-shadow:18px 0 45px #0009;
+  }
+  body.reference-home .home-rail .home-symbol.gc-sidebar-brand {
+    width:100%;
+    height:54px;
+    justify-content:flex-start;
+    padding:4px 8px;
+    margin:0 0 12px;
+  }
+  body.reference-home .home-rail .gc-sidebar-wordmark {display:flex}
+  body.reference-home .home-rail .rail-nav {
+    display:grid;
+    width:100%;
+    justify-items:stretch;
+    gap:5px;
+  }
+  body.reference-home .home-rail .rail-link {
+    display:flex;
+    width:100%;
+    height:42px;
+    justify-content:flex-start;
+    gap:12px;
+    padding:0 12px;
+    box-sizing:border-box;
+  }
+  body.reference-home .home-rail .rail-link:after {
+    content:attr(aria-label);
+    display:block;
+    font:600 12px var(--font);
+    color:#c6d6cc;
+    white-space:nowrap;
+  }
+  body.reference-home .home-rail .rail-link:before {content:none}
+  body.reference-home .overview-topbar {
+    width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    padding:0 12px;
+    gap:8px;
+  }
+  body.reference-home .overview-brand {
+    min-width:0;
+    gap:7px;
+    overflow:hidden;
+  }
+  body.reference-home .overview-brand>b {font-size:12px}
+  body.reference-home .overview-content {
+    width:100%;
+    min-width:0;
+    box-sizing:border-box;
+    padding:0 12px 14px;
+    overflow-x:hidden;
+  }
+  body.reference-home .overview-title-row,
+  body.reference-home .overview-primary-grid,
+  body.reference-home .overview-lower-grid {
+    width:100%;
+    min-width:0;
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.reference-home .overview-primary-grid,
+  body.reference-home .overview-lower-grid {gap:10px}
+  body.reference-home .overview-ticker {
+    justify-content:flex-start;
+    overflow-x:auto;
+    max-width:100%;
+    scrollbar-width:none;
+  }
+  body.reference-home .overview-ticker::-webkit-scrollbar {display:none}
+  body.reference-home .overview-card {width:100%;min-width:0;box-sizing:border-box}
+  body.reference-home .chart-card,
+  body.reference-home .chart-wrap,
+  body.reference-home .chart-container {max-width:100%;min-width:0}
+  body.reference-home .round-content {
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  }
+  body.reference-home .home-menu-collapsed .home-shell {grid-template-columns:1fr}
+}
