@@ -1851,3 +1851,19 @@ i[data-lucide="clipboard-list"]:not(svg)::before{content:"☷"} i[data-lucide="a
  body.reference-subpage .subpage-menu-toggle,body.reference-trade-page .trade-mobile-menu{width:36px;height:36px;min-width:36px;flex-basis:36px}
 }
 @media(prefers-reduced-motion:reduce){body.reference-subpage .subpage-rail,body.reference-trade-page .trade-rail{transition:none}}
+
+
+/* GC.Exchange refreshed mint identity */
+.home-brand-mark,.home-brand-mark.small{width:38px;height:38px;display:block;clip-path:none;background:transparent;filter:drop-shadow(0 2px 10px #00d4a644);font-size:0}
+.home-brand-mark:after{content:none}
+.home-brand-mark.small{width:27px;height:27px}
+.gc-brand-icon{display:block;width:100%;height:100%;object-fit:contain}
+.overview-brand>b{font-weight:800;letter-spacing:-.45px}
+.overview-brand>b .brand-gc{color:#f3fff9}
+.overview-brand>b .brand-exchange{color:#00d4a6}
+.subpage-home-mark .home-brand-mark{width:38px;height:38px}
+.brand-emblem{display:block;width:54px;height:54px;object-fit:contain;flex:0 0 54px}
+.brand .brand-emblem{filter:drop-shadow(0 4px 14px #00d4a633)}
+.brand-title{color:#f3fff9}
+.brand-title .brand-exchange{color:#00d4a6}
+@media(max-width:640px){.home-brand-mark{width:34px;height:34px}.home-brand-mark.small{width:24px;height:24px}.brand-emblem{width:44px;height:44px;flex-basis:44px}}
