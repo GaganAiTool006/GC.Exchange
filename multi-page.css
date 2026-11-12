@@ -2245,3 +2245,142 @@ i[data-lucide="clipboard-list"]:not(svg)::before{content:"☷"} i[data-lucide="a
     background-position:center, 68% center;
   }
 }
+
+
+/* Site-wide image coverage — GC.Exchange visual system.
+   Local bundled WebP artwork is layered under dark/mint overlays so every
+   route gets visible imagery while text, tables and controls remain legible. */
+body.reference-home,
+body.reference-subpage,
+body.reference-trade-page {
+  background-color:#090d0a;
+  background-image:
+    radial-gradient(ellipse at 84% 7%, rgba(0,212,166,.075), transparent 34%),
+    linear-gradient(rgba(8,12,10,.88),rgba(8,12,10,.94)),
+    url("assets/reference-sidebar-art.webp");
+  background-position:center,center,right top;
+  background-size:cover,cover,620px auto;
+  background-repeat:no-repeat;
+  background-attachment:fixed;
+}
+
+/* All standard inner pages: visible artwork in page canvas, page heading,
+   statistic tiles and content panels. */
+.reference-subpage .subpage-content {
+  background-image:
+    linear-gradient(180deg,rgba(10,14,11,.10),rgba(10,14,11,.22)),
+    url("assets/reference-crypto-art.webp");
+  background-position:center, right 4%;
+  background-size:cover, min(720px,72vw) auto;
+  background-repeat:no-repeat;
+}
+.reference-subpage .subpage-content .page-heading {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:19px 21px;
+  min-height:86px;
+  border:1px solid rgba(93,151,120,.24);
+  border-radius:15px;
+  background-image:
+    linear-gradient(100deg,rgba(13,22,16,.97) 0%,rgba(13,22,16,.88) 58%,rgba(13,22,16,.48) 100%),
+    url("assets/reference-sidebar-art.webp");
+  background-position:center,right 38%;
+  background-size:cover,cover;
+}
+.reference-subpage .subpage-content .page-heading>* {position:relative;z-index:1}
+.reference-subpage .subpage-content .panel,
+.reference-subpage .subpage-content .stat-card {
+  background-image:
+    linear-gradient(145deg,rgba(23,27,23,.95),rgba(15,20,16,.91)),
+    url("assets/reference-crypto-art.webp");
+  background-position:center,right center;
+  background-size:cover,520px auto;
+  background-repeat:no-repeat;
+  border-color:rgba(91,126,99,.28);
+}
+.reference-subpage .subpage-content .stat-card:nth-child(2n) {
+  background-image:
+    linear-gradient(145deg,rgba(20,29,23,.94),rgba(14,19,16,.91)),
+    url("assets/reference-sidebar-art.webp");
+}
+.reference-subpage .subpage-content .panel-head {
+  background-image:linear-gradient(90deg,rgba(17,24,19,.7),rgba(17,24,19,.25)),url("assets/reference-sidebar-art.webp");
+  background-size:cover;
+  background-position:right 35%;
+}
+
+/* Overview home: make the artwork visible across all major dashboard blocks. */
+.reference-dashboard-home .overview-title-row {
+  background-image:linear-gradient(90deg,rgba(8,12,10,.94),rgba(8,12,10,.55)),url("assets/reference-sidebar-art.webp");
+  background-size:cover;
+  background-position:right 42%;
+  border-radius:12px;
+  padding:10px 12px;
+}
+.reference-dashboard-home .overview-lower-grid .overview-card {
+  background-image:
+    linear-gradient(145deg,rgba(23,27,23,.93),rgba(15,19,16,.86)),
+    url("assets/reference-crypto-art.webp");
+  background-size:cover,620px auto;
+  background-position:center,right center;
+}
+
+/* Trading screen: chart, order book and order form each receive their own
+   image layer; chart data and form controls remain above the background. */
+.reference-trade-page .trade-chart-card,
+.reference-trade-page .trade-orderbook-card,
+.reference-trade-page .trade-form-card,
+.reference-trade-page .trade-recent-card {
+  background-image:
+    linear-gradient(145deg,rgba(22,27,23,.95),rgba(12,17,14,.92)),
+    url("assets/reference-crypto-art.webp");
+  background-position:center,right center;
+  background-size:cover,560px auto;
+  background-repeat:no-repeat;
+  border-color:rgba(86,128,99,.3);
+}
+.reference-trade-page .trade-market-heading,
+.reference-trade-page .trade-market-price {
+  background-image:linear-gradient(90deg,rgba(13,20,15,.88),rgba(13,20,15,.62)),url("assets/reference-sidebar-art.webp");
+  background-size:cover;
+  background-position:right center;
+  border-radius:12px;
+}
+.reference-trade-page .trade-market-heading {padding:13px 15px}
+
+/* Authentication pages already contain an illustration; extend it to the
+   full page and card so sign-in/sign-up don't feel visually empty. */
+.auth-page {
+  background-image:
+    radial-gradient(ellipse at 18% 50%,rgba(0,212,166,.16),transparent 38%),
+    linear-gradient(110deg,rgba(5,14,10,.92),rgba(5,14,10,.84)),
+    url("assets/reference-login-art.webp");
+  background-position:center,center,right center;
+  background-size:cover,cover, min(850px,72vw) auto;
+  background-repeat:no-repeat;
+}
+.auth-card {
+  background-image:
+    linear-gradient(145deg,rgba(13,28,22,.96),rgba(7,18,14,.94)),
+    url("assets/reference-crypto-art.webp");
+  background-size:cover,520px auto;
+  background-position:center,right center;
+}
+
+/* Preserve the artwork treatment on narrow screens without fixed backgrounds
+   (which can stutter on mobile browsers). */
+@media(max-width:760px) {
+  body.reference-home,
+  body.reference-subpage,
+  body.reference-trade-page {background-attachment:scroll;background-size:cover,cover,420px auto}
+  .reference-subpage .subpage-content {background-size:cover,520px auto}
+  .reference-subpage .subpage-content .page-heading {padding:15px 14px}
+  .reference-subpage .subpage-content .panel,
+  .reference-subpage .subpage-content .stat-card {background-size:cover,420px auto}
+  .reference-trade-page .trade-chart-card,
+  .reference-trade-page .trade-orderbook-card,
+  .reference-trade-page .trade-form-card,
+  .reference-trade-page .trade-recent-card {background-size:cover,420px auto}
+  .auth-page {background-size:cover,cover,620px auto}
+}
